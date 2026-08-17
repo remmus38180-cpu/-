@@ -298,17 +298,33 @@ def install_selenium(python_path=None):
         # 執行 get-pip.py
         print("  ⚙️ 正在安裝 pip...")
         cmd_get_pip = f'"{python_exe}" "{get_pip_file}"'
-        success_pip, _, stderr_get_pip = run_command(cmd_get_pip, "")
-
-        if not success_pip:
-            print(f"  ✗ pip 安裝失敗: {stderr_get_pip[:100]}")
-            return False
+        success_pip, stdout_pip, stderr_get_pip = run_command(cmd_get_pip, "")
 
         # 清理 get-pip.py
         try:
             os.remove(get_pip_file)
         except:
             pass
+
+        if not success_pip:
+            print(f"  ⚠ get-pip.py 執行結果: {stdout_pip[:100] if stdout_pip else stderr_get_pip[:100]}")
+
+        # 驗證 pip 是否真的被安裝
+        print("  ✓ 驗證 pip...")
+        cmd_check_pip = f'"{python_exe}" -m pip --version'
+        success_check, stdout_check, stderr_check = run_command(cmd_check_pip, "")
+
+        if success_check:
+            print(f"  ✓ pip 已安裝: {stdout_check.strip()}")
+        else:
+            print(f"  ✗ pip 驗證失敗: {stderr_check[:100]}")
+            print("\n  ℹ 嘗試使用 --user 選項...")
+            # 嘗試用 --user 選項重新安裝
+            cmd_get_pip_user = f'"{python_exe}" "{get_pip_file}" --user'
+            success_user, _, _ = run_command(cmd_get_pip_user, "")
+            if not success_user:
+                print("  ✗ pip 安裝仍然失敗")
+                return False
 
         print("  ✓ pip 已安裝")
     else:
