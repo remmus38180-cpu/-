@@ -138,7 +138,7 @@ def get_chrome_version_from_registry():
     return None
 
 def download_chrome():
-    """下載 Chrome 便攜版本 (Chrome for Testing)"""
+    """下載 Chrome 便攜版本 (Chrome for Testing - 官方穩定版)"""
     print_step(3, "下載 Chrome")
 
     # 檢查是否已安裝
@@ -153,38 +153,17 @@ def download_chrome():
     chrome_dir = "chrome_portable"
 
     try:
-        # 使用 Google 官方 Chrome for Testing API
-        api_url = "https://googlechromelabs.github.io/chrome-for-testing/download-chrome-for-testing.json"
+        # 使用 Google 官方穩定版本 (152.0.7977.42)
+        # 來源: https://googlechromelabs.github.io/chrome-for-testing/
+        version = "152.0.7977.42"
+        chrome_download_url = f"https://storage.googleapis.com/chrome-for-testing-public/{version}/win64/chrome-win64.zip"
 
-        print("  📥 正在查詢 Chrome for Testing 最新版本...")
-        response = urllib.request.urlopen(api_url, timeout=10)
-        data = json.loads(response.read().decode())
-
-        # 獲取最新版本
-        if not data.get('versions'):
-            print("  ⚠ 無法從 API 獲取版本資訊")
-            return False, None, None
-
-        latest_version = data['versions'][0]
-        version_string = latest_version['version']
-        major_version = version_string.split('.')[0]
-
-        print(f"  版本: Chrome {version_string}")
-
-        # 查找 Windows 64-bit 的 Chrome 下載連結
-        chrome_download_url = None
-        for download in latest_version.get('downloads', {}).get('chrome', []):
-            if download.get('platform') == 'win64':
-                chrome_download_url = download.get('url')
-                break
-
-        if not chrome_download_url:
-            print("  ⚠ 無法找到 Chrome for Testing win64 版本")
-            return False, None, None
+        print(f"  版本: Chrome {version}")
+        print(f"  📥 正在下載 Chrome for Testing...")
 
         # 下載 Chrome
         if not os.path.exists(chrome_zip):
-            if not download_file(chrome_download_url, chrome_zip, "正在下載 Chrome for Testing"):
+            if not download_file(chrome_download_url, chrome_zip, ""):
                 print("  ⚠ 無法下載 Chrome")
                 return False, None, None
 
@@ -201,6 +180,7 @@ def download_chrome():
         chrome_exe = Path(chrome_dir) / "chrome-win64" / "chrome.exe"
         if chrome_exe.exists():
             print(f"  ✓ Chrome 位置: {chrome_exe}")
+            major_version = version.split('.')[0]
             return True, major_version, str(chrome_exe)
 
         print(f"  ⚠ 找不到 chrome.exe 在 {chrome_dir}/")
@@ -208,8 +188,9 @@ def download_chrome():
 
     except Exception as e:
         print(f"  ⚠ 無法下載 Chrome: {e}")
-        print("\n  🌐 或手動下載 Chrome:")
+        print("\n  🌐 手動下載 Chrome:")
         print("     官網: https://googlechromelabs.github.io/chrome-for-testing/")
+        print("     找 Stable 版本的 win64 chrome-win64.zip")
         return False, None, None
 
 def download_chromedriver(chrome_version):
