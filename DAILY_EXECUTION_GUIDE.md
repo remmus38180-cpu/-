@@ -1,122 +1,130 @@
-# 每日執行指南 - 隔離平台版本
+# 每日執行指南 - 自動下載版本
 
-> **適用於**: 每天都要重新安裝的隔離平台/VPN 環境
-
----
-
-## 🎯 快速流程（第一次）
-
-### 第 1 次執行時：
-
-1. **下載這些檔案到您的隔離平台**：
-   - `drug_price_screenshot_selenium.py` （主程式）
-   - `drug_list.csv` （藥品清單）
-   - `auto_setup_and_run.bat` 或 `.py` （自動化腳本）
-
-2. **下載 ChromeDriver**：
-   - 查詢您的 Chrome 版本：`設定` → `關於 Chrome`
-   - 訪問 https://chromedriver.chromium.org/ 下載相符版本
-   - 解壓 `chromedriver.exe` 到同一目錄
-
-3. **執行自動化腳本**：
-   - **方法 A** (簡單)：雙擊 `auto_setup_and_run.bat`
-   - **方法 B** (更可靠)：打開命令提示符，執行
-     ```bash
-     python auto_setup_and_run.py
-     ```
-
-4. **等待完成**：
-   - 大約 30-60 分鐘
-   - 截圖會存放在 `drug_price_screenshots/` 目錄
+> **最簡單的方式** - 自動下載所有依賴，一鍵執行
 
 ---
 
-## 🔄 之後每天的執行
+## 🎯 超簡快流程（推薦）
 
-由於您每天都要重新安裝，**重複以上步驟**：
+### 僅需 1 步！
 
 ```bash
-# 簡單方式 - 只需 2 行命令
-python auto_setup_and_run.py
-# 或
-auto_setup_and_run.bat
+# 方法 A: 直接雙擊
+auto_download_and_install.bat
+
+# 方法 B: 命令提示符
+python auto_download_and_install.py
 ```
 
-**自動會**：
-- ✓ 檢查 Python
-- ✓ 安裝 Selenium
-- ✓ 檢查 ChromeDriver
-- ✓ 驗證輸入檔案
-- ✓ 自動執行截圖程式
+**就這樣！** ✨ 其他一切都會自動完成。
+
+---
+
+## ⏱️ 預計時間
+
+### 第一次
+- **首次執行時間**: 60-90 分鐘
+- 原因: 需要下載 Python (~30-50 MB) + Chrome (~100-200 MB) + ChromeDriver (~5-10 MB)
+
+### 之後每天
+- **執行時間**: 30-60 分鐘
+- 原因: 只運行截圖程式，依賴已存在
 
 ---
 
 ## 📋 檔案準備清單
 
-需要在同一目錄中：
+**只需準備這 3 個檔案**：
 
 ```
-您的工作目錄/
-├── drug_price_screenshot_selenium.py ✓ 下載
-├── drug_list.csv ✓ 下載
-├── auto_setup_and_run.bat 或 .py ✓ 下載
-├── chromedriver.exe ✓ 第 1 次時下載
-└── drug_price_screenshots/ (自動建立)
-    ├── UK_Exforge_search_results.png
-    ├── UK_Exforge_HCT_search_results.png
-    └── ... (80+ 個截圖)
+您的隔離平台/
+├── drug_price_screenshot_selenium.py ✓
+├── drug_list.csv ✓
+└── auto_download_and_install.py ✓
+    （或 auto_download_and_install.bat）
 ```
+
+**所有其他依賴都會自動下載！**
 
 ---
 
-## ⚙️ 如果出現錯誤
+## 🚀 完整示例
 
-### 錯誤 1: "Python 未找到"
-```
-✗ Python 未安裝
-```
-**解決**: 在隔離平台中安裝 Python
-- 下載 Python 3.10+ 安裝程式
-- 執行安裝，**勾選 "Add Python to PATH"**
-- 重新執行自動化腳本
-
-### 錯誤 2: "ChromeDriver 未找到"
-```
-⚠ ChromeDriver 未在 PATH 中
-```
-**解決**:
-- 確認 `chromedriver.exe` 與腳本在同一目錄
-- 或將其放入 Python `Scripts` 資料夾
-- 或添加到系統 PATH 環境變數
-
-### 錯誤 3: "Selenium 安裝失敗"
-```
-✗ Selenium 安裝失敗
-```
-**解決**:
+### Day 1 (第一次執行)
 ```bash
-# 手動安裝
-python -m pip install selenium --upgrade
+# 複製 3 個檔案到隔離平台
 
-# 確認安裝
-python -c "import selenium; print(selenium.__version__)"
+# 執行 (會自動下載依賴)
+python auto_download_and_install.py
+
+# 等待 60-90 分鐘
+# 檢查結果
+ls drug_price_screenshots/
+# 應該有 80 個 PNG 檔案
 ```
 
-### 錯誤 4: "drug_list.csv 未找到"
+### Day 2 (之後每天重新安裝)
+```bash
+# 1. 複製相同的 3 個檔案到新環境
+
+# 2. 執行
+python auto_download_and_install.py
+
+# 3. 完成！（只需 30-60 分鐘）
 ```
-✗ drug_list.csv 未找到
-```
-**解決**:
-- 確保檔案在同一目錄
-- 檔案名稱必須完全相同（小寫 csv）
-- 檔案編碼為 UTF-8（建議用記事本編輯）
 
 ---
 
-## 💡 進階用法
+## 🔍 自動下載流程
 
-### 修改藥品清單
+腳本會自動：
+
+1. **檢查 Python**
+   - 如果已安裝: 使用現有版本
+   - 如果未安裝: 自動下載便攜版本 (3.12)
+
+2. **檢查/下載 Chrome**
+   - 如果已安裝: 讀取版本
+   - 如果未安裝: 自動下載 Chromium 便攜版本
+
+3. **下載 ChromeDriver**
+   - 自動檢測 Chrome 版本
+   - 下載匹配的 ChromeDriver
+
+4. **安裝 Selenium**
+   - 自動運行 pip install
+
+5. **執行截圖**
+   - 開始自動截圖流程
+
+---
+
+## 🆘 如果自動下載失敗
+
+### 網絡問題導致下載失敗？
+
+**選項 1: 使用備用方案**
+```bash
+# 使用手動版本（需要手動下載 Python 和 ChromeDriver）
+python auto_setup_and_run.py
+# 或
+auto_setup_and_run.bat
+```
+
+**選項 2: 手動準備**
+1. 在您的主機下載：
+   - Python 便攜版本
+   - ChromeDriver
+2. 上傳到隔離平台
+3. 放在同一目錄
+4. 重新執行自動下載腳本
+
+---
+
+## 📝 修改藥品清單
+
 編輯 `drug_list.csv`，每行一個藥品名：
+
 ```csv
 Exforge
 Exforge HCT
@@ -128,95 +136,117 @@ IXEMPRA
 Ilaris
 Zelboraf
 Romiplate
-您的藥品名
+您的新藥品
 ```
+
+保存後，執行自動化腳本即可。
+
+---
+
+## 💡 進階用法
 
 ### 只查詢特定國家
-修改 `auto_setup_and_run.bat` 或 `.py`，改變命令行：
 
-**BAT 版本**：找到最後一行，改為：
-```bash
-python drug_price_screenshot_selenium.py --input drug_list.csv --countries UK,FR
-```
+編輯 `auto_download_and_install.py`，找到最後的執行部分，改為：
 
-**Python 版本**：修改最後的 subprocess.run：
 ```python
-[sys.executable, "drug_price_screenshot_selenium.py", 
- "--input", "drug_list.csv",
- "--countries", "UK,FR"]
+# 在 run_main_program() 調用時，修改為
+cmd = f'"{python_exe}" drug_price_screenshot_selenium.py --input drug_list.csv --countries UK,FR'
 ```
 
-支援的國家碼：`JP`, `AU`, `BE`, `FR`, `SE`, `CH`, `UK`, `CA`
+支援的國家碼: `JP`, `AU`, `BE`, `FR`, `SE`, `CH`, `UK`, `CA`
 
----
+### 指定輸出目錄
 
-## 🚀 完整示例
-
-### Day 1 (第一次執行)
 ```bash
-# 1. 準備檔案（已下載）
-# drug_price_screenshot_selenium.py ✓
-# drug_list.csv ✓
-# auto_setup_and_run.bat ✓
-# chromedriver.exe ✓
-
-# 2. 執行
-python auto_setup_and_run.py
-
-# 3. 等待 30-60 分鐘
-
-# 4. 檢查結果
-dir drug_price_screenshots
-# 應該有 80+ 個 PNG 檔案
+python drug_price_screenshot_selenium.py --input drug_list.csv --output-dir my_screenshots
 ```
 
-### Day 2 (重新安裝後)
+---
+
+## 📊 統計信息
+
+- **藥品數**: 10 個（預設）
+- **國家數**: 8 個（JP, AU, BE, FR, SE, CH, UK, CA）
+- **總截圖數**: 80 個
+- **磁碟空間**: ~100-150 MB （截圖結果）
+- **執行時間**: 30-60 分鐘（不含下載）
+
+---
+
+## ✅ 故障排除
+
+### 問題 1: "Python 下載失敗"
+**原因**: 網絡連接問題
+**解決**:
+1. 檢查隔離平台網絡連接
+2. 嘗試手動下載: https://www.python.org/downloads/ (Portable 版本)
+3. 解壓到 `python_portable/` 目錄
+
+### 問題 2: "ChromeDriver 下載失敗"
+**原因**: 無法匹配 Chrome 版本
+**解決**:
+1. 檢查 Chrome 是否已安裝
+2. 手動下載: https://googlechromelabs.github.io/chrome-for-testing/
+3. 解壓 `chromedriver.exe` 到同一目錄
+
+### 問題 3: "Selenium 安裝失敗"
+**原因**: pip 下載問題
+**解決**:
 ```bash
-# 1. 複製相同檔案到新環境
-# 2. 執行（會自動重新安裝依賴）
-python auto_setup_and_run.py
-
-# 3. 完成！
+# 手動安裝
+python -m pip install selenium --upgrade
 ```
 
----
+### 問題 4: "藥品找不到"
+**原因**: 某些網站結構改變
+**解決**: 腳本會跳過該國家，繼續執行其他國家
 
-## 📝 注意事項
-
-- ⏱ **首次執行慢**: 因為要安裝 Selenium，第一次需要額外 5-10 分鐘
-- 🔌 **網絡穩定**: 確保隔離平台網絡穩定，否則查詢可能超時
-- 💾 **清理舊檔**: 如果要重新執行，建議刪除舊的 `drug_price_screenshots/` 目錄
-- 🛑 **中斷恢復**: 如果中途中斷，重新執行會從頭開始（目前無斷點續傳功能）
-
----
-
-## ❓ 最常見的問題
-
-**Q: 為什麼每天都要重新安裝？**
-A: 您的隔離平台每天重置，所以需要重新安裝依賴。自動化腳本可以快速完成此流程。
-
-**Q: 能否保存腳本以減少每天的下載？**
-A: 可以。準備好 4 個檔案後，每次登入隔離平台只需上傳這 4 個檔案即可。
-
-**Q: 如果隔離平台無法訪問 Python 官網？**
-A: 改用在本機安裝 Python 便攜版，然後上傳到隔離平台。
-
-**Q: 執行時間太長怎麼辦？**
-A: 可以減少 `drug_list.csv` 中的藥品數量進行測試。
+### 問題 5: "連接超時"
+**原因**: 網站無響應或網絡慢
+**解決**: 重新執行即可
 
 ---
 
-## ✅ 執行檢查清單
+## 🎯 最佳實踐
 
-每次執行前檢查：
+1. **每次前準備相同的 3 個檔案**
+   ```
+   drug_price_screenshot_selenium.py
+   drug_list.csv
+   auto_download_and_install.py (或 .bat)
+   ```
 
-- [ ] Python 已安裝 (命令提示符執行 `python --version`)
-- [ ] 4 個檔案在同一目錄
-- [ ] `chromedriver.exe` 可用
-- [ ] `drug_list.csv` 編碼為 UTF-8
-- [ ] 網絡連接正常
-- [ ] 足夠的磁碟空間 (80+ 個截圖 ≈ 50-100 MB)
+2. **保存成功的結果**
+   ```
+   drug_price_screenshots/
+   ```
+
+3. **隔離平台新環境時**
+   - 上傳相同 3 個檔案
+   - 執行一個命令
+   - 等待完成
 
 ---
 
-**祝您執行順利！有問題隨時提問。**
+## 🌐 完全離線使用？
+
+如果您的隔離平台完全無法聯網，請：
+
+1. 在有網絡的電腦上：
+   - 下載 Python 便攜版本
+   - 下載 Chrome 或 Chromium 便攜版本
+   - 下載 ChromeDriver
+   - pip install selenium (到本地)
+
+2. 將所有檔案轉移到隔離平台
+
+3. 修改 `auto_download_and_install.py` 略過下載步驟
+
+4. 執行
+
+---
+
+**祝您執行順利！** 
+
+有任何問題，請參考 README.md 或檢查腳本的錯誤訊息。
