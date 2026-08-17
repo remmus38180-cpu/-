@@ -145,7 +145,7 @@ def download_chrome():
     chrome_version = get_chrome_version_from_registry()
     if chrome_version:
         print(f"  ✓ Chrome 已安裝 (版本: {chrome_version})")
-        return True, chrome_version
+        return True, chrome_version, None
 
     print("  ℹ Chrome 未找到，嘗試下載便攜版本...")
 
@@ -168,7 +168,7 @@ def download_chrome():
         if not os.path.exists(chrome_zip):
             if not download_file(chrome_download_url, chrome_zip, "正在下載 Chromium"):
                 print("  ⚠ 無法下載 Chromium")
-                return False, None
+                return False, None, None
 
         # 解壓
         print(f"  📦 解壓 {chrome_zip}...")
