@@ -103,11 +103,16 @@ if (Test-Path $pythonExe) {
     Write-ColorOutput "[START] Extracting Python..." Info
     Write-Host ""
 
-    try {
-        Add-Type -AssemblyName System.IO.Compression.FileSystem
+    # Try 7-Zip first (more reliable)
+    $sevenZipPath = "C:\Program Files\7-Zip\7z.exe"
+    $sevenZipPath32 = "C:\Program Files (x86)\7-Zip\7z.exe"
 
-        Write-Host "  Extracting files..."
-        [System.IO.Compression.ZipFile]::ExtractToDirectory($pythonZip, $WorkDir)
+    if ((Test-Path $sevenZipPath) -or (Test-Path $sevenZipPath32)) {
+        # Use 7-Zip
+        $zip7 = if (Test-Path $sevenZipPath) { $sevenZipPath } else { $sevenZipPath32 }
+
+        Write-Host "  Using 7-Zip to extract files..."
+        & $zip7 x $pythonZip -o"$WorkDir" -y | Out-Null
 
         if (Test-Path $pythonExe) {
             Write-ColorOutput "[SUCCESS] Extraction complete!" Success
@@ -117,10 +122,30 @@ if (Test-Path $pythonExe) {
             Write-ColorOutput "[FAILED] Extraction failed, python.exe not found" Error
             exit 1
         }
-    } catch {
-        Write-ColorOutput "[ERROR] Extraction failed!" Error
-        Write-Host "Reason: $_"
-        exit 1
+    } else {
+        # Fallback to PowerShell
+        Write-Host "  Using PowerShell to extract files..."
+
+        try {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($pythonZip, $WorkDir)
+
+            if (Test-Path $pythonExe) {
+                Write-ColorOutput "[SUCCESS] Extraction complete!" Success
+                Write-Host "        Directory: $pythonDir"
+                Write-Host ""
+            } else {
+                Write-ColorOutput "[FAILED] Extraction failed, python.exe not found" Error
+                exit 1
+            }
+        } catch {
+            Write-ColorOutput "[ERROR] Extraction failed!" Error
+            Write-Host "Reason: $_"
+            Write-Host ""
+            Write-Host "Solution: Install 7-Zip (https://www.7-zip.org/)"
+            exit 1
+        }
     }
 }
 
