@@ -268,11 +268,25 @@ def install_selenium(python_path=None):
     else:
         python_exe = sys.executable
 
-    cmd = f'"{python_exe}" -m pip install selenium --upgrade --quiet'
-    success, stdout, stderr = run_command(cmd, "安裝 Selenium")
+    # 第一步：確保 pip 已安裝（便攜版本可能沒有 pip）
+    print("  📦 確保 pip 已安裝...")
+    cmd_ensure_pip = f'"{python_exe}" -m ensurepip --upgrade'
+    success_pip, _, stderr_pip = run_command(cmd_ensure_pip, "")
+
+    if not success_pip:
+        print(f"  ⚠ 無法安裝 pip: {stderr_pip[:100]}")
+        # 但繼續嘗試安裝 Selenium
+    else:
+        print("  ✓ pip 已可用")
+
+    # 第二步：安裝 Selenium 和 webdriver-manager
+    print("  📥 正在安裝 Selenium...")
+    cmd = f'"{python_exe}" -m pip install selenium webdriver-manager --upgrade --quiet'
+    success, stdout, stderr = run_command(cmd, "")
 
     if success:
         print("  ✓ Selenium 已安裝")
+        print("  ✓ webdriver-manager 已安裝")
         return True
     else:
         print(f"  ✗ Selenium 安裝失敗: {stderr[:100]}")
