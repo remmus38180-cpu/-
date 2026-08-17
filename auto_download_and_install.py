@@ -275,16 +275,44 @@ def install_selenium(python_path=None):
     else:
         python_exe = sys.executable
 
-    # 第一步：確保 pip 已安裝（便攜版本可能沒有 pip）
+    # 第一步：安裝 pip（使用 get-pip.py）
     print("  📦 確保 pip 已安裝...")
+
+    # 嘗試 ensurepip（對於標準 Python）
     cmd_ensure_pip = f'"{python_exe}" -m ensurepip --upgrade'
     success_pip, _, stderr_pip = run_command(cmd_ensure_pip, "")
 
     if not success_pip:
-        print(f"  ⚠ 無法安裝 pip: {stderr_pip[:100]}")
-        # 但繼續嘗試安裝 Selenium
+        # 如果 ensurepip 失敗，使用 get-pip.py
+        print("  ℹ ensurepip 不可用，使用 get-pip.py...")
+
+        get_pip_url = "https://bootstrap.pypa.io/get-pip.py"
+        get_pip_file = "get-pip.py"
+
+        if not os.path.exists(get_pip_file):
+            print("  📥 正在下載 get-pip.py...")
+            if not download_file(get_pip_url, get_pip_file, ""):
+                print("  ✗ 無法下載 get-pip.py")
+                return False
+
+        # 執行 get-pip.py
+        print("  ⚙️ 正在安裝 pip...")
+        cmd_get_pip = f'"{python_exe}" "{get_pip_file}"'
+        success_pip, _, stderr_get_pip = run_command(cmd_get_pip, "")
+
+        if not success_pip:
+            print(f"  ✗ pip 安裝失敗: {stderr_get_pip[:100]}")
+            return False
+
+        # 清理 get-pip.py
+        try:
+            os.remove(get_pip_file)
+        except:
+            pass
+
+        print("  ✓ pip 已安裝")
     else:
-        print("  ✓ pip 已可用")
+        print("  ✓ pip 已安裝")
 
     # 第二步：安裝 Selenium 和 webdriver-manager
     print("  📥 正在安裝 Selenium...")
