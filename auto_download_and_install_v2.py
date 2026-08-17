@@ -26,15 +26,15 @@ def print_step(step_num, description):
     print(f"\n[步驟 {step_num}] {description}")
     print("-" * 70)
 
-def run_command(cmd, description="", shell=True):
+def run_command(cmd, description="", shell=True, timeout=300):
     """執行命令"""
     if description:
         print(f"  ✓ {description}...")
     try:
-        result = subprocess.run(cmd, shell=shell, capture_output=True, text=True, timeout=60)
+        result = subprocess.run(cmd, shell=shell, capture_output=True, text=True, timeout=timeout)
         return result.returncode == 0, result.stdout, result.stderr
     except subprocess.TimeoutExpired:
-        return False, "", "命令超時"
+        return False, "", "命令超時（網路可能較慢）"
     except Exception as e:
         return False, "", str(e)
 
@@ -195,7 +195,7 @@ def install_selenium(python_exe):
     # 先驗證 pip
     print("  📦 驗證 pip...")
     cmd_check_pip = f'"{python_exe}" -m pip --version'
-    success_pip, stdout_pip, stderr_pip = run_command(cmd_check_pip, "")
+    success_pip, stdout_pip, stderr_pip = run_command(cmd_check_pip, "", timeout=30)
 
     if not success_pip:
         print(f"  ✗ pip 不可用: {stderr_pip[:100]}")
@@ -205,17 +205,32 @@ def install_selenium(python_exe):
 
     # 安裝 Selenium 和 webdriver-manager
     print("  📥 正在安裝 Selenium...")
-    cmd = f'"{python_exe}" -m pip install selenium webdriver-manager --upgrade --quiet'
-    success, stdout, stderr = run_command(cmd, "")
+    print("  ⏱ 這可能需要 5-10 分鐘，請耐心等待...")
+
+    # 使用更長的超時和網路參數
+    cmd = f'"{python_exe}" -m pip install selenium webdriver-manager --upgrade --quiet --default-timeout=120 --retries 5'
+    success, stdout, stderr = run_command(cmd, "", timeout=600)  # 10 分鐘超時
 
     if success:
         print("  ✓ Selenium 已安裝")
         print("  ✓ webdriver-manager 已安裝")
         return True
     else:
-        print(f"  ✗ Selenium 安裝失敗")
-        print(f"  錯誤信息: {stderr[:200]}")
-        return False
+        print(f"  ⚠ Selenium 安裝可能失敗或超時")
+        print(f"  錯誤信息: {stderr[:300]}")
+        print("\n  嘗試手動安裝...")
+
+        # 第二次嘗試，不用 quiet 模式以看到進度
+        cmd2 = f'"{python_exe}" -m pip install selenium webdriver-manager --upgrade --default-timeout=120 --retries 5'
+        success2, stdout2, stderr2 = run_command(cmd2, "", timeout=600)
+
+        if success2:
+            print("  ✓ Selenium 已安裝")
+            print("  ✓ webdriver-manager 已安裝")
+            return True
+        else:
+            print(f"  ✗ Selenium 安裝失敗")
+            return False
 
 def check_input_files():
     """檢查輸入檔案"""
