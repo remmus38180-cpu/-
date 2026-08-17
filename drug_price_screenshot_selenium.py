@@ -104,6 +104,8 @@ def create_driver(chrome_path=None):
     Args:
         chrome_path: Chrome 可執行檔路徑（可選）
     """
+    from selenium.webdriver.chrome.service import Service
+
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
@@ -111,45 +113,51 @@ def create_driver(chrome_path=None):
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 
-    # 配置代理（針對此環境的代理）
-    https_proxy = os.environ.get("HTTPS_PROXY") or "http://127.0.0.1:32961"
-    options.add_argument(f"--proxy-server={https_proxy}")
-
-    # 信任代理的 CA 證書
-    ca_bundle = "/root/.ccr/ca-bundle.crt"
-    if os.path.exists(ca_bundle):
-        options.add_argument(f"--ignore-certificate-errors")
-        options.add_argument("--ignore-urlunsafe-zones")
-
-    # 設定 Chrome 二進制路徑（優先級：命令行參數 > 系統預設 > 自動檢測）
+    # 設定 Chrome 二進制路徑（優先級：命令行參數 > 系統預設）
     if chrome_path and os.path.exists(chrome_path):
         options.binary_location = chrome_path
         logger.info(f"使用指定的 Chrome: {chrome_path}")
     else:
-        # 使用系統預先安裝的 Chrome
-        try:
-            if os.path.exists("/opt/pw-browsers/chromium"):
-                options.binary_location = "/opt/pw-browsers/chromium"
-                logger.info(f"使用 /opt/pw-browsers/chromium，代理: {https_proxy}")
-        except:
-            pass
+        # 自動尋找系統中的 Chrome
+        possible_paths = [
+            "/opt/pw-browsers/chromium",
+            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",  # Windows
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",  # macOS
+            "/usr/bin/google-chrome",  # Linux
+            "/usr/bin/chromium",  # Linux
+            "/snap/bin/chromium",  # Linux snap
+        ]
+        found = False
+        for path in possible_paths:
+            if os.path.exists(path):
+                options.binary_location = path
+                logger.info(f"自動偵測到 Chrome: {path}")
+                found = True
+                break
 
+        if not found:
+            logger.warning("未能自動偵測到 Chrome，將嘗試使用系統預設")
+
+    # 嘗試使用 webdriver_manager（適用於本地開發環境）
     try:
-        driver = webdriver.Chrome(
-            service=None,
-            options=options
-        )
-    except Exception as e:
-        logger.warning(f"使用指定 Chrome 失敗 ({e})，嘗試系統預設 Chrome")
-        # 移除 binary_location 嘗試使用系統預設
-        options.binary_location = None
-        try:
-            driver = webdriver.Chrome(options=options)
-        except Exception as e2:
-            logger.error(f"無法建立 Chrome 驅動: {e2}")
-            raise
+        from webdriver_manager.chrome import ChromeDriverManager
 
-    return driver
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+        logger.info("✓ 使用 webdriver_manager 管理的 ChromeDriver")
+        return driver
+    except Exception as e:
+        logger.warning(f"webdriver_manager 初始化失敗: {str(e)[:100]}")
+
+    # 備選：直接使用系統 Chrome 和自動偵測的 ChromeDriver
+    try:
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(options=options)
+        logger.info("✓ 使用系統預設 ChromeDriver")
+        return driver
+    except Exception as e:
+        logger.error(f"無法建立 Chrome 驅動: {str(e)[:200]}")
+        raise
 
 
 def safe_screenshot(driver, output_path, timeout=SCREENSHOT_TIMEOUT):
