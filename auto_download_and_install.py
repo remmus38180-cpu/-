@@ -138,7 +138,7 @@ def get_chrome_version_from_registry():
     return None
 
 def download_chrome():
-    """下載 Chrome 便攜版本"""
+    """下載 Chrome 便攜版本 (Chrome for Testing)"""
     print_step(3, "下載 Chrome")
 
     # 檢查是否已安裝
@@ -149,25 +149,43 @@ def download_chrome():
 
     print("  ℹ Chrome 未找到，嘗試下載便攜版本...")
 
-    # 使用 Chromium 便攜版本
     chrome_zip = "chrome_portable.zip"
     chrome_dir = "chrome_portable"
 
-    # 從 Chromium 官方 CI 下載最新版本
-    chromium_url = "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/LAST_CHANGE"
-
     try:
-        # 獲取最新版本號
-        print("  📥 正在查詢 Chromium 最新版本...")
-        response = urllib.request.urlopen(chromium_url, timeout=10)
-        build_number = response.read().decode().strip()
+        # 使用 Google 官方 Chrome for Testing API
+        api_url = "https://googlechromelabs.github.io/chrome-for-testing/download-chrome-for-testing.json"
 
-        chrome_download_url = f"https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/{build_number}/chrome-win64.zip"
-        print(f"  版本: Chromium {build_number}")
+        print("  📥 正在查詢 Chrome for Testing 最新版本...")
+        response = urllib.request.urlopen(api_url, timeout=10)
+        data = json.loads(response.read().decode())
 
+        # 獲取最新版本
+        if not data.get('versions'):
+            print("  ⚠ 無法從 API 獲取版本資訊")
+            return False, None, None
+
+        latest_version = data['versions'][0]
+        version_string = latest_version['version']
+        major_version = version_string.split('.')[0]
+
+        print(f"  版本: Chrome {version_string}")
+
+        # 查找 Windows 64-bit 的 Chrome 下載連結
+        chrome_download_url = None
+        for download in latest_version.get('downloads', {}).get('chrome', []):
+            if download.get('platform') == 'win64':
+                chrome_download_url = download.get('url')
+                break
+
+        if not chrome_download_url:
+            print("  ⚠ 無法找到 Chrome for Testing win64 版本")
+            return False, None, None
+
+        # 下載 Chrome
         if not os.path.exists(chrome_zip):
-            if not download_file(chrome_download_url, chrome_zip, "正在下載 Chromium"):
-                print("  ⚠ 無法下載 Chromium")
+            if not download_file(chrome_download_url, chrome_zip, "正在下載 Chrome for Testing"):
+                print("  ⚠ 無法下載 Chrome")
                 return False, None, None
 
         # 解壓
@@ -179,22 +197,19 @@ def download_chrome():
         # 清理 ZIP
         os.remove(chrome_zip)
 
-        # 查找 chrome.exe 並提取版本
+        # 查找 chrome.exe
         chrome_exe = Path(chrome_dir) / "chrome-win64" / "chrome.exe"
         if chrome_exe.exists():
-            result = subprocess.run(f'"{chrome_exe}" --version', shell=True, capture_output=True, text=True)
-            match = re.search(r'(\d+)\.\d+\.\d+', result.stdout)
-            if match:
-                version = match.group(1)
-                return True, version, str(chrome_exe)
+            print(f"  ✓ Chrome 位置: {chrome_exe}")
+            return True, major_version, str(chrome_exe)
 
-        return True, build_number, None
+        print(f"  ⚠ 找不到 chrome.exe 在 {chrome_dir}/")
+        return False, None, None
+
     except Exception as e:
-        print(f"  ⚠ 無法下載 Chromium: {e}")
-        print("\n  🌐 請手動下載 Chrome:")
-        print("     1. 訪問 https://www.google.com/chrome/")
-        print("     2. 安裝 Google Chrome")
-        print("     3. 重新執行此腳本")
+        print(f"  ⚠ 無法下載 Chrome: {e}")
+        print("\n  🌐 或手動下載 Chrome:")
+        print("     官網: https://googlechromelabs.github.io/chrome-for-testing/")
         return False, None, None
 
 def download_chromedriver(chrome_version):
