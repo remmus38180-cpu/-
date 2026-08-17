@@ -115,11 +115,20 @@ if (Test-Path $pythonExe) {
 
         # Create target directory if not exists
         if (-not (Test-Path $pythonDir)) {
-            New-Item -ItemType Directory -Path $pythonDir | Out-Null
+            Write-Host "  Creating directory: $pythonDir"
+            New-Item -ItemType Directory -Path $pythonDir -Force | Out-Null
+            Write-Host "  Directory created!"
         }
 
+        # Verify directory exists
+        if (-not (Test-Path $pythonDir)) {
+            Write-ColorOutput "[ERROR] Failed to create directory: $pythonDir" Error
+            exit 1
+        }
+
+        Write-Host "  Extracting to: $pythonDir"
         # Extract to python_portable directory
-        & $zip7 x $pythonZip -o"$pythonDir" -y | Out-Null
+        & $zip7 x $pythonZip "-o$pythonDir" -y | Out-Null
 
         if (Test-Path $pythonExe) {
             Write-ColorOutput "[SUCCESS] Extraction complete!" Success
