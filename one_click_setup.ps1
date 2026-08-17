@@ -107,7 +107,7 @@ if (Test-Path $pythonExe) {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
 
         Write-Host "  Extracting files..."
-        [System.IO.Compression.ZipFile]::ExtractToDirectory($pythonZip, $WorkDir, $true)
+        [System.IO.Compression.ZipFile]::ExtractToDirectory($pythonZip, $WorkDir)
 
         if (Test-Path $pythonExe) {
             Write-ColorOutput "[SUCCESS] Extraction complete!" Success
