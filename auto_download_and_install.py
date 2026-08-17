@@ -147,10 +147,17 @@ def download_chrome():
         print(f"  ✓ Chrome 已安裝 (版本: {chrome_version})")
         return True, chrome_version, None
 
-    print("  ℹ Chrome 未找到，嘗試下載便攜版本...")
-
     chrome_zip = "chrome_portable.zip"
     chrome_dir = "chrome_portable"
+    chrome_exe = Path(chrome_dir) / "chrome-win64" / "chrome.exe"
+
+    # 檢查便攜版本 Chrome 是否已解壓
+    if chrome_exe.exists():
+        print(f"  ✓ Chrome 便攜版本已存在")
+        print(f"  ✓ Chrome 位置: {chrome_exe}")
+        return True, "152", str(chrome_exe)
+
+    print("  ℹ Chrome 未找到，嘗試下載便攜版本...")
 
     try:
         # 使用 Google 官方穩定版本 (152.0.7977.42)
