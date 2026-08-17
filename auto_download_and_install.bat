@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
-REM åœ‹éš›è—¥åƒ¹æˆªåœ– - å®Œå…¨è‡ªå‹•ä¸‹è¼‰å®‰è£ç‰ˆæœ¬
-REM åŠŸèƒ½: è‡ªå‹•ä¸‹è¼‰ Pythonã€Chrome å’Œ ChromeDriverï¼Œç„¶å¾ŒåŸ·è¡Œ
+REM Guo Ji Yao Jia Jie Tu - Wan Quan Zi Dong Xia Zai An Zhuang Ban Ben
+REM °ê»ÚÃÄ»ùºI¹Ï - §¹¥ş¦Û°Ê¤U¸ü¦w¸Ëª©¥»
 REM ============================================================
 
 setlocal enabledelayedexpansion
@@ -9,89 +9,113 @@ setlocal enabledelayedexpansion
 cls
 echo.
 echo ============================================================
-echo åœ‹éš›è—¥åƒ¹è‡ªå‹•æˆªåœ– - å®Œå…¨è‡ªå‹•ä¸‹è¼‰å®‰è£ç‰ˆæœ¬
+echo Guo Ji Yao Jia Zi Dong Jie Tu - Wan Quan Zi Dong Xia Zai An Zhuang
+echo °ê»ÚÃÄ»ù¦Û°ÊºI¹Ï - §¹¥ş¦Û°Ê¤U¸ü¦w¸Ëª©¥»
 echo ============================================================
 echo.
-echo æ­¤è…³æœ¬æœƒè‡ªå‹•:
-echo   1. ä¸‹è¼‰ Python (å¦‚æœæœªå®‰è£)
-echo   2. ä¸‹è¼‰ Chrome/Chromium (å¦‚æœæœªå®‰è£)
-echo   3. ä¸‹è¼‰ ChromeDriver
-echo   4. å®‰è£ Selenium
-echo   5. åŸ·è¡Œæˆªåœ–ç¨‹å¼
+echo CI Jiao Ben Hui Zi Dong:
+echo ¦¹¸}¥»·|¦Û°Ê:
+echo   1. Xia Zai Python (Ru Guo Wei An Zhuang)
+echo   2. Xia Zai Chrome/Chromium (Ru Guo Wei An Zhuang)
+echo   3. Xia Zai ChromeDriver
+echo   4. An Zhuang Selenium
+echo   5. Zhi Xing Jie Tu Cheng Xu
 echo.
 echo ============================================================
 echo.
 
-REM æª¢æŸ¥ Python æ˜¯å¦å·²å®‰è£
-echo [æ­¥é©Ÿ 1/7] æª¢æŸ¥ Python...
+REM Jian Cha Python Shi Fou Yi An Zhuang
+echo [Bu Zhou 1/7] Jian Cha Python...
+echo [¨BÆJ 1/7] ÀË¬d Python...
 python --version >nul 2>&1
 if %errorlevel% equ 0 (
-    echo âœ“ Python å·²å®‰è£
+    echo [OK] Python Yi An Zhuang
+    echo [OK] Python ¤w¦w¸Ë
     for /f "tokens=2" %%i in ('python --version 2^>^&1') do set PYTHON_VER=%%i
-    echo   ç‰ˆæœ¬: !PYTHON_VER!
+    echo   Ban Ben: !PYTHON_VER!
+    echo   ª©¥»: !PYTHON_VER!
     set PYTHON_EXE=python
 ) else (
-    echo â„¹ Python æœªæ‰¾åˆ°ï¼Œå˜—è©¦ä¸‹è¼‰...
+    echo [INFO] Python Wei Zhao Dao, Chang Shi Xia Zai...
+    echo [INFO] Python ¥¼§ä¨ì¡A¹Á¸Õ¤U¸ü...
     echo.
-    echo åŸ·è¡Œ Python è‡ªå‹•ä¸‹è¼‰è…³æœ¬...
+    echo Zhi Xing Python Zi Dong Xia Zai Jiao Ben...
+    echo °õ¦æ Python ¦Û°Ê¤U¸ü¸}¥»...
     python auto_download_and_install.py
     if %errorlevel% neq 0 (
-        echo âœ— è‡ªå‹•ä¸‹è¼‰å¤±æ•—ï¼Œè«‹åƒè€ƒèªªæ˜æ‰‹å‹•ä¸‹è¼‰
+        echo [ERROR] Zi Dong Xia Zai Shi Bai, Qing Can Kao Shuo Ming Shou Dong Xia Zai
+        echo [ERROR] ¦Û°Ê¤U¸ü¥¢±Ñ¡A½Ğ°Ñ¦Ò»¡©ú¤â°Ê¤U¸ü
         pause
         exit /b 1
     )
     set PYTHON_EXE=python_portable\python.exe
 )
 
-REM å®‰è£ Selenium
+REM An Zhuang Selenium
 echo.
-echo [æ­¥é©Ÿ 2/7] å®‰è£ Selenium...
+echo [Bu Zhou 2/7] An Zhuang Selenium...
+echo [¨BÆJ 2/7] ¦w¸Ë Selenium...
 !PYTHON_EXE! -m pip install selenium --upgrade --quiet
 if %errorlevel% equ 0 (
-    echo âœ“ Selenium å·²å®‰è£
+    echo [OK] Selenium Yi An Zhuang
+    echo [OK] Selenium ¤w¦w¸Ë
 ) else (
-    echo âš  Selenium å®‰è£å¯èƒ½å¤±æ•—ï¼Œä½†å˜—è©¦ç¹¼çºŒ...
+    echo [WARNING] Selenium An Zhuang Ke Neng Shi Bai, Dan Chang Shi Ji Xu...
+    echo [WARNING] Selenium ¦w¸Ë¥i¯à¥¢±Ñ¡A¦ı¹Á¸ÕÄ~Äò...
 )
 
-REM æª¢æŸ¥ ChromeDriver
+REM Jian Cha ChromeDriver
 echo.
-echo [æ­¥é©Ÿ 3/7] æª¢æŸ¥ ChromeDriver...
+echo [Bu Zhou 3/7] Jian Cha ChromeDriver...
+echo [¨BÆJ 3/7] ÀË¬d ChromeDriver...
 if exist "chromedriver.exe" (
-    echo âœ“ chromedriver.exe å·²æ‰¾åˆ°
+    echo [OK] chromedriver.exe Yi Zhao Dao
+    echo [OK] chromedriver.exe ¤w§ä¨ì
 ) else (
-    echo âš  ChromeDriver æœªæ‰¾åˆ°
-    echo   è‡ªå‹•ä¸‹è¼‰è…³æœ¬æ‡‰è©²å·²ä¸‹è¼‰éï¼Œè«‹æª¢æŸ¥
+    echo [WARNING] ChromeDriver Wei Zhao Dao
+    echo [WARNING] ChromeDriver ¥¼§ä¨ì
+    echo   Zi Dong Xia Zai Jiao Ben Ying Gai Yi Xia Zai Guo, Qing Jian Cha
+    echo   ¦Û°Ê¤U¸ü¸}¥»À³¸Ó¤w¤U¸ü¹L¡A½ĞÀË¬d
 )
 
-REM æª¢æŸ¥è¼¸å…¥æª”æ¡ˆ
+REM Jian Cha Shu Ru Wen Jian
 echo.
-echo [æ­¥é©Ÿ 4/7] æª¢æŸ¥è¼¸å…¥æª”æ¡ˆ...
+echo [Bu Zhou 4/7] Jian Cha Shu Ru Wen Jian...
+echo [¨BÆJ 4/7] ÀË¬d¿é¤JÀÉ®×...
 
 if not exist "drug_list.csv" (
-    echo âœ— drug_list.csv æœªæ‰¾åˆ°
+    echo [ERROR] drug_list.csv Wei Zhao Dao
+    echo [ERROR] drug_list.csv ¥¼§ä¨ì
     pause
     exit /b 1
 )
-echo âœ“ drug_list.csv å·²æ‰¾åˆ°
+echo [OK] drug_list.csv Yi Zhao Dao
+echo [OK] drug_list.csv ¤w§ä¨ì
 
 if not exist "drug_price_screenshot_selenium.py" (
-    echo âœ— drug_price_screenshot_selenium.py æœªæ‰¾åˆ°
+    echo [ERROR] drug_price_screenshot_selenium.py Wei Zhao Dao
+    echo [ERROR] drug_price_screenshot_selenium.py ¥¼§ä¨ì
     pause
     exit /b 1
 )
-echo âœ“ drug_price_screenshot_selenium.py å·²æ‰¾åˆ°
+echo [OK] drug_price_screenshot_selenium.py Yi Zhao Dao
+echo [OK] drug_price_screenshot_selenium.py ¤w§ä¨ì
 
-REM è¨ˆç®—è—¥å“æ•¸é‡
+REM Ji Suan Yao Pin Shu Liang
 for /f %%A in ('find /c /v "" ^< drug_list.csv') do set DRUG_COUNT=%%A
-echo âœ“ å…± !DRUG_COUNT! å€‹è—¥å“
+echo [OK] Gong !DRUG_COUNT! Ge Yao Pin
+echo [OK] ¦@ !DRUG_COUNT! ­ÓÃÄ«~
 
-REM åŸ·è¡Œä¸»ç¨‹å¼
+REM Zhi Xing Zhu Cheng Xu
 echo.
-echo [æ­¥é©Ÿ 5/7] é–‹å§‹åŸ·è¡Œæˆªåœ–ç¨‹å¼...
+echo [Bu Zhou 5/7] Kai Shi Zhi Xing Jie Tu Cheng Xu...
+echo [¨BÆJ 5/7] ¶}©l°õ¦æºI¹Ïµ{¦¡...
 echo ============================================================
 echo.
-echo â± é è¨ˆæ™‚é–“: 30-60 åˆ†é˜ (!DRUG_COUNT! å€‹è—¥å“ Ã— 8 åœ‹å®¶)
-echo ğŸ’¾ è¼¸å‡ºç›®éŒ„: drug_price_screenshots\
+echo Yu Ji Shi Jian: 30-60 Fen Zhong (!DRUG_COUNT! Ge Yao Pin * 8 Guo Jia)
+echo ¹w­p®É¶¡: 30-60 ¤ÀÄÁ (!DRUG_COUNT! ­ÓÃÄ«~ ¡Ñ 8 °ê®a)
+echo Shu Chu Mu Lu: drug_price_screenshots\
+echo ¿é¥X¥Ø¿ı: drug_price_screenshots\
 echo.
 echo ============================================================
 echo.
@@ -101,15 +125,18 @@ echo.
 if %errorlevel% equ 0 (
     echo.
     echo ============================================================
-    echo âœ“âœ“âœ“ åŸ·è¡Œå®Œæˆ! âœ“âœ“âœ“
+    echo [SUCCESS] Zhi Xing Wan Cheng!
+    echo [SUCCESS] °õ¦æ§¹¦¨!
     echo ============================================================
     echo.
-    echo æˆªåœ–å­˜æ”¾åœ¨: drug_price_screenshots\
+    echo Jie Tu Cun Fang Zai: drug_price_screenshots\
+    echo ºI¹Ï¦s©ñ¦b: drug_price_screenshots\
     echo.
 ) else (
     echo.
     echo ============================================================
-    echo âœ— åŸ·è¡Œéç¨‹ä¸­å‡ºç¾éŒ¯èª¤
+    echo [ERROR] Zhi Xing Guo Cheng Zhong Chu Xian Cuo Wu
+    echo [ERROR] °õ¦æ¹Lµ{¤¤¥X²{¿ù»~
     echo ============================================================
     echo.
 )
