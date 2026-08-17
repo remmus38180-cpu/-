@@ -1,6 +1,6 @@
 @echo off
 REM ============================================================
-REM One-Click Setup - Yi Jian Wan Cheng (‰∏ÄÈçµÂÆåÊàê)
+REM One-Click Setup - Yi Jian Wan Cheng (§@¡‰ßπ¶®)
 REM Xia Zai + Jie Ya + Zhi Xing - All in One
 REM ============================================================
 
@@ -10,31 +10,31 @@ cls
 echo.
 echo ============================================================
 echo Yi Jian Wan Quan Zi Dong Hua An Zhuang
-echo ‰∏ÄÈçµÂÆåÂÖ®Ëá™ÂãïÂåñÂÆâË£ù
+echo §@¡‰ßπ•˛¶€∞ §∆¶w∏À
 echo ============================================================
 echo.
 echo Ci Jiao Ben Hui Zi Dong:
-echo Ê≠§ËÖ≥Êú¨ÊúÉËá™Âãï:
+echo ¶π∏}•ª∑|¶€∞ :
 echo   1. Xia Zai Python 3.12.0
 echo   2. Jie Ya Python
 echo   3. Zhi Xing Zi Dong Xia Zai Jiao Ben
 echo.
 
-REM Ê™¢Êü• PowerShell
+REM ¿À¨d PowerShell
 echo Jian Cha PowerShell...
 powershell -Command "Write-Host '[OK] PowerShell Available'" >nul 2>&1
 
 if !errorlevel! neq 0 (
     echo [ERROR] PowerShell Bu Ke Yong
-    echo [ERROR] PowerShell ‰∏çÂèØÁî®
+    echo [ERROR] PowerShell §£•i•Œ
     pause
     exit /b 1
 )
 
-REM Âü∑Ë°å PowerShell ËÖ≥Êú¨
+REM ∞ı¶Ê PowerShell ∏}•ª
 echo.
 echo Zhi Xing PowerShell Jiao Ben...
-echo Âü∑Ë°å PowerShell ËÖ≥Êú¨...
+echo ∞ı¶Ê PowerShell ∏}•ª...
 echo.
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0one_click_setup.ps1" -WorkDir "%CD%"
@@ -42,11 +42,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0one_click_setup.ps1" -
 if !errorlevel! equ 0 (
     echo.
     echo [SUCCESS] Wan Cheng
-    echo [SUCCESS] ÂÆåÊàê
+    echo [SUCCESS] ßπ¶®
 ) else (
     echo.
     echo [ERROR] Shi Bai
-    echo [ERROR] Â§±Êïó
+    echo [ERROR] •¢±—
 )
 
 pause
