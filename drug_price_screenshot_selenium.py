@@ -97,9 +97,12 @@ logger = logging.getLogger(__name__)
 # Selenium 工具函式
 # ================================================================================
 
-def create_driver():
+def create_driver(chrome_path=None):
     """
     建立 Chrome 無頭瀏覽器實例。
+
+    Args:
+        chrome_path: Chrome 可執行檔路徑（可選）
     """
     options = Options()
     options.add_argument("--headless")
@@ -118,22 +121,33 @@ def create_driver():
         options.add_argument(f"--ignore-certificate-errors")
         options.add_argument("--ignore-urlunsafe-zones")
 
-    # 使用系統預先安裝的 Chrome
-    try:
-        if os.path.exists("/opt/pw-browsers/chromium"):
-            options.binary_location = "/opt/pw-browsers/chromium"
-            logger.info(f"使用 /opt/pw-browsers/chromium，代理: {https_proxy}")
-    except:
-        pass
+    # 設定 Chrome 二進制路徑（優先級：命令行參數 > 系統預設 > 自動檢測）
+    if chrome_path and os.path.exists(chrome_path):
+        options.binary_location = chrome_path
+        logger.info(f"使用指定的 Chrome: {chrome_path}")
+    else:
+        # 使用系統預先安裝的 Chrome
+        try:
+            if os.path.exists("/opt/pw-browsers/chromium"):
+                options.binary_location = "/opt/pw-browsers/chromium"
+                logger.info(f"使用 /opt/pw-browsers/chromium，代理: {https_proxy}")
+        except:
+            pass
 
     try:
         driver = webdriver.Chrome(
             service=None,
             options=options
         )
-    except:
-        logger.warning("使用系統預設 Chrome")
-        driver = webdriver.Chrome(options=options)
+    except Exception as e:
+        logger.warning(f"使用指定 Chrome 失敗 ({e})，嘗試系統預設 Chrome")
+        # 移除 binary_location 嘗試使用系統預設
+        options.binary_location = None
+        try:
+            driver = webdriver.Chrome(options=options)
+        except Exception as e2:
+            logger.error(f"無法建立 Chrome 驅動: {e2}")
+            raise
 
     return driver
 
@@ -169,14 +183,15 @@ def sanitize_filename(name):
 class CountrySearcher:
     """各國查詢的基礎類別。子類實作特定國家邏輯。"""
 
-    def __init__(self, country_code, config):
+    def __init__(self, country_code, config, chrome_path=None):
         self.country_code = country_code
         self.config = config
         self.driver = None
+        self.chrome_path = chrome_path
 
     def setup_driver(self):
         """初始化 driver 並登入。"""
-        self.driver = create_driver()
+        self.driver = create_driver(self.chrome_path)
         if self.config.get("login_required"):
             self.login()
 
@@ -330,22 +345,27 @@ class GenericSearcher(CountrySearcher):
 # 工廠函式
 # ================================================================================
 
-def create_searcher(country_code):
-    """根據國家代碼建立對應的 Searcher 實例。"""
+def create_searcher(country_code, chrome_path=None):
+    """根據國家代碼建立對應的 Searcher 實例。
+
+    Args:
+        country_code: 國家代碼
+        chrome_path: Chrome 可執行檔路徑（可選）
+    """
     if country_code not in COUNTRIES:
         raise ValueError(f"不支援的國家代碼: {country_code}")
 
     config = COUNTRIES[country_code]
 
     if country_code == "UK":
-        return UKSearcher(country_code, config)
+        return UKSearcher(country_code, config, chrome_path)
     elif country_code == "BE":
-        return BESearcher(country_code, config)
+        return BESearcher(country_code, config, chrome_path)
     elif country_code == "FR":
-        return FRSearcher(country_code, config)
+        return FRSearcher(country_code, config, chrome_path)
     else:
         # 預設：簡單 Generic 搜尋器
-        return GenericSearcher(country_code, config)
+        return GenericSearcher(country_code, config, chrome_path)
 
 
 # ================================================================================
@@ -365,6 +385,10 @@ def main():
     parser.add_argument(
         "--output-dir", type=str, default=SCREENSHOT_DIR,
         help="截圖輸出目錄"
+    )
+    parser.add_argument(
+        "--chrome-path", type=str, default=None,
+        help="Chrome 可執行檔路徑（例：C:\\chrome_portable\\chrome-win64\\chrome.exe）"
     )
     args = parser.parse_args()
 
@@ -409,7 +433,7 @@ def main():
         logger.info(f"\n=== 開始查詢 {COUNTRIES[country_code]['name']} ({country_code}) ===")
 
         try:
-            searcher = create_searcher(country_code)
+            searcher = create_searcher(country_code, args.chrome_path)
             searcher.setup_driver()
 
             country_screenshots = 0

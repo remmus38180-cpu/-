@@ -318,7 +318,7 @@ def check_input_files():
         print(f"  ✗ 無法讀取 drug_list.csv: {e}")
         return False, 0
 
-def run_main_program(python_path=None, drug_count=10):
+def run_main_program(python_path=None, chrome_path=None, drug_count=10):
     """執行主程式"""
     print_step(7, "執行截圖程式")
 
@@ -332,6 +332,12 @@ def run_main_program(python_path=None, drug_count=10):
     print("=" * 70 + "\n")
 
     cmd = f'"{python_exe}" drug_price_screenshot_selenium.py --input drug_list.csv'
+
+    # 如果有 Chrome 路徑，添加到命令行
+    if chrome_path and os.path.exists(chrome_path):
+        cmd += f' --chrome-path "{chrome_path}"'
+        print(f"  使用 Chrome: {chrome_path}\n")
+
     result = subprocess.run(cmd, shell=True)
 
     return result.returncode == 0
@@ -399,7 +405,7 @@ def main():
         return 1
 
     # Step 7: 執行主程式
-    if run_main_program(python_dir, drug_count):
+    if run_main_program(python_dir, chrome_exe_path, drug_count):
         print("\n" + "=" * 70)
         print("  ✓✓✓ 執行完成! ✓✓✓")
         print("=" * 70)
