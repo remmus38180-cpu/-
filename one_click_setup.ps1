@@ -112,7 +112,14 @@ if (Test-Path $pythonExe) {
         $zip7 = if (Test-Path $sevenZipPath) { $sevenZipPath } else { $sevenZipPath32 }
 
         Write-Host "  Using 7-Zip to extract files..."
-        & $zip7 x $pythonZip -o"$WorkDir" -y | Out-Null
+
+        # Create target directory if not exists
+        if (-not (Test-Path $pythonDir)) {
+            New-Item -ItemType Directory -Path $pythonDir | Out-Null
+        }
+
+        # Extract to python_portable directory
+        & $zip7 x $pythonZip -o"$pythonDir" -y | Out-Null
 
         if (Test-Path $pythonExe) {
             Write-ColorOutput "[SUCCESS] Extraction complete!" Success
@@ -120,6 +127,16 @@ if (Test-Path $pythonExe) {
             Write-Host ""
         } else {
             Write-ColorOutput "[FAILED] Extraction failed, python.exe not found" Error
+            Write-Host "        Checked: $pythonExe"
+
+            # Check if directory exists and show contents
+            if (Test-Path $pythonDir) {
+                $contents = Get-ChildItem -Path $pythonDir -ErrorAction SilentlyContinue | Select-Object -First 5
+                Write-Host "        Directory contents:"
+                foreach ($item in $contents) {
+                    Write-Host "          - $($item.Name)"
+                }
+            }
             exit 1
         }
     } else {
