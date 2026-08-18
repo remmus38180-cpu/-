@@ -1,0 +1,24 @@
+# 測試資料與報告（執行時自動生成）
+drug_price_data/
+drug_query_report.txt
+
+# Python快取
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系統檔案
+.DS_Store
+Thumbs.db
