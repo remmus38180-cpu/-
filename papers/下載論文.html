@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAS Hash Object 論文 - 直接下載</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .papers-grid {
+            display: grid;
+            gap: 15px;
+        }
+        .paper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .paper:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .paper-info h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .paper-info p {
+            color: #666;
+            font-size: 13px;
+            margin: 3px 0;
+        }
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+            margin-left: 15px;
+            font-size: 14px;
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .batch-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+        .batch-title:first-of-type {
+            margin-top: 0;
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 14px;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .file-size {
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            margin-right: 10px;
+        }
+        @media (max-width: 600px) {
+            .paper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .download-btn {
+                margin-left: 0;
+                margin-top: 12px;
+                width: 100%;
+                text-align: center;
+            }
+            .file-size {
+                display: block;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📚 SAS Hash Object 論文</h1>
+        <p>9 篇精選論文 - 點擊即可下載</p>
+    </div>
+
+    <div class="papers-grid">
+        <!-- 第一批 -->
+        <div class="batch-title">🚀 Hash Object 核心</div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>01. SAS Hash Object in Action</h3>
+                <p>作者：PM Dorfman, K Vyverman • 2009</p>
+                <span class="file-size">5 KB</span>
+            </div>
+            <a href="https://www.academia.edu/download/48795576/HOW009.Dorfman.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>02. Data Aggregation Using the SAS Hash Object</h3>
+                <p>作者：PM Dorfman, D Henderson • 2015</p>
+                <span class="file-size">293 KB</span>
+            </div>
+            <a href="https://pages.mini.pw.edu.pl/~jablonskib/SASpublic/WUSS2024_125/(Dorfman%20and%20Henderson%202015)%20Paul%20M.%20Dorfman,%20Don%20Henderson,%20Data%20Aggregation%20Using%20the%20SAS%20Hash%20Object.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>03. Beyond Table Lookup: The Versatile SAS Hash Object</h3>
+                <p>作者：PM Dorfman, D Henderson • 2017</p>
+                <span class="file-size">351 KB</span>
+            </div>
+            <a href="https://www.beoptimized.be/pdf/Paper_821-2017.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>04. Hash Crash and Beyond</h3>
+                <p>作者：PM Dorfman, LS Shajenko • 2008</p>
+                <span class="file-size">5 KB</span>
+            </div>
+            <a href="https://www.academia.edu/download/48795585/037-2008.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>05. Hash Objects as Programming Tools</h3>
+                <p>作者：P Dorfman, K Vyverman • 2005</p>
+                <span class="file-size">5 KB</span>
+            </div>
+            <a href="https://www.academia.edu/download/48874866/236-30.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <!-- 第二批 -->
+        <div class="batch-title">📈 DS2 & FCMP 進階</div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>06. User-Defined Multithreading with DS2</h3>
+                <p>作者：TM Hughes • Parallel Processing</p>
+                <span class="file-size">735 KB</span>
+            </div>
+            <a href="https://pharmasug.org/proceedings/2018/AA/PharmaSUG-2018-AA07.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>07. Five Reasons To Swipe Right on PROC FCMP</h3>
+                <p>作者：TM Hughes • 2024</p>
+                <span class="file-size">245 KB</span>
+            </div>
+            <a href="https://sesug.org/proceedings/sesug_2024_SAAG/PresentationSummaries/Papers/141_Final_PDF.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>08. User-Written DATA Step Functions</h3>
+                <p>作者：J Secosky • 2007</p>
+                <span class="file-size">52 KB</span>
+            </div>
+            <a href="https://pages.mini.pw.edu.pl/~jablonskib/SASpublic/WUSS2024_125/(Secosky%202007)%20Jason%20Secosky,%20User-Written%20DATA%20Step%20Functions.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+
+        <!-- 第三批 -->
+        <div class="batch-title">💻 SQL & 最佳化</div>
+
+        <div class="paper">
+            <div class="paper-info">
+                <h3>09. The SQL Optimizer Project</h3>
+                <p>作者：R Lavery • 2005</p>
+                <span class="file-size">276 KB</span>
+            </div>
+            <a href="https://www.beoptimized.be/pdf/SUGI30_101.pdf" class="download-btn" download>📥 下載</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>💡 提示：點擊「📥 下載」按鈕直接下載 PDF</p>
+        <p>下載後上傳到你的 <a href="https://drive.google.com/drive/folders/1Xd5UZk0rEJ0hhqmGzt88DP7hNWbz3Fuf" target="_blank">Google Drive 論文資料夾</a></p>
+    </div>
+</div>
+
+</body>
+</html>
