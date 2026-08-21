@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAS Hash Object 論文完整表單</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 30px 0;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .paper-num {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 50px;
+        }
+        .paper-title {
+            font-weight: 500;
+            color: #333;
+        }
+        .paper-author {
+            font-size: 13px;
+            color: #666;
+        }
+        .btn-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-download {
+            background: #667eea;
+            color: white;
+        }
+        .btn-download:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        .btn-gdrive {
+            background: #4285f4;
+            color: white;
+        }
+        .btn-gdrive:hover {
+            background: #357ae8;
+            transform: scale(1.05);
+        }
+        .status-valid {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .status-gdrive {
+            color: #007bff;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: #e7f3ff;
+            border-radius: 4px;
+        }
+        .batch-header {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 10px;
+            }
+            .btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📚 SAS Hash Object 論文完整表單</h1>
+        <p>11 篇精選論文 - 點擊即可開啟或下載</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%">序號</th>
+                <th style="width: 42%">論文標題 & 作者</th>
+                <th style="width: 15%">年份</th>
+                <th style="width: 35%">連結</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 第一批 -->
+            <tr class="batch-header">
+                <td colspan="4">🚀 Hash Object 核心 (5 篇)</td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">1</td>
+                <td>
+                    <div class="paper-title">SAS Hash Object in Action</div>
+                    <div class="paper-author">PM Dorfman, K Vyverman</div>
+                </td>
+                <td>2009</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://www.academia.edu/download/48795576/HOW009.Dorfman.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">2</td>
+                <td>
+                    <div class="paper-title">Data Aggregation Using the SAS Hash Object</div>
+                    <div class="paper-author">PM Dorfman, D Henderson</div>
+                </td>
+                <td>2015</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://pages.mini.pw.edu.pl/~jablonskib/SASpublic/WUSS2024_125/(Dorfman%20and%20Henderson%202015)%20Paul%20M.%20Dorfman,%20Don%20Henderson,%20Data%20Aggregation%20Using%20the%20SAS%20Hash%20Object.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">3</td>
+                <td>
+                    <div class="paper-title">Beyond Table Lookup: The Versatile SAS Hash Object</div>
+                    <div class="paper-author">PM Dorfman, D Henderson</div>
+                </td>
+                <td>2017</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://www.beoptimized.be/pdf/Paper_821-2017.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">4</td>
+                <td>
+                    <div class="paper-title">Hash Crash and Beyond</div>
+                    <div class="paper-author">PM Dorfman, LS Shajenko</div>
+                </td>
+                <td>2008</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://www.academia.edu/download/48795585/037-2008.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">5</td>
+                <td>
+                    <div class="paper-title">Hash Objects as Programming Tools</div>
+                    <div class="paper-author">P Dorfman, K Vyverman</div>
+                </td>
+                <td>2005</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://www.academia.edu/download/48874866/236-30.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- 第二批 -->
+            <tr class="batch-header">
+                <td colspan="4">📈 DS2 & FCMP 進階 (5 篇)</td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">6</td>
+                <td>
+                    <div class="paper-title">User-Defined Multithreading with DS2</div>
+                    <div class="paper-author">TM Hughes • Parallel Processing</div>
+                </td>
+                <td>2018</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://pharmasug.org/proceedings/2018/AA/PharmaSUG-2018-AA07.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">7</td>
+                <td>
+                    <div class="paper-title">Using PROC FCMP to the Fullest: Getting Started and Doing More</div>
+                    <div class="paper-author">Arthur L. Carpenter</div>
+                </td>
+                <td>2013</td>
+                <td>
+                    <div class="btn-container">
+                        <span class="status-gdrive">✓ 在 Google Drive</span>
+                        <a href="https://drive.google.com/file/d/1W3RnZMP5jd8fMVUUrWNxV4hmfDBqtnQL/view?usp=drivesdk" class="btn btn-gdrive" target="_blank">📂 開啟</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">8</td>
+                <td>
+                    <div class="paper-title">Five Reasons To Swipe Right on PROC FCMP</div>
+                    <div class="paper-author">TM Hughes</div>
+                </td>
+                <td>2024</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://sesug.org/proceedings/sesug_2024_SAAG/PresentationSummaries/Papers/141_Final_PDF.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">9</td>
+                <td>
+                    <div class="paper-title">User-Written DATA Step Functions</div>
+                    <div class="paper-author">J Secosky</div>
+                </td>
+                <td>2007</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://pages.mini.pw.edu.pl/~jablonskib/SASpublic/WUSS2024_125/(Secosky%202007)%20Jason%20Secosky,%20User-Written%20DATA%20Step%20Functions.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">10</td>
+                <td>
+                    <div class="paper-title">The SQL Optimizer Project: _Method and _Tree in SAS 9.1</div>
+                    <div class="paper-author">R Lavery</div>
+                </td>
+                <td>2005</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://www.beoptimized.be/pdf/SUGI30_101.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- 補充 -->
+            <tr class="batch-header">
+                <td colspan="4">💡 補充論文 (1 篇)</td>
+            </tr>
+
+            <tr>
+                <td class="paper-num">11</td>
+                <td>
+                    <div class="paper-title">Black Belt Hashigana</div>
+                    <div class="paper-author">P Dorfman, K Vyverman, V Dorfman</div>
+                </td>
+                <td>2010</td>
+                <td>
+                    <div class="btn-container">
+                        <a href="https://www.lexjansen.com/nesug/nesug10/bb/bb03.pdf" class="btn btn-download" target="_blank">📥 下載</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>💡 提示</p>
+        <p>📥 下載 = 直接下載 PDF 到裝置</p>
+        <p>📂 開啟 = 在 Google Drive 中開啟</p>
+        <p style="margin-top: 15px;">
+            📁 <a href="https://drive.google.com/drive/folders/1Xd5UZk0rEJ0hhqmGzt88DP7hNWbz3Fuf" target="_blank">Google Drive 論文資料夾</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
