@@ -9,6 +9,7 @@
 
     CIS_bdpm.txt        藥品主檔（名稱、劑型、給藥途徑、藥證持有商）
     CIS_CIP_bdpm.txt    包裝及藥價檔（CIP7／CIP13、包裝說明、價格）
+    CIS_COMPO_bdpm.txt  成分組成檔（**成分名與含量**）
     CIS_GENER_bdpm.txt  學名藥群組對照檔（**含原廠／學名藥註記**）
 
 兩個注意事項
@@ -36,6 +37,7 @@ BASE_URL = "https://base-donnees-publique.medicaments.gouv.fr/download/file/"
 FILES = [
     ("CIS_bdpm.txt", "藥品主檔"),
     ("CIS_CIP_bdpm.txt", "包裝及藥價檔"),
+    ("CIS_COMPO_bdpm.txt", "成分組成檔"),
     ("CIS_GENER_bdpm.txt", "學名藥群組對照檔"),
 ]
 
@@ -50,6 +52,15 @@ CIP_CIS, CIP_CIP7, CIP_LABEL, CIP_STATUS = 0, 1, 2, 3
 CIP_MARKETING, CIP_DECL_DATE, CIP_CIP13 = 4, 5, 6
 CIP_COLLECTIVITY, CIP_REIMBURSE_RATE = 7, 8
 CIP_PRICE, CIP_PRICE_WITH_FEE, CIP_FEE, CIP_INDICATIONS = 9, 10, 11, 12
+
+# --- CIS_COMPO_bdpm.txt 欄位 ---
+COMPO_CIS, COMPO_ELEMENT, COMPO_SUBSTANCE_CODE = 0, 1, 2
+COMPO_SUBSTANCE, COMPO_DOSAGE, COMPO_REFERENCE = 3, 4, 5
+COMPO_NATURE, COMPO_LINK = 6, 7
+
+# 成分組成檔的「成分性質」：SA 為有效成分，ST 為治療活性部分。
+# 只取 SA，否則同一成分會因為鹽類與活性部分各列一次而重複。
+ACTIVE_SUBSTANCE = "SA"
 
 # --- CIS_GENER_bdpm.txt 欄位 ---
 GEN_GROUP_ID, GEN_GROUP_LABEL, GEN_CIS, GEN_TYPE, GEN_SORT = 0, 1, 2, 3, 4
@@ -103,12 +114,27 @@ class FranceCIP(Source):
 
         master, master_encoding = self._load(by_name["CIS_bdpm.txt"])
         packs, pack_encoding = self._load(by_name["CIS_CIP_bdpm.txt"])
+        compo, _ = self._load(by_name["CIS_COMPO_bdpm.txt"])
         groups, _ = self._load(by_name["CIS_GENER_bdpm.txt"])
         ctx.log(f"　編碼：藥品主檔 {master_encoding}／藥價檔 {pack_encoding}")
 
         # Code CIS -> 藥品主檔那一列
         drugs = {row[CIS_CODE]: row for row in master
                  if len(row) > CIS_HOLDER and row[CIS_CODE]}
+
+        # Code CIS -> (成分名, 含量原文)。複方藥會有多個成分，以「＋」相連。
+        composition = {}
+        for row in compo:
+            if len(row) <= COMPO_NATURE or not row[COMPO_CIS]:
+                continue
+            if row[COMPO_NATURE].strip().upper() != ACTIVE_SUBSTANCE:
+                continue
+            entry = composition.setdefault(row[COMPO_CIS], {"names": [], "doses": []})
+            name = row[COMPO_SUBSTANCE].strip()
+            dose = row[COMPO_DOSAGE].strip() if len(row) > COMPO_DOSAGE else ""
+            if name and name not in entry["names"]:
+                entry["names"].append(name)
+                entry["doses"].append(dose)
 
         # Code CIS -> (原廠註記, 群組名稱)
         originator = {}
@@ -133,7 +159,14 @@ class FranceCIP(Source):
 
             label = row[CIP_LABEL]
             name = drug[CIS_NAME] if drug else ""
-            strength_value, strength_unit = parse_strength(name)
+            parts = composition.get(cis, {"names": [], "doses": []})
+            generic_name = "＋".join(parts["names"])
+            dose_text = "＋".join(d for d in parts["doses"] if d)
+
+            # 含量優先用成分組成檔的值，那裡的寫法比商品名裡的乾淨
+            strength_value, strength_unit = parse_strength(dose_text)
+            if strength_value is None:
+                strength_value, strength_unit = parse_strength(name)
             pack_value, pack_unit, _ = parse_pack_size(label)
             flag, group_label = originator.get(cis, ("", ""))
 
@@ -146,6 +179,7 @@ class FranceCIP(Source):
                 record.native_code_type = "CIP13"
                 record.native_code = row[CIP_CIP13] if len(row) > CIP_CIP13 else ""
                 record.brand_name = name
+                record.generic_name = generic_name
                 record.form = drug[CIS_FORM] if drug else ""
                 record.strength_value = ("" if strength_value is None
                                          else f"{strength_value:g}")
@@ -167,6 +201,7 @@ class FranceCIP(Source):
                     f"調劑費：{row[CIP_FEE]}"
                     if len(row) > CIP_FEE and row[CIP_FEE] else "",
                     f"學名藥群組：{group_label}" if group_label else "",
+                    f"含量原文：{dose_text}" if dose_text else "",
                 ) if part)
                 record.compute_unit_price()
                 records.append(record)

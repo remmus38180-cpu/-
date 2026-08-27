@@ -27,6 +27,7 @@ from datetime import date
 
 from ..core import xlsx
 from ..core.schema import Confidence, PriceCategory
+from ..core.units import parse_strength
 from ..core.textfile import decode
 from .base import Downloaded, Source
 
@@ -174,6 +175,7 @@ class JapanMHLW(Source):
                 strength, count, unit = parse_spec(cell(COL_SPEC))
                 if count is None:
                     unparsed_specs += 1
+                strength_value, strength_unit = parse_strength(strength)
 
                 originator = ""
                 if cell(COL_ORIGINATOR_MARK):
@@ -187,7 +189,9 @@ class JapanMHLW(Source):
                 record.brand_name = cell(COL_BRAND)
                 record.generic_name = cell(COL_GENERIC)
                 record.form = cell(COL_CATEGORY)
-                record.strength_value = strength
+                record.strength_value = ("" if strength_value is None
+                                         else f"{strength_value:g}")
+                record.strength_unit = strength_unit
                 record.pack_size_value = "" if count is None else f"{count:g}"
                 record.pack_size_unit = unit
                 record.price = price

@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>十國藥價工具</title>
+<style>
+:root{
+  --paper:#FAF8F4; --surface:#fff; --surface-2:#F2EEE7;
+  --ink:#22242A; --ink-soft:#4A4C53; --muted:#6C6760;
+  --rule:#E2DBD1; --rule-strong:#C9BFB1;
+  --accent:#8E2C34; --accent-soft:#F5E9E8;
+  --ok:#3F6B52; --ok-soft:#E7F0EA;
+  --warn:#8A6114; --warn-soft:#F6EEDC;
+  --grey:#565B64; --grey-soft:#EBEAE7;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#15161A; --surface:#1C1E23; --surface-2:#23262C;
+    --ink:#E9E5DD; --ink-soft:#C3BEB4; --muted:#968F84;
+    --rule:#32353C; --rule-strong:#474B54;
+    --accent:#DB868B; --accent-soft:#2E2226;
+    --ok:#83B99B; --ok-soft:#1E2A24;
+    --warn:#D4A85C; --warn-soft:#2B2519;
+    --grey:#9AA1AC; --grey-soft:#25282E;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.75}
+header{background:var(--surface);border-bottom:1px solid var(--rule);
+  padding:16px 24px;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:19px;margin:0;font-weight:700}
+.sub{color:var(--muted);font-size:13px}
+nav{display:flex;gap:4px;margin-top:14px;flex-wrap:wrap}
+nav button{font:inherit;font-size:14px;padding:7px 15px;border:1px solid transparent;
+  background:none;color:var(--ink-soft);cursor:pointer;border-radius:3px}
+nav button:hover{background:var(--surface-2)}
+nav button[aria-selected=true]{background:var(--accent);color:#fff;font-weight:500}
+main{max-width:1240px;margin:0 auto;padding:28px 24px 80px}
+section[hidden]{display:none}
+h2{font-size:17px;margin:0 0 6px}
+.lede{color:var(--muted);font-size:14px;margin:0 0 20px;max-width:70ch}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+  padding:18px 20px;margin-bottom:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+button.go{font:inherit;font-weight:500;padding:9px 20px;border:none;border-radius:3px;
+  background:var(--accent);color:#fff;cursor:pointer}
+button.go:disabled{opacity:.45;cursor:not-allowed}
+button.plain{font:inherit;padding:7px 14px;border:1px solid var(--rule-strong);
+  border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer}
+textarea,input[type=file],select{font:inherit;width:100%;padding:10px;
+  border:1px solid var(--rule-strong);border-radius:3px;background:var(--surface);
+  color:var(--ink)}
+textarea{min-height:170px;font-family:var(--mono);font-size:13px;resize:vertical}
+label.check{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;
+  border:1px solid var(--rule);border-radius:3px;background:var(--surface);cursor:pointer}
+label.check:hover{border-color:var(--rule-strong)}
+label.check input{margin-top:5px}
+.pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:3px;
+  font-family:var(--mono)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.grey{background:var(--grey-soft);color:var(--grey)}
+.pill.accent{background:var(--accent-soft);color:var(--accent)}
+.msg{padding:12px 15px;border-radius:3px;margin-bottom:10px;font-size:14px}
+.msg.info{background:var(--surface-2);color:var(--ink-soft)}
+.msg.warn{background:var(--warn-soft);color:var(--warn)}
+.msg.err{background:var(--accent-soft);color:var(--accent)}
+.banner{border-left:3px solid var(--accent);background:var(--surface);
+  border:1px solid var(--rule);border-left:3px solid var(--accent);
+  padding:14px 18px;border-radius:3px;margin-bottom:18px}
+.banner b{color:var(--accent)}
+pre.log{background:var(--surface-2);border:1px solid var(--rule);border-radius:3px;
+  padding:14px;font-family:var(--mono);font-size:12.5px;line-height:1.7;
+  max-height:380px;overflow:auto;white-space:pre-wrap;margin:0}
+details{border:1px solid var(--rule);border-radius:3px;background:var(--surface);
+  padding:0;margin-bottom:18px}
+details>summary{cursor:pointer;padding:13px 18px;font-weight:500;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸ ";color:var(--accent)}
+details[open]>summary::before{content:"▾ "}
+details>.body{padding:0 18px 18px;border-top:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:12px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--rule);
+  vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:12.5px;white-space:nowrap}
+td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+.cand{border:1px solid var(--rule);border-radius:4px;background:var(--surface);
+  padding:14px 16px;margin-bottom:10px}
+.cand.top{border-color:var(--accent);border-left-width:3px}
+.cand-head{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.rank{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600}
+.cand-name{font-weight:600;font-size:15px}
+.cand-meta{color:var(--muted);font-size:13px;margin-bottom:8px}
+.scores{display:flex;gap:20px;flex-wrap:wrap;margin:8px 0}
+.score{min-width:190px;flex:1}
+.score-top{display:flex;justify-content:space-between;font-size:12.5px;
+  color:var(--muted);margin-bottom:3px}
+.score-top b{color:var(--ink);font-family:var(--mono)}
+.bar{height:5px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.second i{background:var(--grey)}
+.basis{font-size:13px;color:var(--ink-soft);background:var(--surface-2);
+  padding:9px 12px;border-radius:3px;margin-top:8px}
+.basis b{color:var(--accent);font-weight:600}
+.caution{font-size:13px;color:var(--warn);background:var(--warn-soft);
+  padding:9px 12px;border-radius:3px;margin-top:8px}
+.prices{margin-top:10px;overflow-x:auto}
+.query-block{margin-bottom:28px}
+.query-title{font-size:16px;font-weight:600;margin:0 0 4px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule-strong)}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--rule-strong);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;
+  vertical-align:-1px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation:none}}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>十國藥價工具</h1>
+    <span class="sub" id="hdr-status">載入中…</span>
+  </div>
+  <nav id="tabs" role="tablist">
+    <button role="tab" data-tab="overview" aria-selected="true">總覽</button>
+    <button role="tab" data-tab="list" aria-selected="false">藥品清單</button>
+    <button role="tab" data-tab="download" aria-selected="false">下載藥價</button>
+    <button role="tab" data-tab="review" aria-selected="false">複核候選</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ 總覽 ============ -->
+<section id="tab-overview">
+  <h2>各國資料狀態</h2>
+  <p class="lede">顯示每個國家的資料是否已下載、什麼時候下載的、有幾筆。
+     還沒下載的國家，請到「下載藥價」分頁執行。</p>
+  <div class="grid" id="country-cards"></div>
+
+  <h2 style="margin-top:32px">本工具不涵蓋的國家</h2>
+  <p class="lede">以下國家目前無法自動下載，需要人工辦理。
+     列在這裡是為了讓您知道不是程式漏抓。</p>
+  <div class="card" id="not-yet"></div>
+</section>
+
+<!-- ============ 藥品清單 ============ -->
+<section id="tab-list" hidden>
+  <h2>匯入要查的藥品</h2>
+  <p class="lede">可以直接貼上，或選擇檔案。每行一個商品名就可以，
+     但<b>強烈建議一併提供成分名</b>——各國商品名差異很大，
+     只靠商品名比對會漏掉很多。</p>
+
+  <div class="card">
+    <p style="margin:0 0 10px;font-size:14px"><b>格式一：每行一個商品名</b></p>
+    <pre class="log" style="max-height:none">Eliquis
+Exforge
+Zelboraf</pre>
+    <p style="margin:16px 0 10px;font-size:14px"><b>格式二：有表頭的 CSV（建議）</b></p>
+    <pre class="log" style="max-height:none">商品名,成分名,ATC,含量,藥商
+Eliquis,apixaban,B01AF02,2.5 mg,Bristol-Myers Squibb
+Exforge,amlodipine+valsartan,C09DB01,5/80 mg,Novartis</pre>
+    <p style="margin:14px 0 0;font-size:13px;color:var(--muted)">
+      欄位名可用中文或英文，順序不拘。可用的欄位：商品名、成分名、ATC、含量、劑型、藥商。</p>
+  </div>
+
+  <div class="card">
+    <textarea id="list-text" placeholder="在這裡貼上藥品清單…"></textarea>
+    <div class="row">
+      <button class="go" id="btn-save-list">儲存清單</button>
+      <input type="file" id="list-file" accept=".csv,.txt" style="width:auto">
+    </div>
+  </div>
+  <div id="list-messages"></div>
+  <div id="list-preview"></div>
+</section>
+
+<!-- ============ 下載 ============ -->
+<section id="tab-download" hidden>
+  <h2>下載各國藥價</h2>
+  <p class="lede">勾選要下載的國家後執行。程式會直接連到各國官方網站取得檔案，
+     原始檔會原封不動保存在 raw 資料夾並計算雜湊值，作為日後的佐證。</p>
+
+  <div class="banner">
+    <b>澳洲需要比較久。</b>
+    澳洲官方 API 規定每 20 秒只能請求一次，且此上限由全世界的使用者共用，
+    因此澳洲一國約需 2 分鐘。這是官方規定，不是程式慢。
+  </div>
+
+  <div class="card">
+    <div class="grid" id="download-picks"></div>
+    <div class="row">
+      <button class="go" id="btn-download">開始下載</button>
+      <button class="plain" id="btn-all">全選</button>
+      <button class="plain" id="btn-none">全部取消</button>
+      <span id="dl-status" class="sub"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:15px;margin-bottom:10px">執行訊息</h2>
+    <pre class="log" id="job-log">（尚未執行）</pre>
+  </div>
+</section>
+
+<!-- ============ 複核 ============ -->
+<section id="tab-review" hidden>
+  <h2>複核候選並勾選</h2>
+
+  <div class="banner">
+    <b>排序不是決定。</b>
+    程式只是把最可能相符的擺前面，所有候選都會列出來。
+    哪一筆才是原廠藥、哪個規格可以拿來比較，仍然由您判斷。
+    每一筆下方的「排序依據」會寫明它為什麼排在這個位置。
+  </div>
+
+  <details id="rules-panel">
+    <summary>排序是怎麼決定的？（點開看完整規則）</summary>
+    <div class="body" id="rules-body">載入中…</div>
+  </details>
+
+  <div class="card">
+    <div class="row" style="margin-top:0">
+      <label style="font-size:14px">比對國家
+        <select id="review-country" style="width:auto;margin-left:8px"></select>
+      </label>
+      <label style="font-size:14px">每列最多顯示
+        <select id="review-limit" style="width:auto;margin-left:8px">
+          <option value="5">5 筆</option>
+          <option value="10" selected>10 筆</option>
+          <option value="20">20 筆</option>
+        </select>
+      </label>
+      <button class="go" id="btn-match">重新比對</button>
+      <button class="plain" id="btn-export">匯出比對結果 CSV</button>
+    </div>
+  </div>
+
+  <div id="review-results"></div>
+</section>
+
+</main>
+
+<script>
+"use strict";
+
+const $ = (id) => document.getElementById(id);
+const esc = (text) => String(text ?? "").replace(/[&<>"']/g,
+  (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+let state = null;
+
+/* ---------------- 分頁 ---------------- */
+function showTab(name) {
+  let found = false;
+  for (const tab of $("tabs").querySelectorAll("button")) {
+    const on = tab.dataset.tab === name;
+    if (on) found = true;
+    tab.setAttribute("aria-selected", on ? "true" : "false");
+    $("tab-" + tab.dataset.tab).hidden = !on;
+  }
+  if (!found) return showTab("overview");
+  if (name === "review") {
+    loadRules();
+    autoMatch();
+  }
+}
+
+$("tabs").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-tab]");
+  if (!button) return;
+  location.hash = button.dataset.tab;
+});
+
+window.addEventListener("hashchange", () => showTab(location.hash.slice(1)));
+
+/* ---------------- 共用 ---------------- */
+async function api(path, options) {
+  const response = await fetch(path, options);
+  const isJson = (response.headers.get("Content-Type") || "").includes("json");
+  const payload = isJson ? await response.json() : await response.text();
+  if (!response.ok) throw new Error((payload && payload["錯誤"]) || "請求失敗");
+  return payload;
+}
+
+function note(container, text, kind) {
+  container.insertAdjacentHTML("beforeend",
+    `<div class="msg ${kind || "info"}">${esc(text)}</div>`);
+}
+
+/* ---------------- 總覽 ---------------- */
+async function refreshState() {
+  state = await api("/api/state");
+
+  $("hdr-status").textContent =
+    `清單 ${state["清單筆數"]} 筆 ｜ 已下載 ` +
+    `${state["國家"].filter((c) => c["已下載"]).length}/${state["國家"].length} 國`;
+
+  $("country-cards").innerHTML = state["國家"].map((c) => `
+    <div class="card" style="margin:0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+        <b>${esc(c["國家"])}</b>
+        <span class="pill ${c["已下載"] ? "ok" : "grey"}">${c["已下載"] ? "已下載" : "未下載"}</span>
+      </div>
+      <div class="sub" style="margin-top:6px">${esc(c["來源機關"])}</div>
+      <div class="sub">幣別 ${esc(c["幣別"])} ｜ 欄位對照：${esc(c["欄位對照依據"])}</div>
+      ${c["已下載"] ? `<div class="sub" style="margin-top:6px">
+          ${Number(c["筆數"]).toLocaleString()} 筆 ｜ ${esc(c["檔案時間"])}</div>` : ""}
+    </div>`).join("");
+
+  $("not-yet").innerHTML = state["尚未接上"].map((n) =>
+    `<div style="padding:5px 0"><span class="pill grey">${esc(n["代碼"])}</span>
+     <span style="margin-left:8px">${esc(n["說明"])}</span></div>`).join("");
+
+  const picks = state["國家"].map((c) => `
+    <label class="check">
+      <input type="checkbox" value="${esc(c["代碼"])}" checked>
+      <span><b>${esc(c["國家"])}</b><br>
+      <span class="sub">${esc(c["來源機關"])}</span></span>
+    </label>`).join("");
+  $("download-picks").innerHTML = picks;
+
+  const options = ['<option value="">全部國家</option>'].concat(
+    state["國家"].map((c) =>
+      `<option value="${esc(c["代碼"])}">${esc(c["國家"])}</option>`));
+  $("review-country").innerHTML = options.join("");
+}
+
+/* ---------------- 藥品清單 ---------------- */
+async function saveList(data) {
+  const box = $("list-messages");
+  box.innerHTML = "";
+  try {
+    const result = await api("/api/druglist", { method: "POST", body: data });
+    for (const message of result["訊息"]) {
+      note(box, message, message.includes("建議") || message.includes("沒有讀到")
+        ? "warn" : "info");
+    }
+    renderListPreview(result["清單"]);
+    await refreshState();
+  } catch (error) {
+    note(box, error.message, "err");
+  }
+}
+
+function renderListPreview(rows) {
+  if (!rows || !rows.length) { $("list-preview").innerHTML = ""; return; }
+  $("list-preview").innerHTML = `
+    <div class="card"><h2 style="font-size:15px">讀入的清單（${rows.length} 筆）</h2>
+    <table><thead><tr><th>商品名</th><th>成分名</th><th>ATC</th>
+      <th>含量</th><th>劑型</th><th>藥商</th></tr></thead><tbody>
+    ${rows.map((r) => `<tr>
+      <td>${esc(r.brand_name)}</td><td>${esc(r.generic_name)}</td>
+      <td>${esc(r.atc_code)}</td><td>${esc(r.strength)}</td>
+      <td>${esc(r.form)}</td><td>${esc(r.marketer)}</td></tr>`).join("")}
+    </tbody></table></div>`;
+}
+
+$("btn-save-list").addEventListener("click", () => {
+  const text = $("list-text").value.trim();
+  if (!text) { note($("list-messages"), "請先貼上內容。", "warn"); return; }
+  saveList(text);
+});
+
+$("list-file").addEventListener("change", async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const buffer = await file.arrayBuffer();
+  $("list-text").value = new TextDecoder("utf-8").decode(buffer);
+  saveList(buffer);
+});
+
+/* ---------------- 下載 ---------------- */
+function selectedCountries(container) {
+  return Array.from(container.querySelectorAll("input:checked")).map((i) => i.value);
+}
+$("btn-all").addEventListener("click", () =>
+  $("download-picks").querySelectorAll("input").forEach((i) => { i.checked = true; }));
+$("btn-none").addEventListener("click", () =>
+  $("download-picks").querySelectorAll("input").forEach((i) => { i.checked = false; }));
+
+let polling = null;
+$("btn-download").addEventListener("click", async () => {
+  const picked = selectedCountries($("download-picks"));
+  if (!picked.length) { $("dl-status").textContent = "請至少勾選一個國家。"; return; }
+  $("btn-download").disabled = true;
+  $("job-log").textContent = "";
+  try {
+    await api("/api/download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ "國家": picked }),
+    });
+    $("dl-status").innerHTML = '<span class="spinner"></span>執行中…';
+    pollJob(0);
+  } catch (error) {
+    $("dl-status").textContent = error.message;
+    $("btn-download").disabled = false;
+  }
+});
+
+async function pollJob(since) {
+  clearTimeout(polling);
+  const job = await api("/api/job?since=" + since);
+  if (job["訊息"] && job["訊息"].length) {
+    $("job-log").textContent += job["訊息"].join("\n") + "\n";
+    $("job-log").scrollTop = $("job-log").scrollHeight;
+  }
+  const seen = job["訊息總數"] ?? since;
+  if (job["狀態"] === "執行中") {
+    polling = setTimeout(() => pollJob(seen), 1200);
+  } else {
+    $("dl-status").textContent = "已" + (job["狀態"] || "結束");
+    $("btn-download").disabled = false;
+    refreshState();
+  }
+}
+
+/* ---------------- 排序規則說明 ---------------- */
+let rulesLoaded = false;
+async function loadRules() {
+  if (rulesLoaded) return;
+  const rules = await api("/api/rules");
+  const table = (title, list) => `
+    <h2 style="font-size:15px;margin-top:16px">${esc(title)}</h2>
+    <table><thead><tr><th>條件</th><th style="text-align:right">分數</th>
+      <th>說明</th></tr></thead><tbody>
+    ${list.map((r) => `<tr>
+      <td>${esc(r.description)}</td>
+      <td class="num">${r.points > 0 ? "+" : ""}${r.points}</td>
+      <td class="sub">${esc(r.note || "")}</td></tr>`).join("")}
+    </tbody></table>`;
+
+  $("rules-body").innerHTML = `
+    <p style="font-size:14px;margin-top:14px">
+      每一筆候選會算<b>兩個分數</b>。分開算是因為您其實在判斷兩件事：
+      這筆是不是我要找的藥，以及這筆是不是原廠藥。
+      混成一個分數會看不出高分是哪一種原因造成的。</p>
+    ${table("藥品相符度　—　這筆是不是我要找的藥", rules["藥品相符度"])}
+    ${table("原廠可能性　—　這筆是不是原廠藥", rules["原廠可能性"])}
+    <h2 style="font-size:15px;margin-top:20px">排序方式</h2>
+    <ol style="font-size:14px;margin:8px 0 0;padding-left:22px">
+      ${rules["排序方式"].map((s) => `<li>${esc(s)}</li>`).join("")}
+    </ol>
+    <p class="msg warn" style="margin-top:16px">${esc(rules["說明"])}</p>`;
+  rulesLoaded = true;
+}
+
+/* ---------------- 複核 ---------------- */
+let matchedOnce = false;
+function autoMatch() {
+  // 清單已經備妥時就直接比對，不用再叫使用者按一次按鈕
+  if (matchedOnce || !state || !state["清單筆數"]) return;
+  if (!state["國家"].some((c) => c["已下載"])) return;
+  matchedOnce = true;
+  runMatch();
+}
+
+async function runMatch() {
+  const box = $("review-results");
+  box.innerHTML = '<div class="msg info"><span class="spinner"></span>比對中…</div>';
+  const country = $("review-country").value;
+  try {
+    const result = await api("/api/match", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        "國家": country ? [country] : null,
+        "每列上限": Number($("review-limit").value),
+      }),
+    });
+    renderMatches(result);
+  } catch (error) {
+    box.innerHTML = `<div class="msg err">${esc(error.message)}</div>`;
+  }
+}
+
+$("btn-match").addEventListener("click", () => { matchedOnce = true; runMatch(); });
+
+function tierPill(tier, label) {
+  const kind = tier === "A" ? "ok" : tier === "B" ? "warn" : "grey";
+  return `<span class="pill ${kind}">${esc(tier)} ${esc(label)}</span>`;
+}
+
+function renderCandidate(candidate) {
+  const prices = candidate.prices.map((p) => `<tr>
+      <td>${esc(p.category_label)}</td>
+      <td class="num">${esc(p.price)} ${esc(p.currency)}</td>
+      <td class="num">${esc(p.unit_price || "—")}</td>
+      <td class="sub">${esc(p.unit_price_basis || "")}</td>
+      <td class="sub">${esc(p.source_row)}${p.duplicate_count > 1
+        ? `<br><span style="color:var(--muted)">原始檔另有 ${p.duplicate_count - 1}
+           列價格相同</span>` : ""}</td></tr>`).join("");
+
+  return `<div class="cand${candidate.rank === 1 ? " top" : ""}">
+    <div class="cand-head">
+      <span class="rank">第 ${candidate.rank} 順位</span>
+      ${tierPill(candidate.tier, candidate.tier_label)}
+      <span class="cand-name">${esc(candidate.brand_name || "（無商品名）")}</span>
+      ${candidate.originator_flag
+        ? `<span class="pill ${candidate.originator_flag.startsWith("原廠")
+            || candidate.originator_flag.startsWith("原研")
+            || candidate.originator_flag.startsWith("生物原廠")
+            ? "accent" : "grey"}">${esc(candidate.originator_flag)}</span>` : ""}
+    </div>
+    <div class="cand-meta">
+      成分 ${esc(candidate.generic_name || "—")}
+      ｜ ATC ${esc(candidate.atc_code || "—")}
+      ｜ ${esc(candidate.form || "—")}
+      ｜ 含量 ${esc(candidate.strength_value + candidate.strength_unit) || "—"}
+      ｜ 包裝 ${esc(candidate.pack_size_value + candidate.pack_size_unit) || "—"}
+      ｜ 藥商 ${esc(candidate.marketer || "—")}
+      ｜ ${esc(candidate.native_code_type)} ${esc(candidate.native_code)}
+    </div>
+    <div class="scores">
+      <div class="score">
+        <div class="score-top"><span>藥品相符度</span><b>${candidate.drug_score}</b></div>
+        <div class="bar"><i style="width:${candidate.drug_score}%"></i></div>
+      </div>
+      <div class="score">
+        <div class="score-top"><span>原廠可能性</span><b>${candidate.originator_score}</b></div>
+        <div class="bar second"><i style="width:${candidate.originator_score}%"></i></div>
+      </div>
+    </div>
+    <div class="basis"><b>排序依據：</b>${esc(candidate.ranking_basis)}</div>
+    ${candidate.caution ? `<div class="caution">${esc(candidate.caution)}</div>` : ""}
+    <div class="prices"><table>
+      <thead><tr><th>價格類別</th><th>當地價格</th><th>單位藥價</th>
+        <th>算式</th><th>原始檔位置</th></tr></thead>
+      <tbody>${prices}</tbody></table></div>
+  </div>`;
+}
+
+function renderMatches(result) {
+  const parts = [];
+  for (const country of result["結果"]) {
+    parts.push(`<h2 style="margin-top:26px">${esc(country["國家"])}</h2>`);
+    if (country["尚未下載"]) {
+      parts.push(`<div class="msg warn">這個國家還沒有下載資料，
+        請先到「下載藥價」分頁執行。</div>`);
+      continue;
+    }
+    for (const item of country["查詢"]) {
+      parts.push(`<div class="query-block">
+        <p class="query-title">${esc(item["商品名"] || "（未填商品名）")}
+        ${item["成分名"] ? `<span class="sub">　成分：${esc(item["成分名"])}</span>` : ""}
+        </p>`);
+      if (item["訊息"]) {
+        parts.push(`<div class="msg warn">${esc(item["訊息"])}</div>`);
+      }
+      parts.push(item["候選"].map(renderCandidate).join(""));
+      parts.push("</div>");
+    }
+  }
+  $("review-results").innerHTML = parts.join("") ||
+    '<div class="msg info">沒有結果。</div>';
+}
+
+$("btn-export").addEventListener("click", () => {
+  const country = $("review-country").value;
+  window.location = "/api/export" + (country ? "?%E5%9C%8B%E5%AE%B6=" + country : "");
+});
+
+/* ---------------- 啟動 ---------------- */
+(async function start() {
+  try {
+    await refreshState();
+    const list = await api("/api/druglist");
+    if (list["清單"] && list["清單"].length) {
+      renderListPreview(list["清單"]);
+      $("list-text").value = list["清單"]
+        .map((r) => [r.brand_name, r.generic_name, r.atc_code, r.strength,
+                     r.form, r.marketer].join(",")).join("\n");
+      const header = "商品名,成分名,ATC,含量,劑型,藥商\n";
+      $("list-text").value = header + $("list-text").value;
+    }
+  } catch (error) {
+    $("hdr-status").textContent = "載入失敗：" + error.message;
+  }
+  showTab(location.hash.slice(1) || "overview");
+})();
+</script>
+</body>
+</html>
