@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 執行時產生的資料
+raw/
+output/
+環境檢測報告_*.txt
+drug_price_screenshots/
+
+# 本機環境
+python_portable/
+*.zip
+chromedriver.exe
