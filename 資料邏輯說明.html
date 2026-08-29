@@ -260,15 +260,16 @@ figcaption b{font-weight:600;color:var(--ink)}
 
       <rect x="618" y="182" width="246" height="52" class="s-box"/>
       <text x="632" y="202" class="s-lbl">OUTPUT C</text>
-      <text x="632" y="222" class="s-t">提案附件 Excel（6 分頁）</text>
+      <text x="632" y="222" class="s-t">提案附件 Excel（分頁自行勾選）</text>
     </svg>
     <figcaption><b>三份輸出取用同一份整備結果，因此數字必然一致。</b>整備只在讀檔後跑一次，之後 Word 與兩份 Excel 都不再各自重算。全部運算在承辦人自己的瀏覽器內完成，資料不上傳、不外送，也不需要連外網路。</figcaption>
   </figure>
 
-  <div class="section-head"><h2>本次更新</h2><span class="meta">2026-08（第 17 次改版）</span></div>
+  <div class="section-head"><h2>本次更新</h2><span class="meta">2026-08（第 18 次改版）</span></div>
   <dl class="chg">
+    <dt>附件分頁改為勾選</dt><dd>提案附件 Excel 原本<strong>固定產出 6 張表</strong>，現改為在畫面步驟 04 <strong>自行勾選這次要產出哪幾張</strong>。預設仍是六張全勾（＝與過去相同），另附三顆快捷鍵：<code>全選</code>／<code>全不選</code>／<code>只選 Word 會引用的三張</code>（同分組＋ATC 前 5 碼＋ATC7 碼）。一張都沒勾時，「下載提案附件 Excel」按鈕會自動變灰。<br><strong>分頁序號依實際勾選重新編號</strong>，永遠從 1 開始且連號；各分頁的欄位、排序、小計與列印設定完全不變，勾選只決定「產出哪幾張」。<code>ATC前1碼</code>、<code>ATC前3碼</code> 資料量極大，不需要時取消勾選可明顯縮短產檔時間與檔案大小。</dd>
     <dt>需求檔預設</dt><dd><code>ATC_MODE</code> <strong>預設值改為 <code>BOTH</code></strong>：留空或填入無法辨識的值，一律視為 BOTH，表二固定產生「同 ATC7 碼」與「同 ATC 前 5 碼」兩張表。</dd>
-    <dt>提案附件 Excel</dt><dd>新增一份<strong>提案附件 Excel</strong>（版面依「專家提案附件」規格）：於 ATC7 碼右方增列「<strong>ATC 名稱</strong>」欄，灰底列為各分組小計，排序同四分頁報表的分頁 3，A4 <strong>橫向</strong>、寬度縮至一頁、凍結並重複前 3 列標題。<code>分組代碼</code>置於 A 欄供同仁審查，但<strong>不在列印範圍內</strong>。<br>分頁<strong>固定 6 張</strong>，與 <code>ATC_MODE</code> 無關：<code>同分組</code>／<code>ATC前1碼</code>／<code>ATC前3碼</code>／<code>ATC前4碼</code>／<code>ATC前5碼</code>／<code>ATC7碼</code>。ATC 一律只用來「挑分組」，挑到後該分組的全部項目都納入，因此各分頁的項目數為巢狀包含關係。</dd>
+    <dt>提案附件 Excel</dt><dd>新增一份<strong>提案附件 Excel</strong>（版面依「專家提案附件」規格）：於 ATC7 碼右方增列「<strong>ATC 名稱</strong>」欄，灰底列為各分組小計，排序同四分頁報表的分頁 3，A4 <strong>橫向</strong>、寬度縮至一頁、凍結並重複前 3 列標題。<code>分組代碼</code>置於 A 欄供同仁審查，但<strong>不在列印範圍內</strong>。<br>可產出的分頁共 6 張，與 <code>ATC_MODE</code> 無關：<code>同分組</code>／<code>ATC前1碼</code>／<code>ATC前3碼</code>／<code>ATC前4碼</code>／<code>ATC前5碼</code>／<code>ATC7碼</code>（第 18 次改版起改為<strong>由使用者勾選</strong>，預設全出）。ATC 一律只用來「挑分組」，挑到後該分組的全部項目都納入，因此各分頁的項目數為巢狀包含關係。</dd>
     <dt>Word 表格</dt><dd>資料列<strong>一律不加粗</strong>，只有「<strong>（本案藥品）</strong>」四字加粗，且改標記在<strong>項次下方</strong>；金額／數量欄名一律帶年度（如「114 年整組申報金額」）；表一刪除「整組每月平均申報金額」欄並把申報量移到最後；編號清單第一層縮排 1 個字元、第二層 1.5 個字元。</dd>
     <dt>表二 · 同 ATC 5 碼</dt><dd><strong>固定顯示</strong> ATC7 碼與 ATC 名稱兩欄（置於分組名稱右方）；同一分組含多個 ATC7 碼時<strong>分列呈現各自數據</strong>，分組名稱與項次以<strong>合併儲存格</strong>呈現。</dd>
     <dt>頁碼欄位</dt><dd>說明二（二）（三）（四）、說明五、說明七的三個子項目，均於冒號左方留 <code>(P-)</code> 供承辦人填寫附件頁碼；說明二標題改為「本案藥品健保收載情形說明如下：」，（一）於適應症後加註「ATC7 碼為 {碼} {名稱}」。</dd>
@@ -931,12 +932,12 @@ figcaption b{font-weight:600;color:var(--ink)}
   <div class="section-head"><h2>四分頁報表的格式</h2></div>
   <p class="prose">四個分頁皆已套用框線、表頭底色與凍結標題列，明細頁另附自動篩選。金額與數量欄套千分位格式、支付價欄保留必要小數，欄寬依內容自動估算，開檔即可直接閱讀或列印，不需再手動調整。</p>
 
-  <div class="section-head"><h2>提案附件 Excel</h2><span class="meta">另一個按鈕 · 固定 6 分頁</span></div>
+  <div class="section-head"><h2>提案附件 Excel</h2><span class="meta">另一個按鈕 · 分頁自行勾選</span></div>
   <p class="prose">供 Word 說明二各項後方 <code>(P-)</code> 所指的紙本附件使用，版面依「專家提案附件」規格。與四分頁報表是兩份不同的檔案，但數字同源。</p>
 
   <figure>
     <svg viewBox="0 0 880 250" role="img" aria-label="提案附件的六個分頁，依 ATC 碼數由寬到窄，範圍呈巢狀包含">
-      <text x="16" y="24" class="s-lbl">六個分頁 · 範圍由寬到窄</text>
+      <text x="16" y="24" class="s-lbl">六個可勾選的分頁 · 範圍由寬到窄</text>
 
       <rect x="16" y="36" width="700" height="30" class="s-box"/>
       <text x="32" y="56" class="s-tm">ATC前1碼</text><text x="180" y="56" class="s-ts">例 R　→　所有呼吸系統用藥所屬的分組</text>
@@ -957,19 +958,20 @@ figcaption b{font-weight:600;color:var(--ink)}
       <text x="32" y="236" class="s-tm s-acc">同分組</text>
       <text x="272" y="236" class="s-ts">不看 ATC，直接取本案項目所屬分組的聯集</text>
     </svg>
-    <figcaption><b>ATC 一律只用來「挑分組」。</b>先以指定碼數比對主檔找出相符項目，取其分組代碼，再把這些分組的<b>全部項目</b>納入 —— 與表二同一原則。因此由寬到窄必為巢狀包含：前1碼 ⊇ 前3碼 ⊇ 前4碼 ⊇ 前5碼 ⊇ ATC7碼。六張表固定產出，與 <code>ATC_MODE</code> 無關；Word 只用到其中三張，其餘供備查。<br><b>注意範圍差很多：</b><code>ATC前1碼</code> 是整個 ATC 大分類（例 <code>A</code>＝消化道與代謝用藥），在實際主檔動輒六千多個項目，這張是<b>電子查閱用</b>，不是拿來列印夾在提案裡的。</figcaption>
+    <figcaption><b>ATC 一律只用來「挑分組」。</b>先以指定碼數比對主檔找出相符項目，取其分組代碼，再把這些分組的<b>全部項目</b>納入 —— 與表二同一原則。因此由寬到窄必為巢狀包含：前1碼 ⊇ 前3碼 ⊇ 前4碼 ⊇ 前5碼 ⊇ ATC7碼。六張表<b>由使用者在畫面上勾選</b>要產出哪幾張（預設全勾），與 <code>ATC_MODE</code> 無關；Word 只用到其中三張（同分組、ATC7碼、ATC前5碼），其餘供備查。<br><b>注意範圍差很多：</b><code>ATC前1碼</code> 是整個 ATC 大分類（例 <code>A</code>＝消化道與代謝用藥），在實際主檔動輒六千多個項目，這張是<b>電子查閱用</b>，不是拿來列印夾在提案裡的。</figcaption>
   </figure>
 
   <div class="tbl-wrap"><table>
     <thead><tr><th>項目</th><th>設定</th></tr></thead>
     <tbody>
+      <tr><td class="k">產出分頁</td><td>步驟 04 的<strong>勾選清單</strong>決定這次產出哪幾張，預設六張全勾；快捷鍵可一鍵切到「只選 Word 會引用的三張」。<strong>分頁序號依勾選重新編號</strong>（例：只勾三張 → <code>1.同分組</code>／<code>2.ATC前5碼</code>／<code>3.ATC7碼</code>）</td></tr>
       <tr class="hl"><td class="k">欄位</td><td>依附件規格排列，並於 <code>ATC7碼</code> <strong>右方新增「ATC名稱」欄</strong>；三個年度各有申報量與申報金額兩欄</td></tr>
-      <tr class="hl"><td class="k">灰底列</td><td><strong>各分組小計</strong>，最末再加一列總計。數字用<strong>0 元項目年度歸零後</strong>的金額與數量加總，與表一、表二、四分頁報表同源，因此各表必然一致</td></tr>
-      <tr><td class="k">排序</td><td>同分頁 3：調劑大類 ↑ → 分組代碼 ↑ → 支付價 0 元者置後 → 許可證層級加總金額 ↓ → 當期金額 ↓ → CODE ↑</td></tr>
-      <tr class="hl"><td class="k">分組代碼</td><td>置於 <strong>A 欄</strong>，螢幕上完整可見、可篩選可複製，但<strong>列印範圍由 B 欄起算</strong>，因此不會印出來</td></tr>
-      <tr><td class="k">列印</td><td>A4 <strong>橫向</strong>，寬度自動縮成一頁；前 3 列（標題／說明／欄名）凍結，且每頁重複列印</td></tr>
-      <tr class="hl"><td class="k">列高</td><td><code>ATC前1碼</code>、<code>ATC前3碼</code> 兩張<strong>鎖定固定列高</strong>，適應症等長欄位只顯示第一行、不隨內容把整列撐高；其餘四張維持自動列高。這兩張的項數動輒數千，鎖列高後列印頁數約可減半</td></tr>
-      <tr><td class="k">本案藥品</td><td>藥品名稱欄以淡藍底粗體標記</td></tr>
+      <tr><td class="k">灰底列</td><td><strong>各分組小計</strong>，最末再加一列總計。數字用<strong>0 元項目年度歸零後</strong>的金額與數量加總，與表一、表二、四分頁報表同源，因此各表必然一致</td></tr>
+      <tr class="hl"><td class="k">排序</td><td>同分頁 3：調劑大類 ↑ → 分組代碼 ↑ → 支付價 0 元者置後 → 許可證層級加總金額 ↓ → 當期金額 ↓ → CODE ↑</td></tr>
+      <tr><td class="k">分組代碼</td><td>置於 <strong>A 欄</strong>，螢幕上完整可見、可篩選可複製，但<strong>列印範圍由 B 欄起算</strong>，因此不會印出來</td></tr>
+      <tr class="hl"><td class="k">列印</td><td>A4 <strong>橫向</strong>，寬度自動縮成一頁；前 3 列（標題／說明／欄名）凍結，且每頁重複列印</td></tr>
+      <tr><td class="k">列高</td><td><code>ATC前1碼</code>、<code>ATC前3碼</code> 兩張<strong>鎖定固定列高</strong>，適應症等長欄位只顯示第一行、不隨內容把整列撐高；其餘四張維持自動列高。這兩張的項數動輒數千，鎖列高後列印頁數約可減半</td></tr>
+      <tr class="hl"><td class="k">本案藥品</td><td>藥品名稱欄以淡藍底粗體標記</td></tr>
     </tbody>
   </table></div>
   <div class="callout"><strong>為什麼不用「隱藏欄」：</strong>Excel 的隱藏欄在螢幕上也看不到，與「同仁審查時要用分組代碼」牴觸。改用「放在最左欄 + 列印範圍從 B 欄起算」，兩個需求可以同時成立。</div>
@@ -1032,7 +1034,8 @@ figcaption b{font-weight:600;color:var(--ink)}
     <li><strong>表二新規則檢核。</strong>以含「0 元且不良品註記 Y」的測試主檔驗證：項目數計入、支付價欄不出現 0、表下備註行數與分組數相符；<code>BOTH</code> 模式確實產出兩張表且編號連續。</li>
     <li><strong>同 CODE 多列合併檢核。</strong>1 項藥品配 5 筆文號（僅第 1 列填值）：合併為 1 項，說明一列出 5 筆、表五 1 列、核價表 1 張；另測值填在第 2 列、文號重複、混填 <code>ATC_MODE</code> 等情形，取值與去重均正確。</li>
     <li><strong>檔案實際開啟驗證。</strong>產出的 Word 與 Excel 以實際文書軟體開啟並轉為 PDF，檢查版面、編號連續性與合併儲存格；需求檔範本確認下拉選單與「填表說明」分頁正常。</li>
-    <li><strong>全流程自動化測試。</strong>上傳兩檔 → 預覽 → 產出 Word 與 Excel，確認無任何錯誤。</li>
+    <li><strong>附件分頁勾選檢核。</strong>全選／部分勾選／單張／未勾選各情形逐一驗證：分頁序號皆從 1 連號重新編號，產出檔案的分頁名稱與列印範圍設定隨勾選正確對應；未勾選任何一張時下載按鈕變灰並顯示提示。</li>
+    <li><strong>全流程自動化測試。</strong>上傳兩檔 → 預覽 → 產出 Word 與 Excel，確認無任何錯誤；並以自動化操作驗證勾選清單與三顆快捷鍵的反應正確。</li>
   </ol>
 
   <div class="section-head"><h2>使用環境</h2></div>
@@ -1041,7 +1044,7 @@ figcaption b{font-weight:600;color:var(--ink)}
 </div></div>
 
 <div class="foot">
-  本頁說明對應之工具版本：一份需求檔產出一份提案 Word（多項藥品合併）＋ 四分頁 Excel ＋ 提案附件 Excel（固定 6 分頁）。用語依「全民健康保險藥物給付項目及支付標準」，一律使用「項目」。
+  本頁說明對應之工具版本：一份需求檔產出一份提案 Word（多項藥品合併）＋ 四分頁 Excel ＋ 提案附件 Excel（分頁由使用者勾選，預設 6 張全出）。用語依「全民健康保險藥物給付項目及支付標準」，一律使用「項目」。
 </div>
 
 <script>
