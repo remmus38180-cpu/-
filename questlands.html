@@ -1,5 +1,5 @@
 <title>Questlands</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
 <style>
 :root {
   --void: #0D0907;
@@ -16,7 +16,7 @@
   --twilight: #5B8BA8;
   --violet: #8B6DB5;
   --copper: #D4764E;
-  font-family: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+  font-family: 'Noto Serif TC', 'Songti TC', 'PMingLiU', Georgia, serif;
   color: var(--parchment);
   background: var(--void);
 }
@@ -40,10 +40,13 @@ input, select, textarea { font-family: inherit; }
   font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px;
   color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase;
 }
-.game-title span { color: var(--parchment); font-weight: 400; font-size: 14px; letter-spacing: 0.02em; text-transform: none; margin-left: 12px; opacity: 0.7; }
+.game-title span {
+  font-family: 'Noto Serif TC', serif; color: var(--parchment); font-weight: 400;
+  font-size: 14px; letter-spacing: 0.02em; text-transform: none; margin-left: 12px; opacity: 0.7;
+}
 .header-actions { display: flex; gap: 8px; }
 .lore-btn {
-  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 600;
   padding: 6px 16px; border: 1px solid var(--frame);
   border-radius: 4px; color: var(--ink); letter-spacing: 0.05em;
   transition: all 0.2s;
@@ -66,8 +69,8 @@ input, select, textarea { font-family: inherit; }
 .guild-panel::-webkit-scrollbar { width: 4px; }
 .guild-panel::-webkit-scrollbar-thumb { background: var(--frame); border-radius: 2px; }
 .panel-title {
-  font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
-  color: var(--ink); letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 14px; font-weight: 700;
+  color: var(--ink); letter-spacing: 0.15em;
   margin-bottom: 14px; padding-bottom: 8px;
   border-bottom: 1px solid var(--frame);
 }
@@ -90,7 +93,7 @@ input, select, textarea { font-family: inherit; }
 }
 .member-info { flex: 1; min-width: 0; }
 .member-name { font-weight: 600; font-size: 14px; line-height: 1.2; }
-.member-title { font-size: 11px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.member-title { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
 .member-xp-bar {
   height: 4px; background: var(--frame); border-radius: 2px; margin-top: 4px; overflow: hidden;
 }
@@ -147,8 +150,8 @@ input, select, textarea { font-family: inherit; }
 }
 .hex-icon { font-size: 26px; line-height: 1; }
 .hex-name {
-  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
-  color: var(--parchment); text-align: center; letter-spacing: 0.04em;
+  font-size: 12px; font-weight: 700;
+  color: var(--parchment); text-align: center; letter-spacing: 0.08em;
   text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 .hex-token {
@@ -158,7 +161,6 @@ input, select, textarea { font-family: inherit; }
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;
   box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-  font-family: 'Crimson Pro', serif;
 }
 .hex-dots {
   position: absolute; bottom: 10px;
@@ -190,10 +192,10 @@ input, select, textarea { font-family: inherit; }
   border-bottom: 1px solid var(--frame); margin-bottom: 12px;
 }
 .quest-panel-title {
-  font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700;
+  font-size: 16px; font-weight: 700;
   color: var(--gold);
 }
-.quest-panel-title .realm-desc { font-family: 'Crimson Pro', serif; font-weight: 400; font-size: 13px; color: var(--ink); margin-left: 8px; }
+.quest-panel-title .realm-desc { font-weight: 400; font-size: 13px; color: var(--ink); margin-left: 8px; }
 .quest-empty {
   text-align: center; padding: 40px 20px; color: var(--ink-dim);
   font-style: italic; font-size: 15px;
@@ -247,20 +249,20 @@ input, select, textarea { font-family: inherit; }
   margin-bottom: 16px;
 }
 .focus-label {
-  font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700;
+  font-size: 16px; font-weight: 700;
   color: var(--parchment); margin-bottom: 4px;
 }
-.focus-sublabel { font-size: 11px; color: var(--gold-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+.focus-sublabel { font-size: 11px; color: var(--gold-dim); letter-spacing: 0.1em; margin-bottom: 16px; }
 .focus-flavor {
-  font-style: italic; font-size: 14px; color: var(--ink);
-  line-height: 1.5; margin-bottom: 16px; padding: 0 8px;
+  font-size: 14px; color: var(--ink);
+  line-height: 1.7; margin-bottom: 16px; padding: 0 8px;
 }
 .roll-btn {
-  font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+  font-size: 14px; font-weight: 700;
   padding: 10px 32px;
   background: linear-gradient(to bottom, #7A4E2D, #5A3620);
   border: 2px solid var(--gold-dim); border-radius: 6px;
-  color: var(--parchment); letter-spacing: 0.06em;
+  color: var(--parchment); letter-spacing: 0.08em;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 6px rgba(0,0,0,0.3);
   transition: all 0.2s;
 }
@@ -278,11 +280,9 @@ input, select, textarea { font-family: inherit; }
   border-radius: 8px; display: flex; align-items: center; justify-content: center;
   font-size: 24px; font-weight: 700; color: var(--void);
   box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(0,0,0,0.1);
-  font-family: 'Crimson Pro', serif; font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums;
 }
-.die.rolling {
-  animation: die-tumble 0.4s ease-in-out;
-}
+.die.rolling { animation: die-tumble 0.4s ease-in-out; }
 @keyframes die-tumble {
   0% { transform: rotateZ(0deg) scale(1); }
   25% { transform: rotateZ(90deg) scale(1.1); }
@@ -292,13 +292,13 @@ input, select, textarea { font-family: inherit; }
 }
 .dice-result {
   text-align: center; font-size: 13px; color: var(--gold);
-  font-style: italic; min-height: 20px;
+  min-height: 20px;
 }
 .dice-realm-icon { font-size: 18px; }
 .chronicle-section { flex: 1; }
 .chronicle-title {
-  font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
-  color: var(--ink); letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 14px; font-weight: 700;
+  color: var(--ink); letter-spacing: 0.15em;
   margin-bottom: 10px; padding-bottom: 6px;
   border-bottom: 1px solid var(--frame);
 }
@@ -306,12 +306,11 @@ input, select, textarea { font-family: inherit; }
 .chronicle-entry {
   display: flex; gap: 8px; padding: 7px 4px;
   border-bottom: 1px solid rgba(61,46,31,0.5); font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
-.chronicle-entry .icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.chronicle-entry .icon { font-size: 14px; flex-shrink: 0; margin-top: 2px; }
 .chronicle-entry .text { flex: 1; color: var(--parchment); }
-.chronicle-entry .time { font-size: 11px; color: var(--ink-dim); white-space: nowrap; flex-shrink: 0; }
-.chronicle-entry .turn { font-size: 10px; color: var(--ink-dim); display: block; margin-top: 1px; }
+.chronicle-entry .turn { font-size: 10px; color: var(--ink-dim); display: block; margin-top: 2px; }
 
 /* ── Arsenal Bar (Bottom) ── */
 .arsenal {
@@ -331,10 +330,7 @@ input, select, textarea { font-family: inherit; }
   border: 1px solid var(--frame); min-width: 68px;
   position: relative;
 }
-.resource-card .r-label {
-  font-size: 10px; color: var(--ink); text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
+.resource-card .r-label { font-size: 10px; color: var(--ink); letter-spacing: 0.06em; }
 .resource-card .r-icon { font-size: 18px; }
 .resource-card .r-count {
   font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums;
@@ -347,9 +343,9 @@ input, select, textarea { font-family: inherit; }
 }
 .action-buttons { display: flex; gap: 8px; }
 .action-btn {
-  font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+  font-size: 12px; font-weight: 700;
   padding: 10px 20px; border-radius: 6px;
-  letter-spacing: 0.04em; transition: all 0.2s;
+  letter-spacing: 0.06em; transition: all 0.2s;
   border: 1px solid var(--frame);
   background: var(--oak); color: var(--parchment);
 }
@@ -368,16 +364,14 @@ input, select, textarea { font-family: inherit; }
   position: fixed; inset: 0; z-index: 100;
   background: rgba(13,9,7,0.85);
   display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.25s;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
 }
 .modal-overlay.open { opacity: 1; pointer-events: auto; }
 .modal-box {
   background: var(--oak); border: 2px solid var(--frame);
   border-radius: 10px; width: 90%; max-width: 520px;
   max-height: 85vh; overflow-y: auto;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-  position: relative;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6); position: relative;
 }
 .modal-box::-webkit-scrollbar { width: 4px; }
 .modal-box::-webkit-scrollbar-thumb { background: var(--frame); border-radius: 2px; }
@@ -388,21 +382,14 @@ input, select, textarea { font-family: inherit; }
   font-size: 18px; z-index: 2; transition: background 0.2s;
 }
 .modal-close:hover { background: var(--vermilion); }
-.modal-header {
-  padding: 20px 24px 12px;
-  border-bottom: 1px solid var(--frame);
-}
-.modal-header h2 {
-  font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700;
-  color: var(--gold);
-}
-.modal-header p { font-size: 13px; color: var(--ink); margin-top: 4px; font-style: italic; }
+.modal-header { padding: 20px 24px 12px; border-bottom: 1px solid var(--frame); }
+.modal-header h2 { font-size: 20px; font-weight: 700; color: var(--gold); }
+.modal-header p { font-size: 13px; color: var(--ink); margin-top: 4px; }
 .modal-body { padding: 20px 24px; }
 .form-group { margin-bottom: 16px; }
 .form-group label {
   display: block; font-size: 12px; font-weight: 600;
-  color: var(--ink); text-transform: uppercase; letter-spacing: 0.06em;
-  margin-bottom: 6px;
+  color: var(--ink); letter-spacing: 0.06em; margin-bottom: 6px;
 }
 .form-group input, .form-group select, .form-group textarea {
   width: 100%; padding: 9px 12px; background: var(--walnut);
@@ -418,12 +405,10 @@ input, select, textarea { font-family: inherit; }
   padding: 12px 24px 20px;
   display: flex; justify-content: flex-end; gap: 8px;
 }
-/* Trade modal */
 .trade-members { display: flex; gap: 6px; margin-bottom: 16px; }
 .trade-member-btn {
   flex: 1; padding: 10px 8px; border-radius: 6px;
-  border: 2px solid var(--frame); text-align: center;
-  transition: all 0.2s;
+  border: 2px solid var(--frame); text-align: center; transition: all 0.2s;
 }
 .trade-member-btn:hover { border-color: var(--gold-dim); }
 .trade-member-btn.selected { border-color: var(--gold); background: rgba(196,149,58,0.1); }
@@ -438,14 +423,9 @@ input, select, textarea { font-family: inherit; }
 }
 .trade-quest-item:hover { border-color: var(--gold-dim); }
 .trade-quest-item.selected { border-color: var(--gold); background: rgba(196,149,58,0.1); }
-
-/* Lore modal */
 .lore-section { margin-bottom: 16px; }
-.lore-section h3 {
-  font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold);
-  margin-bottom: 6px;
-}
-.lore-section p, .lore-section li { font-size: 13px; line-height: 1.6; color: var(--ink); }
+.lore-section h3 { font-size: 14px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+.lore-section p, .lore-section li { font-size: 13px; line-height: 1.8; color: var(--ink); }
 .lore-section ul { padding-left: 16px; }
 .lore-section li { margin-bottom: 3px; }
 
@@ -456,10 +436,8 @@ input, select, textarea { font-family: inherit; }
 }
 .xp-float {
   position: fixed; pointer-events: none;
-  font-family: 'Cinzel', serif; font-weight: 700;
-  font-size: 18px; color: var(--gold);
-  animation: xp-gain 1s ease-out forwards;
-  z-index: 200;
+  font-weight: 700; font-size: 18px; color: var(--gold);
+  animation: xp-gain 1s ease-out forwards; z-index: 200;
 }
 @keyframes quest-complete-flash {
   0% { background: var(--oak); }
@@ -497,15 +475,15 @@ input, select, textarea { font-family: inherit; }
 
 <div id="app">
   <header class="game-header">
-    <div class="game-title">Questlands <span id="project-name">Sunmere Workshop</span></div>
+    <div class="game-title">Questlands <span id="project-name">日暮工坊</span></div>
     <div class="header-actions">
-      <button class="lore-btn" onclick="openModal('lore-modal')">📜 Lore</button>
+      <button class="lore-btn" onclick="openModal('lore-modal')">📜 指南</button>
     </div>
   </header>
 
   <div class="game-board">
     <aside class="guild-panel">
-      <div class="panel-title">The Guild</div>
+      <div class="panel-title">公會成員</div>
       <div id="guild-list"></div>
       <hr class="guild-divider">
       <div id="guild-achievements"></div>
@@ -515,21 +493,21 @@ input, select, textarea { font-family: inherit; }
       <div class="hex-grid-wrapper">
         <div class="hex-grid" id="hex-grid"></div>
       </div>
-      <div class="hex-grid-hint">Click a realm to view its quests</div>
+      <div class="hex-grid-hint">點擊領域查看其中的任務</div>
       <div class="quest-panel" id="quest-panel"></div>
     </main>
 
     <aside class="command-scroll">
       <div class="focus-panel">
-        <div class="focus-label" id="focus-label">Your Focus</div>
-        <div class="focus-sublabel" id="focus-sublabel">Awaiting orders</div>
-        <div class="focus-flavor" id="focus-flavor">Roll the bones to reveal today's calling. Matching realms illuminate your path.</div>
-        <button class="roll-btn" id="roll-btn" onclick="rollDice()">🎲 Roll Dice</button>
+        <div class="focus-label" id="focus-label">今日聚焦</div>
+        <div class="focus-sublabel" id="focus-sublabel">等待指令</div>
+        <div class="focus-flavor" id="focus-flavor">擲骰以揭示今日的召喚，對應領域將照亮你的前路。</div>
+        <button class="roll-btn" id="roll-btn" onclick="rollDice()">🎲 擲骰子</button>
         <div class="dice-display" id="dice-display"></div>
         <div class="dice-result" id="dice-result"></div>
       </div>
       <div class="chronicle-section">
-        <div class="chronicle-title">Chronicle</div>
+        <div class="chronicle-title">編年史</div>
         <div class="chronicle-list" id="chronicle-list"></div>
       </div>
     </aside>
@@ -538,8 +516,8 @@ input, select, textarea { font-family: inherit; }
   <footer class="arsenal">
     <div class="resource-cards" id="resource-cards"></div>
     <div class="action-buttons">
-      <button class="action-btn primary" onclick="openModal('quest-modal')">⚔ New Quest</button>
-      <button class="action-btn" onclick="openModal('trade-modal')">🤝 Trade</button>
+      <button class="action-btn primary" onclick="openModal('quest-modal')">⚔ 新任務</button>
+      <button class="action-btn" onclick="openModal('trade-modal')">🤝 交易</button>
     </div>
   </footer>
 </div>
@@ -549,39 +527,39 @@ input, select, textarea { font-family: inherit; }
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('quest-modal')">✕</button>
     <div class="modal-header">
-      <h2>Forge a New Quest</h2>
-      <p>Chart a task upon the guild's ledger.</p>
+      <h2>⚔ 鍛造新任務</h2>
+      <p>將任務記載於公會帳簿之上。</p>
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label>Quest Title</label>
-        <input type="text" id="quest-title-input" placeholder="What must be done?">
+        <label>任務名稱</label>
+        <input type="text" id="quest-title-input" placeholder="需要完成什麼？">
       </div>
       <div class="form-group">
-        <label>Realm</label>
+        <label>所屬領域</label>
         <select id="quest-realm-input"></select>
       </div>
       <div class="form-group">
-        <label>Assign to</label>
+        <label>指派給</label>
         <select id="quest-assignee-input"></select>
       </div>
       <div class="form-group">
-        <label>Priority</label>
+        <label>優先級</label>
         <select id="quest-priority-input">
-          <option value="common">Common — 10 XP</option>
-          <option value="uncommon">Uncommon — 25 XP</option>
-          <option value="rare" selected>Rare — 50 XP</option>
-          <option value="epic">Epic — 100 XP</option>
+          <option value="common">普通 — 10 XP</option>
+          <option value="uncommon">精良 — 25 XP</option>
+          <option value="rare" selected>稀有 — 50 XP</option>
+          <option value="epic">史詩 — 100 XP</option>
         </select>
       </div>
       <div class="form-group">
-        <label>Notes (optional)</label>
-        <textarea id="quest-notes-input" placeholder="Additional details..."></textarea>
+        <label>備註（選填）</label>
+        <textarea id="quest-notes-input" placeholder="補充說明⋯"></textarea>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="action-btn" onclick="closeModal('quest-modal')">Cancel</button>
-      <button class="action-btn primary" onclick="createQuest()">⚔ Forge Quest</button>
+      <button class="action-btn" onclick="closeModal('quest-modal')">取消</button>
+      <button class="action-btn primary" onclick="createQuest()">⚔ 鍛造任務</button>
     </div>
   </div>
 </div>
@@ -591,13 +569,13 @@ input, select, textarea { font-family: inherit; }
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('trade-modal')">✕</button>
     <div class="modal-header">
-      <h2>The Trading Table</h2>
-      <p>Reassign quests between guild members.</p>
+      <h2>🤝 交易桌</h2>
+      <p>在公會成員之間重新分配任務。</p>
     </div>
     <div class="modal-body" id="trade-body"></div>
     <div class="modal-footer">
-      <button class="action-btn" onclick="closeModal('trade-modal')">Cancel</button>
-      <button class="action-btn primary" id="trade-confirm-btn" onclick="confirmTrade()" disabled>🤝 Reassign</button>
+      <button class="action-btn" onclick="closeModal('trade-modal')">取消</button>
+      <button class="action-btn primary" id="trade-confirm-btn" onclick="confirmTrade()" disabled>🤝 確認轉交</button>
     </div>
   </div>
 </div>
@@ -607,45 +585,45 @@ input, select, textarea { font-family: inherit; }
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('lore-modal')">✕</button>
     <div class="modal-header">
-      <h2>The Lore of Questlands</h2>
-      <p>A guide to the realm's workings.</p>
+      <h2>📜 冒險領域指南</h2>
+      <p>關於這片領域運作的一切。</p>
     </div>
     <div class="modal-body">
       <div class="lore-section">
-        <h3>⚔ Quests</h3>
-        <p>Tasks are quests, organized by realm. Each carries an XP bounty based on priority. Complete quests to level up your guild members.</p>
+        <h3>⚔ 任務</h3>
+        <p>工作項目即為「任務」，依領域分類。每項任務依優先級帶有經驗值獎勵，完成任務可為公會成員升級。</p>
       </div>
       <div class="lore-section">
-        <h3>🏰 Realms</h3>
-        <p>Seven domains organize your work. Click a hex on the board to view and manage quests within that realm.</p>
+        <h3>🏰 七大領域</h3>
+        <p>七個領域組織你的所有工作。點擊地圖上的六角磚即可查看並管理該領域的任務。</p>
         <ul>
-          <li><strong>The Forge</strong> — Development & engineering</li>
-          <li><strong>Atelier</strong> — Design & creative</li>
-          <li><strong>Scriptorium</strong> — Documentation & writing</li>
-          <li><strong>Laboratory</strong> — Testing & QA</li>
-          <li><strong>Harbor</strong> — Deployment & ops</li>
-          <li><strong>Great Hall</strong> — Planning & coordination</li>
-          <li><strong>Watchtower</strong> — Research & discovery</li>
+          <li><strong>鍛造廠</strong> — 開發與工程</li>
+          <li><strong>工藝坊</strong> — 設計與創意</li>
+          <li><strong>藏書閣</strong> — 文件與撰寫</li>
+          <li><strong>煉丹房</strong> — 測試與品管</li>
+          <li><strong>啟航港</strong> — 部署與維運</li>
+          <li><strong>議事廳</strong> — 規劃與協調</li>
+          <li><strong>瞭望塔</strong> — 研究與探索</li>
         </ul>
       </div>
       <div class="lore-section">
-        <h3>🎲 Rolling the Bones</h3>
-        <p>Roll two dice to randomly select a realm for focused work. The chosen realm glows gold on the map. Realms with more active quests appear more often.</p>
+        <h3>🎲 擲骰</h3>
+        <p>擲出兩顆骰子，隨機選定一個領域作為今日的重點。被選中的領域會在地圖上發出金光。任務越多的領域，被選中的機率越高。</p>
       </div>
       <div class="lore-section">
-        <h3>🏆 Experience & Levels</h3>
-        <p>Completing quests awards XP to the assignee. Accumulate XP to advance through ranks: Apprentice → Journeyman → Artisan → Craftmaster → Warden → Champion → Legendary → Mythic → Ascended.</p>
+        <h3>🏆 經驗值與等級</h3>
+        <p>完成任務會為指派者獲得經驗值。累積經驗值可依序晉升：學徒 → 行者 → 匠師 → 工坊主 → 守護者 → 勇者 → 傳奇 → 神話 → 飛昇。</p>
       </div>
       <div class="lore-section">
-        <h3>🤝 Trading</h3>
-        <p>Open the Trading Table to reassign any active quest to a different guild member. Balance workloads to keep the guild thriving.</p>
+        <h3>🤝 交易</h3>
+        <p>打開交易桌，可將任何進行中的任務重新指派給其他公會成員。善用交易平衡工作量，讓公會運作更順暢。</p>
       </div>
       <div class="lore-section">
-        <h3>⌨ Shortcuts</h3>
+        <h3>⌨ 快捷鍵</h3>
         <ul>
-          <li><strong>N</strong> — New quest</li>
-          <li><strong>R</strong> — Roll dice</li>
-          <li><strong>Esc</strong> — Close modal</li>
+          <li><strong>N</strong> — 新任務</li>
+          <li><strong>R</strong> — 擲骰子</li>
+          <li><strong>Esc</strong> — 關閉彈窗</li>
         </ul>
       </div>
     </div>
@@ -655,13 +633,13 @@ input, select, textarea { font-family: inherit; }
 <script>
 /* ── Constants ── */
 const REALMS = [
-  { id: 'forge', name: 'The Forge', icon: '⚒️', bg: 'linear-gradient(135deg, #3D2E1F, #2A1F16)', desc: 'Development' },
-  { id: 'atelier', name: 'Atelier', icon: '🎨', bg: 'linear-gradient(135deg, #2E1F3D, #1F162A)', desc: 'Design' },
-  { id: 'scriptorium', name: 'Scriptorium', icon: '📜', bg: 'linear-gradient(135deg, #1F2E3D, #16202A)', desc: 'Documentation' },
-  { id: 'laboratory', name: 'Laboratory', icon: '⚗️', bg: 'linear-gradient(135deg, #1F3D2A, #162A1F)', desc: 'Testing' },
-  { id: 'harbor', name: 'Harbor', icon: '⛵', bg: 'linear-gradient(135deg, #3D2A1F, #2A1F16)', desc: 'Deployment' },
-  { id: 'greathall', name: 'Great Hall', icon: '🏛️', bg: 'linear-gradient(135deg, #2E2A1F, #201F16)', desc: 'Planning' },
-  { id: 'watchtower', name: 'Watchtower', icon: '🔭', bg: 'linear-gradient(135deg, #1F2A3D, #161F2A)', desc: 'Research' },
+  { id: 'forge', name: '鍛造廠', icon: '⚒️', bg: 'linear-gradient(135deg, #3D2E1F, #2A1F16)', desc: '開發與工程' },
+  { id: 'atelier', name: '工藝坊', icon: '🎨', bg: 'linear-gradient(135deg, #2E1F3D, #1F162A)', desc: '設計與創意' },
+  { id: 'scriptorium', name: '藏書閣', icon: '📜', bg: 'linear-gradient(135deg, #1F2E3D, #16202A)', desc: '文件與撰寫' },
+  { id: 'laboratory', name: '煉丹房', icon: '⚗️', bg: 'linear-gradient(135deg, #1F3D2A, #162A1F)', desc: '測試與品管' },
+  { id: 'harbor', name: '啟航港', icon: '⛵', bg: 'linear-gradient(135deg, #3D2A1F, #2A1F16)', desc: '部署與維運' },
+  { id: 'greathall', name: '議事廳', icon: '🏛️', bg: 'linear-gradient(135deg, #2E2A1F, #201F16)', desc: '規劃與協調' },
+  { id: 'watchtower', name: '瞭望塔', icon: '🔭', bg: 'linear-gradient(135deg, #1F2A3D, #161F2A)', desc: '研究與探索' },
 ];
 
 const HEX_POS = [
@@ -675,42 +653,49 @@ const HEX_POS = [
 ];
 
 const PRIORITIES = {
-  common:   { name: 'Common',   xp: 10,  color: '#5B8BA8' },
-  uncommon: { name: 'Uncommon', xp: 25,  color: '#4A7C59' },
-  rare:     { name: 'Rare',     xp: 50,  color: '#C4953A' },
-  epic:     { name: 'Epic',     xp: 100, color: '#8B6DB5' },
+  common:   { name: '普通', xp: 10,  color: '#5B8BA8' },
+  uncommon: { name: '精良', xp: 25,  color: '#4A7C59' },
+  rare:     { name: '稀有', xp: 50,  color: '#C4953A' },
+  epic:     { name: '史詩', xp: 100, color: '#8B6DB5' },
 };
 
 const LEVELS = [
-  { t: 0, title: 'Apprentice' },
-  { t: 100, title: 'Journeyman' },
-  { t: 250, title: 'Artisan' },
-  { t: 500, title: 'Craftmaster' },
-  { t: 800, title: 'Warden' },
-  { t: 1200, title: 'Champion' },
-  { t: 1700, title: 'Legendary' },
-  { t: 2300, title: 'Mythic' },
-  { t: 3000, title: 'Ascended' },
+  { t: 0, title: '學徒' },
+  { t: 100, title: '行者' },
+  { t: 250, title: '匠師' },
+  { t: 500, title: '工坊主' },
+  { t: 800, title: '守護者' },
+  { t: 1200, title: '勇者' },
+  { t: 1700, title: '傳奇' },
+  { t: 2300, title: '神話' },
+  { t: 3000, title: '飛昇' },
 ];
 
+const HOUSES = {
+  '#C44B3B': '赤焰家族',
+  '#C4953A': '金光家族',
+  '#5B8BA8': '蒼瀾家族',
+  '#E8D5B7': '白霜家族',
+};
+
 const FLAVOR_TEXTS = [
-  'The spirits guide your hand toward',
-  'Fate draws your attention to',
-  'The guild elders summon you to',
-  'A raven brings word from',
-  'Ancient scrolls point toward',
-  'The stars align over',
-  'Whispers in the wind call you to',
+  '神靈引導你的目光望向',
+  '命運將你的注意力引向',
+  '公會長老召喚你前往',
+  '飛鴿傳書來自',
+  '古老卷軸指向',
+  '星辰匯聚於',
+  '風中的耳語呼喚你前往',
 ];
 
 /* ── State ── */
 let state = {
   quests: [],
   guild: [
-    { id: 'you', name: 'You', avatar: '🛡️', hue: '#C44B3B', xp: 340 },
-    { id: 'eleanor', name: 'Eleanor', avatar: '⚔️', hue: '#C4953A', xp: 180 },
-    { id: 'rowan', name: 'Rowan', avatar: '🏹', hue: '#5B8BA8', xp: 250 },
-    { id: 'finn', name: 'Finn', avatar: '🗡️', hue: '#E8D5B7', xp: 80 },
+    { id: 'you', name: '你', avatar: '🛡️', hue: '#C44B3B', xp: 340 },
+    { id: 'ruoxue', name: '若雪', avatar: '⚔️', hue: '#C4953A', xp: 180 },
+    { id: 'mingyuan', name: '明遠', avatar: '🏹', hue: '#5B8BA8', xp: 250 },
+    { id: 'yifeng', name: '逸風', avatar: '🗡️', hue: '#E8D5B7', xp: 80 },
   ],
   chronicle: [],
   selectedRealm: null,
@@ -722,11 +707,11 @@ let tradeState = { questId: null, targetMember: null };
 
 /* ── Persistence ── */
 function save() {
-  try { localStorage.setItem('questlands', JSON.stringify(state)); } catch(e) {}
+  try { localStorage.setItem('questlands-tw', JSON.stringify(state)); } catch(e) {}
 }
 function load() {
   try {
-    const d = localStorage.getItem('questlands');
+    const d = localStorage.getItem('questlands-tw');
     if (d) {
       const parsed = JSON.parse(d);
       state = { ...state, ...parsed };
@@ -754,10 +739,10 @@ function uid() { return Date.now().toString(36) + Math.random().toString(36).sli
 /* ── Time Formatting ── */
 function timeAgo(ts) {
   const d = Date.now() - ts;
-  if (d < 60000) return 'just now';
-  if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
-  if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
-  return Math.floor(d / 86400000) + 'd ago';
+  if (d < 60000) return '剛剛';
+  if (d < 3600000) return Math.floor(d / 60000) + ' 分鐘前';
+  if (d < 86400000) return Math.floor(d / 3600000) + ' 小時前';
+  return Math.floor(d / 86400000) + ' 天前';
 }
 
 /* ── Chronicle ── */
@@ -771,28 +756,28 @@ function addChronicle(type, message, icon) {
 function seedData() {
   const now = Date.now();
   state.quests = [
-    { id: uid(), title: 'Build authentication flow', realm: 'forge', assignee: 'you', priority: 'rare', status: 'active', notes: '', createdAt: now - 86400000 * 3 },
-    { id: uid(), title: 'Refactor database queries', realm: 'forge', assignee: 'rowan', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
-    { id: uid(), title: 'Design landing page hero', realm: 'atelier', assignee: 'eleanor', priority: 'rare', status: 'active', notes: 'High-impact visual', createdAt: now - 86400000 * 4 },
-    { id: uid(), title: 'Create icon system', realm: 'atelier', assignee: 'eleanor', priority: 'common', status: 'active', notes: '', createdAt: now - 86400000 },
-    { id: uid(), title: 'Write API documentation', realm: 'scriptorium', assignee: 'finn', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
-    { id: uid(), title: 'Update onboarding guide', realm: 'scriptorium', assignee: 'you', priority: 'common', status: 'completed', notes: '', createdAt: now - 86400000 * 5, completedAt: now - 86400000 },
-    { id: uid(), title: 'Add unit tests for auth', realm: 'laboratory', assignee: 'rowan', priority: 'rare', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
-    { id: uid(), title: 'Performance benchmarks', realm: 'laboratory', assignee: 'you', priority: 'epic', status: 'active', notes: 'Critical for launch', createdAt: now - 86400000 },
-    { id: uid(), title: 'Deploy to staging', realm: 'harbor', assignee: 'rowan', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 3 },
-    { id: uid(), title: 'Set up CI/CD pipeline', realm: 'harbor', assignee: 'finn', priority: 'rare', status: 'completed', notes: '', createdAt: now - 86400000 * 6, completedAt: now - 86400000 * 2 },
-    { id: uid(), title: 'Sprint retrospective', realm: 'greathall', assignee: 'you', priority: 'common', status: 'active', notes: '', createdAt: now - 86400000 },
-    { id: uid(), title: 'Design review session', realm: 'greathall', assignee: 'eleanor', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
-    { id: uid(), title: 'Evaluate caching strategies', realm: 'watchtower', assignee: 'finn', priority: 'rare', status: 'active', notes: '', createdAt: now - 86400000 * 3 },
-    { id: uid(), title: 'Research WebSocket alternatives', realm: 'watchtower', assignee: 'you', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
+    { id: uid(), title: '建置身份驗證流程', realm: 'forge', assignee: 'you', priority: 'rare', status: 'active', notes: '', createdAt: now - 86400000 * 3 },
+    { id: uid(), title: '重構資料庫查詢', realm: 'forge', assignee: 'mingyuan', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
+    { id: uid(), title: '設計首頁主視覺', realm: 'atelier', assignee: 'ruoxue', priority: 'rare', status: 'active', notes: '高影響力視覺', createdAt: now - 86400000 * 4 },
+    { id: uid(), title: '建立圖標系統', realm: 'atelier', assignee: 'ruoxue', priority: 'common', status: 'active', notes: '', createdAt: now - 86400000 },
+    { id: uid(), title: '撰寫 API 文件', realm: 'scriptorium', assignee: 'yifeng', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
+    { id: uid(), title: '更新入門指南', realm: 'scriptorium', assignee: 'you', priority: 'common', status: 'completed', notes: '', createdAt: now - 86400000 * 5, completedAt: now - 86400000 },
+    { id: uid(), title: '新增身份驗證單元測試', realm: 'laboratory', assignee: 'mingyuan', priority: 'rare', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
+    { id: uid(), title: '效能基準測試', realm: 'laboratory', assignee: 'you', priority: 'epic', status: 'active', notes: '上線前關鍵任務', createdAt: now - 86400000 },
+    { id: uid(), title: '部署至測試環境', realm: 'harbor', assignee: 'mingyuan', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 3 },
+    { id: uid(), title: '建置 CI/CD 流水線', realm: 'harbor', assignee: 'yifeng', priority: 'rare', status: 'completed', notes: '', createdAt: now - 86400000 * 6, completedAt: now - 86400000 * 2 },
+    { id: uid(), title: '衝刺回顧會議', realm: 'greathall', assignee: 'you', priority: 'common', status: 'active', notes: '', createdAt: now - 86400000 },
+    { id: uid(), title: '設計審查會議', realm: 'greathall', assignee: 'ruoxue', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
+    { id: uid(), title: '評估快取策略', realm: 'watchtower', assignee: 'yifeng', priority: 'rare', status: 'active', notes: '', createdAt: now - 86400000 * 3 },
+    { id: uid(), title: '研究 WebSocket 替代方案', realm: 'watchtower', assignee: 'you', priority: 'uncommon', status: 'active', notes: '', createdAt: now - 86400000 * 2 },
   ];
   state.chronicle = [
-    { id: uid(), type: 'system', message: 'The guild has been established. Quests await.', icon: '🏰', timestamp: now - 86400000 * 6 },
-    { id: uid(), type: 'quest_complete', message: 'Finn completed "Set up CI/CD pipeline"', icon: '✅', timestamp: now - 86400000 * 2 },
-    { id: uid(), type: 'quest_complete', message: 'You completed "Update onboarding guide"', icon: '✅', timestamp: now - 86400000 },
-    { id: uid(), type: 'level_up', message: 'Rowan advanced to Artisan!', icon: '⬆️', timestamp: now - 86400000 },
-    { id: uid(), type: 'quest_create', message: 'New quest forged: "Performance benchmarks"', icon: '⚔️', timestamp: now - 86400000 },
-    { id: uid(), type: 'dice_roll', message: 'The bones revealed The Forge (8)', icon: '🎲', timestamp: now - 3600000 * 4 },
+    { id: uid(), type: 'system', message: '公會已建立，冒險等待著。', icon: '🏰', timestamp: now - 86400000 * 6 },
+    { id: uid(), type: 'quest_complete', message: '逸風完成了「建置 CI/CD 流水線」', icon: '✅', timestamp: now - 86400000 * 2 },
+    { id: uid(), type: 'quest_complete', message: '你完成了「更新入門指南」', icon: '✅', timestamp: now - 86400000 },
+    { id: uid(), type: 'level_up', message: '明遠晉升為匠師！', icon: '⬆️', timestamp: now - 86400000 },
+    { id: uid(), type: 'quest_create', message: '鍛造新任務：「效能基準測試」', icon: '⚔️', timestamp: now - 86400000 },
+    { id: uid(), type: 'dice_roll', message: '骰子揭示了鍛造廠 (8)', icon: '🎲', timestamp: now - 3600000 * 4 },
   ];
   save();
 }
@@ -809,11 +794,11 @@ function renderGuild() {
         <div class="member-avatar" style="border-color: ${m.hue}">${m.avatar}</div>
         <div class="member-info">
           <div class="member-name">${m.name}</div>
-          <div class="member-title" style="color: ${m.hue}">${m.hue === '#C44B3B' ? 'Red House' : m.hue === '#C4953A' ? 'Yellow House' : m.hue === '#5B8BA8' ? 'Blue House' : 'White House'}</div>
+          <div class="member-title" style="color: ${m.hue}">${HOUSES[m.hue] || ''}</div>
           <div class="member-stats">
             <span>${lv.title}</span>
             <span>${m.xp} XP</span>
-            <span>${questCount} quests</span>
+            <span>${questCount} 任務</span>
           </div>
           <div class="member-xp-bar">
             <div class="member-xp-fill" style="width: ${lv.progress * 100}%; background: ${m.hue}"></div>
@@ -823,7 +808,6 @@ function renderGuild() {
     `;
   }).join('');
 
-  // Achievements
   const achEl = document.getElementById('guild-achievements');
   const totalCompleted = state.quests.filter(q => q.status === 'completed').length;
   const mostQuests = state.guild.reduce((best, m) => {
@@ -833,11 +817,11 @@ function renderGuild() {
   achEl.innerHTML = `
     <div class="guild-achievement">
       <span class="icon">🏆</span>
-      <span class="label"><strong>Quests completed</strong>${totalCompleted} total</span>
+      <span class="label"><strong>已完成任務</strong>共 ${totalCompleted} 項</span>
     </div>
     <div class="guild-achievement">
       <span class="icon">⚡</span>
-      <span class="label"><strong>Most active</strong>${mostQuests.name} · ${mostQuests.count} quests</span>
+      <span class="label"><strong>最活躍成員</strong>${mostQuests.name}・${mostQuests.count} 項任務</span>
     </div>
   `;
 }
@@ -872,7 +856,7 @@ function renderHexGrid() {
 function renderQuests() {
   const panel = document.getElementById('quest-panel');
   if (!state.selectedRealm) {
-    panel.innerHTML = '<div class="quest-empty">Select a realm on the map to view its quests.</div>';
+    panel.innerHTML = '<div class="quest-empty">在地圖上選擇一個領域以查看其任務。</div>';
     return;
   }
   const realm = REALMS.find(r => r.id === state.selectedRealm);
@@ -880,7 +864,6 @@ function renderQuests() {
   if (state.selectedMember) {
     quests = quests.filter(q => q.assignee === state.selectedMember);
   }
-  // Sort: active first, then by priority weight desc
   const pOrder = { epic: 4, rare: 3, uncommon: 2, common: 1 };
   quests.sort((a, b) => {
     if (a.status !== b.status) return a.status === 'active' ? -1 : 1;
@@ -893,10 +876,10 @@ function renderQuests() {
     <div class="quest-panel-header">
       <div class="quest-panel-title">
         ${realm.icon} ${realm.name}
-        <span class="realm-desc">${realm.desc}${memberFilter ? ` · ${memberFilter}` : ''}</span>
+        <span class="realm-desc">${realm.desc}${memberFilter ? `・${memberFilter}` : ''}</span>
       </div>
     </div>
-    ${quests.length === 0 ? '<div class="quest-empty">No quests in this realm. Forge one below.</div>' : ''}
+    ${quests.length === 0 ? '<div class="quest-empty">此領域尚無任務，點擊下方鍛造一個。</div>' : ''}
     <div class="quest-list">
       ${quests.map(q => {
         const pri = PRIORITIES[q.priority];
@@ -906,7 +889,7 @@ function renderQuests() {
             <div class="quest-body">
               <div class="quest-title">${q.title}</div>
               <div class="quest-meta">
-                <span class="badge">${assignee?.avatar || '?'} ${assignee?.name || 'Unassigned'}</span>
+                <span class="badge">${assignee?.avatar || '?'} ${assignee?.name || '未指派'}</span>
                 <span class="badge" style="color: ${pri.color}">${pri.name}</span>
                 <span class="badge">+${pri.xp} XP</span>
                 ${q.notes ? `<span class="badge" title="${q.notes}">📝</span>` : ''}
@@ -914,9 +897,9 @@ function renderQuests() {
             </div>
             <div class="quest-actions">
               ${q.status === 'active' ? `
-                <button class="complete-btn" onclick="completeQuest('${q.id}')" title="Complete">✅</button>
+                <button class="complete-btn" onclick="completeQuest('${q.id}')" title="完成">✅</button>
               ` : ''}
-              <button class="delete-btn" onclick="deleteQuest('${q.id}')" title="Remove">🗑️</button>
+              <button class="delete-btn" onclick="deleteQuest('${q.id}')" title="刪除">🗑️</button>
             </div>
           </div>
         `;
@@ -947,23 +930,23 @@ function renderResources() {
     <div class="resource-card">
       <span class="r-icon">⚡</span>
       <span class="r-count">${active}</span>
-      <span class="r-label">Active</span>
+      <span class="r-label">進行中</span>
     </div>
     <div class="resource-card">
       <span class="r-icon">✅</span>
       <span class="r-count">${completed}</span>
-      <span class="r-label">Done</span>
+      <span class="r-label">已完成</span>
       ${completed > 0 ? `<span class="r-badge">+${completed}</span>` : ''}
     </div>
     <div class="resource-card">
       <span class="r-icon">🏆</span>
       <span class="r-count">${totalXp}</span>
-      <span class="r-label">Guild XP</span>
+      <span class="r-label">公會 XP</span>
     </div>
     <div class="resource-card">
       <span class="r-icon">💎</span>
       <span class="r-count">${epics}</span>
-      <span class="r-label">Epics</span>
+      <span class="r-label">史詩級</span>
     </div>
   `;
 }
@@ -997,7 +980,6 @@ function rollDice() {
   const sublabel = document.getElementById('focus-sublabel');
   const flavor = document.getElementById('focus-flavor');
 
-  // Animate dice
   let rolls = 0;
   const maxRolls = 8;
   const interval = setInterval(() => {
@@ -1007,7 +989,6 @@ function rollDice() {
     rolls++;
     if (rolls >= maxRolls) {
       clearInterval(interval);
-      // Pick realm weighted by active quest count
       const weights = REALMS.map(r => {
         const c = state.quests.filter(q => q.realm === r.id && q.status === 'active').length;
         return Math.max(c, 1);
@@ -1025,13 +1006,13 @@ function rollDice() {
       const sum = finalD1 + finalD2;
       display.innerHTML = `<div class="die">${finalD1}</div><div class="die">${finalD2}</div>`;
       result.innerHTML = `<span class="dice-realm-icon">${realm.icon}</span> ${realm.name}`;
-      label.textContent = 'Your Focus';
+      label.textContent = '今日聚焦';
       sublabel.textContent = realm.name;
-      flavor.textContent = FLAVOR_TEXTS[Math.floor(Math.random() * FLAVOR_TEXTS.length)] + ' ' + realm.name + '.';
+      flavor.textContent = FLAVOR_TEXTS[Math.floor(Math.random() * FLAVOR_TEXTS.length)] + realm.name + '。';
 
       state.focusedRealm = realm.id;
       state.selectedRealm = realm.id;
-      addChronicle('dice_roll', `The bones revealed ${realm.name} (${sum})`, '🎲');
+      addChronicle('dice_roll', `骰子揭示了${realm.name}（${sum}）`, '🎲');
       btn.disabled = false;
       render();
     }
@@ -1052,9 +1033,8 @@ function createQuest() {
   };
   state.quests.push(quest);
   state.selectedRealm = realm;
-  addChronicle('quest_create', `New quest forged: "${title}"`, '⚔️');
+  addChronicle('quest_create', `鍛造新任務：「${title}」`, '⚔️');
 
-  // Reset form
   document.getElementById('quest-title-input').value = '';
   document.getElementById('quest-notes-input').value = '';
   closeModal('quest-modal');
@@ -1075,13 +1055,12 @@ function completeQuest(id) {
     member.xp += pri.xp;
     const newLevel = getLevel(member.xp);
     if (newLevel.level > oldLevel) {
-      addChronicle('level_up', `${member.name} advanced to ${newLevel.title}!`, '⬆️');
+      addChronicle('level_up', `${member.name}晉升為${newLevel.title}！`, '⬆️');
     }
   }
 
-  addChronicle('quest_complete', `${member?.name || 'Someone'} completed "${q.title}"`, '✅');
+  addChronicle('quest_complete', `${member?.name || '某人'}完成了「${q.title}」`, '✅');
 
-  // XP float animation
   const card = document.querySelector(`.quest-card[data-id="${id}"]`);
   if (card) {
     card.classList.add('completing');
@@ -1103,7 +1082,7 @@ function deleteQuest(id) {
   const q = state.quests.find(x => x.id === id);
   if (!q) return;
   state.quests = state.quests.filter(x => x.id !== id);
-  addChronicle('quest_delete', `Quest abandoned: "${q.title}"`, '🗑️');
+  addChronicle('quest_delete', `放棄任務：「${q.title}」`, '🗑️');
   render();
 }
 
@@ -1114,9 +1093,9 @@ function renderTradeModal() {
 
   body.innerHTML = `
     <div style="margin-bottom: 12px; font-size: 14px; color: var(--ink);">
-      Choose a quest to reassign and select the new bearer.
+      選擇要重新分配的任務，並指定新的承擔者。
     </div>
-    <div style="margin-bottom: 8px; font-size: 12px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.06em;">Select quest</div>
+    <div style="margin-bottom: 8px; font-size: 12px; color: var(--ink-dim); letter-spacing: 0.06em;">選擇任務</div>
     <div class="trade-quest-list">
       ${activeQuests.map(q => {
         const assignee = state.guild.find(g => g.id === q.assignee);
@@ -1134,7 +1113,7 @@ function renderTradeModal() {
       const q = state.quests.find(x => x.id === tradeState.questId);
       const otherMembers = state.guild.filter(m => m.id !== q?.assignee);
       return `
-        <div style="margin-top: 16px; margin-bottom: 8px; font-size: 12px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.06em;">Reassign to</div>
+        <div style="margin-top: 16px; margin-bottom: 8px; font-size: 12px; color: var(--ink-dim); letter-spacing: 0.06em;">轉交給</div>
         <div class="trade-members">
           ${otherMembers.map(m => {
             const load = state.quests.filter(x => x.assignee === m.id && x.status === 'active').length;
@@ -1143,7 +1122,7 @@ function renderTradeModal() {
               <button class="trade-member-btn ${sel ? 'selected' : ''}" onclick="selectTradeTarget('${m.id}')">
                 <span class="tm-avatar">${m.avatar}</span>
                 <span class="tm-name">${m.name}</span>
-                <span class="tm-load">${load} quests</span>
+                <span class="tm-load">${load} 項任務</span>
               </button>
             `;
           }).join('')}
@@ -1172,7 +1151,7 @@ function confirmTrade() {
   if (!q || !to) return;
 
   q.assignee = tradeState.targetMember;
-  addChronicle('trade', `"${q.title}" reassigned from ${from?.name || '?'} to ${to.name}`, '🤝');
+  addChronicle('trade', `「${q.title}」從${from?.name || '?'}轉交至${to.name}`, '🤝');
   tradeState = { questId: null, targetMember: null };
   closeModal('trade-modal');
   render();
@@ -1182,12 +1161,10 @@ function confirmTrade() {
 function openModal(id) {
   document.getElementById(id).classList.add('open');
   if (id === 'quest-modal') {
-    // Populate realm dropdown
     const realmSel = document.getElementById('quest-realm-input');
     realmSel.innerHTML = REALMS.map(r =>
       `<option value="${r.id}" ${r.id === state.selectedRealm ? 'selected' : ''}>${r.icon} ${r.name}</option>`
     ).join('');
-    // Populate assignee dropdown
     const assignSel = document.getElementById('quest-assignee-input');
     assignSel.innerHTML = state.guild.map(m =>
       `<option value="${m.id}">${m.avatar} ${m.name}</option>`
@@ -1213,7 +1190,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'r' || e.key === 'R') rollDice();
 });
 
-// Close modal on overlay click
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', e => {
     if (e.target === overlay) overlay.classList.remove('open');
