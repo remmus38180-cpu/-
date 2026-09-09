@@ -1,0 +1,1140 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAS Hash 語法產生器</title>
+<!--
+  如果你在看這裡，你大概是工程師，或者非常有好奇心。
+  這個工具純手工，無框架，無後端，離線可用。
+  就像 hash object：查得到就有，查不到就 call missing()。
+  彩蛋在別處。繼續找。🥚
+-->
+<style>
+/* ── Base (claude-light style) ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Helvetica Neue", Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #1a1a1a;
+  background: #f0f0f0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  height: 46px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+.logo-badge {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #A25050;
+  background: #F6F6F6;
+  border: 1px solid #E8E8E8;
+  border-radius: 3px;
+  padding: 2px 7px;
+}
+header h1 { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+
+/* ── Layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Form Panel ── */
+.form-panel {
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.scenario-bar {
+  padding: 14px 18px 0;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+.bar-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+.tabs { display: flex; flex-wrap: wrap; gap: 5px; padding-bottom: 13px; }
+.tab {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  color: #555;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all .1s;
+  line-height: 1.4;
+}
+.tab:hover { border-color: #A25050; color: #A25050; background: #fdf6f6; }
+.tab.active { border-color: #A25050; color: #A25050; background: #fdf6f6; font-weight: 600; }
+
+.form-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Form controls ── */
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+.field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hint { font-size: 11px; font-weight: 400; color: #aaa; }
+
+.fi {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12.5px;
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fafafa;
+  color: #1a1a1a;
+  width: 100%;
+  transition: border-color .1s, background .1s;
+}
+.fi:focus { outline: none; border-color: #A25050; background: #fff; }
+.fi::placeholder { color: #ccc; }
+.fi-len { width: 62px; flex: none; text-align: center; font-size: 11.5px; }
+
+.multi-wrap { display: flex; flex-direction: column; gap: 5px; }
+.multi-row { display: flex; gap: 5px; align-items: center; }
+.multi-row .fi { flex: 1; }
+
+.col-label {
+  font-size: 10px;
+  color: #aaa;
+  text-align: center;
+  width: 62px;
+  flex: none;
+}
+
+.col-labels { display: flex; gap: 5px; align-items: center; padding-left: 0; }
+.col-labels .spacer { flex: 1; }
+
+.btn-rm {
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid #fde8e8;
+  background: #fde8e8;
+  color: #b52a2a;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 26px;
+  text-align: center;
+}
+.btn-rm:hover { background: #fccaca; }
+
+.btn-add {
+  padding: 4px 10px;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  background: transparent;
+  color: #888;
+  font-size: 11.5px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all .1s;
+}
+.btn-add:hover { border-color: #A25050; color: #A25050; background: #fdf6f6; }
+
+.btn-preset {
+  padding: 5px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fafafa;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .1s;
+  align-self: flex-end;
+  margin-top: -8px;
+}
+.btn-preset:hover { border-color: #A25050; color: #A25050; background: #fdf6f6; }
+
+/* ── Lookup block（JOIN + HASH-H 共用）── */
+.lookup-block, .lookup-card {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lb-head, .lookup-header { display: flex; align-items: center; justify-content: space-between; }
+.lb-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+.btn-rm-sm {
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid #fde8e8;
+  background: #fde8e8;
+  color: #b52a2a;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* ── Checkbox row ── */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #555;
+  cursor: pointer;
+  padding-top: 6px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 2px;
+  user-select: none;
+}
+.check-row input[type="checkbox"] { width: 13px; height: 13px; accent-color: #A25050; cursor: pointer; }
+.check-row.active { color: #A25050; }
+
+.multidata-hint {
+  font-size: 11px;
+  color: #7a6000;
+  padding: 5px 10px;
+  background: #fffbf0;
+  border-left: 3px solid #f0a500;
+  border-radius: 0 3px 3px 0;
+  line-height: 1.5;
+}
+
+/* ── Notes ── */
+.note {
+  font-size: 12px;
+  color: #444;
+  padding: 6px 12px;
+  border-left: 3px solid #cccccc;
+  line-height: 1.55;
+  background: none;
+}
+
+/* ── Code Panel ── */
+.code-panel {
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+  flex-shrink: 0;
+}
+.lang-tag {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+.btn-copy {
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background: #fafafa;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all .1s;
+}
+.btn-copy:hover { border-color: #A25050; color: #A25050; }
+.btn-copy.ok { color: #15803d; border-color: #bbf7d0; background: #f0fdf4; }
+
+.code-scroll { flex: 1; overflow-y: auto; padding: 18px; }
+pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.8;
+  background: #F6F6F6;
+  border: 1px solid #E8E8E8;
+  border-radius: 6px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  color: #1a1a1a;
+  white-space: pre;
+}
+.empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #ccc;
+  font-family: "SFMono-Regular", monospace;
+  font-size: 13px;
+}
+
+/* Syntax highlight — light theme */
+.kw  { color: #7c3aed; font-weight: 600; }
+.fn  { color: #1d4ed8; }
+.str { color: #15803d; }
+.num { color: #c2410c; }
+.cmt { color: #9ca3af; font-style: italic; }
+
+@media (max-width: 720px) {
+  body { height: auto; min-height: 100vh; overflow: auto; }
+  .layout { display: flex; flex-direction: column; height: auto; overflow: visible; }
+  .form-panel { height: auto; overflow: visible; border-right: none; border-bottom: 1px solid #e0e0e0; }
+  .form-scroll { flex: none; height: auto; overflow: visible; max-height: none; }
+  .code-panel { height: 70vh; flex-shrink: 0; }
+}
+</style>
+
+<header>
+  <span class="logo-badge">SAS</span>
+  <h1>Hash Object 語法產生器</h1>
+</header>
+
+<div class="layout">
+  <div class="form-panel">
+    <div class="scenario-bar">
+      <div class="bar-label">場景</div>
+      <div class="tabs">
+        <button class="tab active" data-s="join">JOIN</button>
+        <button class="tab" data-s="dedup">DEDUP</button>
+        <button class="tab" data-s="count">COUNT</button>
+        <button class="tab" data-s="sum">SUM</button>
+        <button class="tab" data-s="countd">COUNT DISTINCT</button>
+        <button class="tab" data-s="sort">SORT</button>
+        <button class="tab" data-s="hashh">HASH-H</button>
+      </div>
+    </div>
+    <div class="form-scroll" id="formScroll"></div>
+  </div>
+
+  <div class="code-panel">
+    <div class="code-header">
+      <span class="lang-tag">SAS · hash object</span>
+      <button class="btn-copy" id="btnCopy">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M4 2a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V2zm2 0v8h8V2H6zM2 6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-1H9v1H2V8h1V6H2z"/>
+        </svg>
+        複製
+      </button>
+    </div>
+    <div class="code-scroll" id="codeScroll">
+      <div class="empty"><span>← 填入欄位後即時產生語法</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── State ── */
+const S = {
+  scenario: 'join',
+  join: {
+    output: '', main: '',
+    lookups: [{ table: '', keys: [''], data: [{name:'',length:''}], multidata: false }]
+  },
+  dedup:  { output: '', main: '', keys: [''] },
+  count:  { output: '', main: '', groups: [''] },
+  sum:    { output: '', main: '', groups: [''], field: '' },
+  countd: { output: '', main: '', groups: [''], field: '' },
+  sort:   { output: '', main: '', keys: [''], data: [''], order: 'a' },
+  hashh:  {
+    output: '', main: '', routeField: '',
+    routes: [
+      { val:'', valType:'char', table:'', key:'', data:[''] },
+      { val:'', valType:'char', table:'', key:'', data:[''] }
+    ]
+  },
+};
+
+const descs = {
+  join:   '主表從對照表帶回欄位（等同 LEFT JOIN）',
+  dedup:  '保留每個 key 第一次出現的那筆',
+  count:  '依分組累計筆數，輸出變數 cnt',
+  sum:    '依分組加總數值欄位，輸出變數 total',
+  countd: '每組裡某欄位不重複值計數（COUNT DISTINCT）',
+  sort:   '用 hash iterator 把整張表排序後輸出',
+  hashh:  '依路由欄位值決定查哪個對照表（條件式 JOIN）',
+};
+
+const presets = {
+  join: () => {
+    S.join.output = 'work.orders_with_info';
+    S.join.main   = 'work.orders';
+    S.join.lookups = [{
+      table: 'work.user_lookup',
+      keys: ['user_id'],
+      data: [{name:'user_name',length:'$50'},{name:'dept',length:'$20'}],
+      multidata: false
+    }];
+  },
+  dedup:  () => { S.dedup.output='work.orders_dedup'; S.dedup.main='work.orders'; S.dedup.keys=['order_id']; },
+  count:  () => { S.count.output='work.dept_order_count'; S.count.main='work.orders'; S.count.groups=['dept']; },
+  sum:    () => { S.sum.output='work.dept_sales'; S.sum.main='work.orders'; S.sum.groups=['dept']; S.sum.field='order_amount'; },
+  countd: () => { S.countd.output='work.dept_user_count'; S.countd.main='work.orders'; S.countd.groups=['dept']; S.countd.field='user_id'; },
+  sort:   () => { S.sort.output='work.orders_sorted'; S.sort.main='work.orders'; S.sort.keys=['order_date','order_id']; S.sort.data=['amount']; S.sort.order='a'; },
+  hashh:  () => {
+    S.hashh.output='work.orders_joined'; S.hashh.main='work.orders'; S.hashh.routeField='source_type';
+    S.hashh.routes=[
+      { val:'A', valType:'char', table:'work.type_a_ref', key:'item_id', data:['item_name','price'] },
+      { val:'B', valType:'char', table:'work.type_b_ref', key:'item_id', data:['item_name','discount'] }
+    ];
+  },
+};
+
+/* ── Helpers ── */
+const $  = id => document.getElementById(id);
+const qv = v  => v || '???';
+const cleanStr = a => a.filter(Boolean);
+const cleanObj = a => a.map(d=>d.name).filter(Boolean);
+
+function inp(val, ph, cb) {
+  const el = document.createElement('input');
+  el.type='text'; el.className='fi'; el.value=val||''; el.placeholder=ph||'';
+  el.addEventListener('input', e => { cb(e.target.value); gen(); });
+  return el;
+}
+
+function fg(label, hint, ...children) {
+  const d = document.createElement('div'); d.className='field-group';
+  const l = document.createElement('div'); l.className='field-label'; l.textContent=label;
+  if (hint) { const h=document.createElement('span'); h.className='hint'; h.textContent=hint; l.appendChild(h); }
+  d.appendChild(l);
+  children.forEach(c => d.appendChild(c));
+  return d;
+}
+
+/* Plain string multi-input (key fields, group fields) */
+function multiStr(arr, ph) {
+  const wrap = document.createElement('div'); wrap.className='multi-wrap';
+  const render = () => {
+    wrap.innerHTML='';
+    arr.forEach((v,i) => {
+      const row = document.createElement('div'); row.className='multi-row';
+      const el = document.createElement('input');
+      el.type='text'; el.className='fi'; el.value=v; el.placeholder=ph||'欄位名稱';
+      el.addEventListener('input', e => { arr[i]=e.target.value; gen(); });
+      row.appendChild(el);
+      if (arr.length>1) {
+        const rm=document.createElement('button'); rm.className='btn-rm'; rm.textContent='×';
+        rm.addEventListener('click', ()=>{ arr.splice(i,1); render(); gen(); });
+        row.appendChild(rm);
+      }
+      wrap.appendChild(row);
+    });
+    const add=document.createElement('button'); add.className='btn-add'; add.textContent='+ 新增欄位';
+    add.addEventListener('click', ()=>{ arr.push(''); render(); gen(); });
+    wrap.appendChild(add);
+  };
+  render(); return wrap;
+}
+
+/* Data field input with optional length (JOIN only) */
+function dataFields(arr) {
+  const wrap = document.createElement('div'); wrap.className='multi-wrap';
+  const render = () => {
+    wrap.innerHTML='';
+    // Column labels
+    const cl = document.createElement('div'); cl.className='col-labels';
+    const sp = document.createElement('div'); sp.className='spacer'; cl.appendChild(sp);
+    const ln = document.createElement('div'); ln.className='col-label'; ln.textContent='長度（選填）'; cl.appendChild(ln);
+    const ph = document.createElement('div'); ph.style.width='26px'; ph.style.flexShrink='0'; cl.appendChild(ph);
+    wrap.appendChild(cl);
+
+    arr.forEach((d,i) => {
+      const row = document.createElement('div'); row.className='multi-row';
+      const ni = document.createElement('input');
+      ni.type='text'; ni.className='fi'; ni.value=d.name; ni.placeholder='data_var';
+      ni.addEventListener('input', e=>{ arr[i].name=e.target.value; gen(); });
+      row.appendChild(ni);
+      const li = document.createElement('input');
+      li.type='text'; li.className='fi fi-len'; li.value=d.length; li.placeholder='$50';
+      li.title='字元型如 $50，數值型如 8；空白=從對照表自動推導';
+      li.addEventListener('input', e=>{ arr[i].length=e.target.value; gen(); });
+      row.appendChild(li);
+      if (arr.length>1) {
+        const rm=document.createElement('button'); rm.className='btn-rm'; rm.textContent='×';
+        rm.addEventListener('click', ()=>{ arr.splice(i,1); render(); gen(); });
+        row.appendChild(rm);
+      }
+      wrap.appendChild(row);
+    });
+    const add=document.createElement('button'); add.className='btn-add'; add.textContent='+ 新增欄位';
+    add.addEventListener('click', ()=>{ arr.push({name:'',length:''}); render(); gen(); });
+    wrap.appendChild(add);
+  };
+  render(); return wrap;
+}
+
+/* ── Form renderers ── */
+function renderJoin(fs) {
+  const J = S.join;
+  // Preset button row
+  const topRow = document.createElement('div');
+  topRow.style.cssText='display:flex;align-items:center;justify-content:space-between;';
+  const descEl = document.createElement('div'); descEl.className='note'; descEl.textContent=descs.join;
+  const preBtn = document.createElement('button'); preBtn.className='btn-preset'; preBtn.textContent='📋 帶入範例';
+  preBtn.addEventListener('click', ()=>{ presets.join(); renderForm(); gen(); });
+  topRow.appendChild(descEl); topRow.appendChild(preBtn);
+  fs.appendChild(topRow);
+
+  fs.appendChild(fg('輸出表', '', inp(J.output,'work.output_table',v=>J.output=v)));
+  fs.appendChild(fg('主表', '（set 的主表）', inp(J.main,'work.main_table',v=>J.main=v)));
+
+  const sec = document.createElement('div'); sec.className='field-group';
+  const lbl = document.createElement('div'); lbl.className='field-label'; lbl.textContent='對照表';
+  const hint = document.createElement('span'); hint.className='hint'; hint.textContent='可多張'; lbl.appendChild(hint);
+  sec.appendChild(lbl);
+
+  const renderLookups = () => {
+    while (sec.children.length>1) sec.removeChild(sec.lastChild);
+    J.lookups.forEach((lk,li) => {
+      const blk = document.createElement('div'); blk.className='lookup-block';
+      const bh = document.createElement('div'); bh.className='lb-head';
+      const bt = document.createElement('span'); bt.className='lb-title'; bt.textContent=`對照表 ${li+1}`; bh.appendChild(bt);
+      if (J.lookups.length>1) {
+        const rm=document.createElement('button'); rm.className='btn-rm-sm'; rm.textContent='移除';
+        rm.addEventListener('click', ()=>{ J.lookups.splice(li,1); renderLookups(); gen(); });
+        bh.appendChild(rm);
+      }
+      blk.appendChild(bh);
+
+      const ti=document.createElement('input');
+      ti.type='text'; ti.className='fi'; ti.value=lk.table; ti.placeholder='work.lookup_table';
+      ti.addEventListener('input', e=>{ J.lookups[li].table=e.target.value; gen(); });
+      blk.appendChild(fg('資料集名稱','',ti));
+      blk.appendChild(fg('Key 欄位','',multiStr(lk.keys,'key_var')));
+      blk.appendChild(fg('帶回欄位','（若與主表欄位同名，hash find 後值將被覆蓋）',dataFields(lk.data)));
+
+      // Multidata checkbox
+      const chkRow = document.createElement('label'); chkRow.className='check-row'+(lk.multidata?' active':'');
+      const chk = document.createElement('input'); chk.type='checkbox'; chk.checked=lk.multidata;
+      chk.addEventListener('change', e=>{
+        J.lookups[li].multidata=e.target.checked;
+        chkRow.className='check-row'+(e.target.checked?' active':'');
+        mdNote.hidden=!e.target.checked;
+        gen();
+      });
+      chkRow.appendChild(chk);
+      chkRow.appendChild(document.createTextNode(' 對照表有重複 Key（multidata:"YES"）'));
+      blk.appendChild(chkRow);
+
+      const mdNote = document.createElement('div'); mdNote.className='multidata-hint'; mdNote.hidden=!lk.multidata;
+      mdNote.textContent='啟用後改用 do while(h.do_over()=0) 迴圈擷取所有符合記錄，output 在迴圈內執行。';
+      blk.appendChild(mdNote);
+      sec.appendChild(blk);
+    });
+    const addBtn=document.createElement('button'); addBtn.className='btn-add'; addBtn.textContent='+ 新增對照表';
+    addBtn.addEventListener('click', ()=>{ J.lookups.push({table:'',keys:[''],data:[{name:'',length:''}],multidata:false}); renderLookups(); gen(); });
+    sec.appendChild(addBtn);
+  };
+  renderLookups(); fs.appendChild(sec);
+}
+
+function addPresetBtn(fs, scenario, descText) {
+  const topRow = document.createElement('div');
+  topRow.style.cssText='display:flex;align-items:flex-start;justify-content:space-between;gap:8px;';
+  const descEl = document.createElement('div'); descEl.className='note'; descEl.textContent=descText;
+  const preBtn = document.createElement('button'); preBtn.className='btn-preset'; preBtn.textContent='📋 帶入範例';
+  preBtn.addEventListener('click', ()=>{ presets[scenario](); renderForm(); gen(); });
+  topRow.appendChild(descEl); topRow.appendChild(preBtn);
+  fs.appendChild(topRow);
+}
+
+function renderDedup(fs) {
+  const D=S.dedup;
+  addPresetBtn(fs,'dedup',descs.dedup);
+  fs.appendChild(fg('輸出表','',inp(D.output,'work.output_table',v=>D.output=v)));
+  fs.appendChild(fg('主表','',inp(D.main,'work.main_table',v=>D.main=v)));
+  fs.appendChild(fg('去重 Key 欄位','複合 key 可多個',multiStr(D.keys,'key_var')));
+}
+
+function renderCount(fs) {
+  const C=S.count;
+  addPresetBtn(fs,'count',descs.count);
+  fs.appendChild(fg('輸出表','支援 &macrovar.',inp(C.output,'work.count_result 或 &outds.',v=>C.output=v)));
+  fs.appendChild(fg('主表','',inp(C.main,'work.main_table',v=>C.main=v)));
+  fs.appendChild(fg('Group 欄位','分組依據，可多個',multiStr(C.groups,'group_var')));
+  const n=document.createElement('div'); n.className='note'; n.textContent='輸出變數固定為 cnt（計次）'; fs.appendChild(n);
+}
+
+function renderSum(fs) {
+  const T=S.sum;
+  addPresetBtn(fs,'sum',descs.sum);
+  fs.appendChild(fg('輸出表','支援 &macrovar.',inp(T.output,'work.sum_result 或 &outds.',v=>T.output=v)));
+  fs.appendChild(fg('主表','',inp(T.main,'work.main_table',v=>T.main=v)));
+  fs.appendChild(fg('Group 欄位','可多個',multiStr(T.groups,'group_var')));
+  fs.appendChild(fg('加總欄位','數值型',inp(T.field,'amount_var',v=>T.field=v)));
+  const n=document.createElement('div'); n.className='note'; n.textContent='輸出變數固定為 total（加總值）'; fs.appendChild(n);
+}
+
+function renderCountD(fs) {
+  const D=S.countd;
+  addPresetBtn(fs,'countd',descs.countd);
+  fs.appendChild(fg('輸出表','支援 &macrovar.',inp(D.output,'work.countd_result 或 &outds.',v=>D.output=v)));
+  fs.appendChild(fg('主表','',inp(D.main,'work.main_table',v=>D.main=v)));
+  fs.appendChild(fg('Group 欄位','可多個',multiStr(D.groups,'group_var')));
+  fs.appendChild(fg('計 distinct 欄位','同組內不重複計次',inp(D.field,'target_var',v=>D.field=v)));
+  const n=document.createElement('div'); n.className='note';
+  n.textContent='輸出變數固定為 cnt。missing 值不計入（對齊 SQL COUNT(DISTINCT) 語意）；若需計入 missing，移除生成程式碼中的 if not missing 那行。⚠️ seen hash 會保留所有出現過的「group + distinct 值」組合於記憶體，資料量龐大時請評估記憶體需求，必要時改用 PROC SQL 或 PROC SORT + DATA 步方案。'; fs.appendChild(n);
+}
+
+function renderSort(fs) {
+  const T=S.sort;
+  addPresetBtn(fs,'sort',descs.sort);
+  fs.appendChild(fg('輸出表','',inp(T.output,'work.sorted_output',v=>T.output=v)));
+  fs.appendChild(fg('主表','',inp(T.main,'work.main_table',v=>T.main=v)));
+  fs.appendChild(fg('排序 Key 欄位','definekey 依據，可多個',multiStr(T.keys,'key_var')));
+  fs.appendChild(fg('額外 Data 欄位','Key 以外要帶出的欄位',multiStr(T.data,'data_var')));
+  // 排序方向 selector
+  const oSel = document.createElement('select'); oSel.className='fi';
+  ['升冪（a）','降冪（d）'].forEach((lbl,i)=>{
+    const op=document.createElement('option'); op.value=i===0?'a':'d'; op.textContent=lbl;
+    if(op.value===T.order) op.selected=true;
+    oSel.appendChild(op);
+  });
+  oSel.addEventListener('change',e=>{ T.order=e.target.value; gen(); });
+  fs.appendChild(fg('排序方向','',oSel));
+  const n=document.createElement('div'); n.className='note';
+  n.textContent='整張主表讀入 hash，依 key 排序後輸出。自動加 _seq_ 流水號確保重複 key 不遺失，輸出時 drop。'; fs.appendChild(n);
+}
+
+function renderHashH(fs) {
+  const H=S.hashh;
+  addPresetBtn(fs,'hashh',descs.hashh);
+  fs.appendChild(fg('輸出表','',inp(H.output,'work.output_table',v=>H.output=v)));
+  fs.appendChild(fg('主表','',inp(H.main,'work.main_table',v=>H.main=v)));
+  fs.appendChild(fg('路由欄位','依此欄位值決定查哪個 hash',inp(H.routeField,'category_var',v=>H.routeField=v)));
+
+  const sec=document.createElement('div'); sec.className='field-group';
+  const lbl=document.createElement('div'); lbl.className='field-label'; lbl.textContent='路由對照表';
+  sec.appendChild(lbl);
+
+  const renderRoutes=()=>{
+    // remove old route cards
+    while(sec.children.length>1) sec.removeChild(sec.lastChild);
+    H.routes.forEach((r,i)=>{
+      const card=document.createElement('div'); card.className='lookup-card';
+      const header=document.createElement('div'); header.className='lookup-header';
+      const title=document.createElement('span'); title.textContent=`路由 ${i+1}`;
+      header.appendChild(title);
+      if(H.routes.length>2){
+        const rm=document.createElement('button'); rm.className='btn-rm'; rm.textContent='×';
+        rm.addEventListener('click',()=>{ H.routes.splice(i,1); renderRoutes(); gen(); });
+        header.appendChild(rm);
+      }
+      card.appendChild(header);
+
+      const valRow=document.createElement('div'); valRow.className='field-label';
+      valRow.textContent='路由值';
+      card.appendChild(valRow);
+      // 型態選鈕 — 決定 generator 是否自動加引號
+      const typeWrap=document.createElement('div'); typeWrap.style.cssText='display:flex;gap:5px;margin-bottom:4px;';
+      ['char','num'].forEach(t=>{
+        const btn=document.createElement('button');
+        btn.className='tab'+(r.valType===t?' active':'');
+        btn.textContent=t==='char'?'字元型（自動加引號）':'數值型';
+        btn.style.cssText='font-size:11px;padding:3px 9px;';
+        btn.addEventListener('click',()=>{
+          r.valType=t;
+          typeWrap.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          gen();
+        });
+        typeWrap.appendChild(btn);
+      });
+      card.appendChild(typeWrap);
+      const valInp=document.createElement('input'); valInp.type='text'; valInp.className='fi';
+      valInp.value=r.val; valInp.placeholder=r.valType==='char'?'TypeA（不需加引號）':'1';
+      valInp.addEventListener('input',e=>{ r.val=e.target.value; gen(); });
+      card.appendChild(valInp);
+
+      const tbl=document.createElement('div'); tbl.className='field-label'; tbl.textContent='對照表';
+      card.appendChild(tbl);
+      const tblInp=document.createElement('input'); tblInp.type='text'; tblInp.className='fi';
+      tblInp.value=r.table; tblInp.placeholder='work.lookup_a';
+      tblInp.addEventListener('input',e=>{ r.table=e.target.value; gen(); });
+      card.appendChild(tblInp);
+
+      const klbl=document.createElement('div'); klbl.className='field-label'; klbl.textContent='Key 欄位';
+      card.appendChild(klbl);
+      const kInp=document.createElement('input'); kInp.type='text'; kInp.className='fi';
+      kInp.value=r.key; kInp.placeholder='key_var';
+      kInp.addEventListener('input',e=>{ r.key=e.target.value; gen(); });
+      card.appendChild(kInp);
+
+      const dlbl=document.createElement('div'); dlbl.className='field-label'; dlbl.textContent='Data 欄位';
+      card.appendChild(dlbl);
+      card.appendChild(multiStr(r.data,'data_var'));
+
+      sec.appendChild(card);
+    });
+    const addBtn=document.createElement('button'); addBtn.className='btn-add';
+    addBtn.textContent='+ 新增路由';
+    addBtn.addEventListener('click',()=>{ H.routes.push({val:'',table:'',key:'',data:['']}); renderRoutes(); gen(); });
+    sec.appendChild(addBtn);
+  };
+  renderRoutes();
+  fs.appendChild(sec);
+  const n=document.createElement('div'); n.className='note';
+  n.textContent='SAS 無法在執行期動態呼叫 hash 物件，以 if/else if 條件路由模擬 hash of hashes。'; fs.appendChild(n);
+}
+
+function renderForm() {
+  const fs=$('formScroll'); fs.innerHTML='';
+  switch(S.scenario) {
+    case 'join':   renderJoin(fs);   break;
+    case 'dedup':  renderDedup(fs);  break;
+    case 'count':  renderCount(fs);  break;
+    case 'sum':    renderSum(fs);    break;
+    case 'sort':   renderSort(fs);   break;
+    case 'hashh':  renderHashH(fs);  break;
+    case 'countd': renderCountD(fs); break;
+  }
+}
+
+/* ── Code generators ── */
+
+/* 遞迴巢狀 multidata cross-join 產生器
+   多張 multidata 對照表：外層跑完 h[i] 所有命中，每輪重新 find() h[i+1]，
+   內層展開 h[i+1] 所有命中，產生真正的 cross-join（筆數為各表命中數的乘積）。
+   find() 失敗時清空欄位並仍輸出（LEFT JOIN 語意）。                         */
+function genChain(multis, idx, indent, lines) {
+  const {hn, names} = multis[idx];
+  const miss = names.length ? names.join(', ') : '???';
+  const isLast = idx === multis.length - 1;
+  if(isLast){
+    lines.push(`${indent}if ${hn}.find() = 0 then do;`);
+    lines.push(`${indent}  output;`);
+    lines.push(`${indent}  do while(${hn}.do_over() = 0);`);
+    lines.push(`${indent}    output;`);
+    lines.push(`${indent}  end;`);
+    lines.push(`${indent}end; else do;`);
+    lines.push(`${indent}  call missing(${miss});`);
+    lines.push(`${indent}  output;`);
+    lines.push(`${indent}end;`);
+  } else {
+    lines.push(`${indent}if ${hn}.find() = 0 then do;`);
+    lines.push(`${indent}  do while(1 = 1);  /* 外層：逐筆跑 ${hn} 所有命中，每輪重新 find 內層 */`);
+    genChain(multis, idx+1, indent+'    ', lines);
+    lines.push(`${indent}    if ${hn}.do_over() ne 0 then leave;`);
+    lines.push(`${indent}  end;`);
+    lines.push(`${indent}end; else do;  /* ${hn} 未命中：清空後仍跑內層（LEFT JOIN 語意）*/`);
+    lines.push(`${indent}  call missing(${miss});`);
+    genChain(multis, idx+1, indent+'  ', lines);
+    lines.push(`${indent}end;`);
+  }
+}
+
+function genJoin() {
+  const J=S.join, out=qv(J.output), main=qv(J.main);
+  const ls=J.lookups;
+  const lines=[`data ${out};`];
+
+  // 1. Length specs FIRST (before if 0 then set)
+  const lenSpecs=[];
+  ls.forEach(lk=>{ lk.data.forEach(d=>{ if(d.length&&d.name) lenSpecs.push(`${d.name} ${d.length}`); }); });
+  if(lenSpecs.length) lines.push(`  length ${lenSpecs.join(' ')};`);
+
+  // 2. if 0 then set (for type inference)
+  ls.forEach(lk=>{
+    const tbl=qv(lk.table);
+    const names=cleanObj(lk.data);
+    const keep=[...cleanStr(lk.keys),...names];
+    lines.push(`  if 0 then set ${tbl}(keep=${keep.length?keep.join(' '):'???'});`);
+  });
+
+  // 3. Declare hashes
+  lines.push(`  if _n_ = 1 then do;`);
+  ls.forEach((lk,i)=>{
+    const hn=ls.length===1?'h':`h${i+1}`;
+    const tbl=qv(lk.table);
+    const keys=cleanStr(lk.keys);
+    const names=cleanObj(lk.data);
+    const md=lk.multidata?', multidata:"YES"':'';
+    lines.push(`    dcl hash ${hn}(dataset:"${tbl}"${md});`);
+    lines.push(`    ${hn}.definekey(${keys.length?keys.map(k=>`"${k}"`).join(', '):'"???"'});`);
+    lines.push(`    ${hn}.definedata(${names.length?names.map(d=>`"${d}"`).join(', '):'"???"'});`);
+    lines.push(`    ${hn}.definedone();`);
+    if(i<ls.length-1) lines.push('');
+  });
+  lines.push(`  end;`);
+  lines.push(`  set ${main};`);
+
+  // 4. Non-multidata: find / call missing（LEFT JOIN；欄位值在後續所有 output 中保持不變）
+  //    同名欄位 validation：多張 lookup 若有相同 data 欄位名稱，後者會覆蓋前者
+  if(ls.length > 1){
+    const seen={}; const dups=[];
+    ls.forEach((lk,i)=>{ cleanObj(lk.data).forEach(n=>{ if(seen[n]!==undefined) dups.push(n); seen[n]=i; }); });
+    const uniq=[...new Set(dups)];
+    if(uniq.length) lines.push(`  /* ⚠️ 警告：欄位 ${uniq.join(', ')} 在多張對照表重複出現，後者執行會覆蓋前者的值。 */`);
+  }
+  // ⚠️ 每張 lookup 的 key ∩ data 重疊偵測
+  ls.forEach((lk,i)=>{
+    const keys=cleanStr(lk.keys), names=cleanObj(lk.data);
+    const hn=ls.length===1?'h':`h${i+1}`;
+    const kdOverlap=keys.filter(k=>names.includes(k));
+    if(kdOverlap.length) lines.push(`  /* ⚠️ ${hn}：欄位 ${kdOverlap.join(', ')} 同時列於 key 與 data，find() 後 key 值已存 PDV，definedata 含 key 為多餘且易造成混淆，建議從帶回欄位移除。 */`);
+  });
+  ls.forEach((lk,i)=>{
+    if(!lk.multidata){
+      const hn=ls.length===1?'h':`h${i+1}`;
+      const names=cleanObj(lk.data);
+      lines.push(`  if ${hn}.find() ne 0 then call missing(${names.length?names.join(', '):'???'});`);
+    }
+  });
+
+  // 5. Multidata: 用 genChain 遞迴展開（1 張：單層 do_over；多張：巢狀 cross-join）
+  const multis=[];
+  ls.forEach((lk,i)=>{
+    if(lk.multidata){
+      const hn=ls.length===1?'h':`h${i+1}`;
+      const names=cleanObj(lk.data);
+      multis.push({hn, names});
+    }
+  });
+  if(multis.length>0) genChain(multis, 0, '  ', lines);
+
+  lines.push(`run;`);
+  return lines.join('\n');
+}
+
+function genDedup() {
+  const D=S.dedup;
+  const keys=cleanStr(D.keys);
+  const kstr=keys.length?keys.map(k=>`"${k}"`).join(', '):'"???"';
+  return [
+    `data ${qv(D.output)};`,
+    `  if _n_ = 1 then do;`,
+    `    dcl hash seen();`,
+    `    seen.definekey(${kstr});`,
+    `    seen.definedone();`,
+    `  end;`,
+    `  set ${qv(D.main)};`,
+    `  if seen.check() ne 0 then do;  /* 第一次出現才進來 */`,
+    `    seen.add();`,
+    `    output;`,
+    `  end;`,
+    `run;`,
+  ].join('\n');
+}
+
+function genCount() {
+  const C=S.count;
+  const groups=cleanStr(C.groups);
+  const gk=groups.length?groups.map(g=>`"${g}"`).join(', '):'"???"';
+  const gd=groups.length?[...groups.map(g=>`"${g}"`),...['"cnt"']].join(', '):'"???", "cnt"';
+  return [
+    `data _null_;`,
+    `  if _n_ = 1 then do;`,
+    `    dcl hash h();`,
+    `    h.definekey(${gk});`,
+    `    h.definedata(${gd});`,
+    `    h.definedone();`,
+    `  end;`,
+    `  set ${qv(C.main)} end=lr;`,
+    `  if h.find() ne 0 then cnt = 0;`,
+    `  cnt + 1;`,
+    `  h.replace();`,
+    `  if lr then h.output(dataset:"${qv(C.output)}");`,
+    `run;`,
+  ].join('\n');
+}
+
+function genSum() {
+  const T=S.sum;
+  const groups=cleanStr(T.groups), sf=T.field||'???';
+  const gk=groups.length?groups.map(g=>`"${g}"`).join(', '):'"???"';
+  const gd=groups.length?[...groups.map(g=>`"${g}"`),...['"total"']].join(', '):'"???", "total"';
+  return [
+    `data _null_;`,
+    `  if _n_ = 1 then do;`,
+    `    dcl hash h();`,
+    `    h.definekey(${gk});`,
+    `    h.definedata(${gd});`,
+    `    h.definedone();`,
+    `  end;`,
+    `  set ${qv(T.main)} end=lr;`,
+    `  if h.find() ne 0 then total = 0;`,
+    `  total + ${sf};`,
+    `  h.replace();`,
+    `  if lr then h.output(dataset:"${qv(T.output)}");`,
+    `run;`,
+  ].join('\n');
+}
+
+function genCountD() {
+  const D=S.countd;
+  const groups=cleanStr(D.groups), cf=D.field||'???';
+  const gk=groups.length?groups.map(g=>`"${g}"`).join(', '):'"???"';
+  const gd=groups.length?[...groups.map(g=>`"${g}"`),...['"cnt"']].join(', '):'"???", "cnt"';
+  const sk=groups.length?[...groups.map(g=>`"${g}"`),`"${cf}"`].join(', '):`"???", "${cf}"`;
+  return [
+    `data _null_;`,
+    `  if _n_ = 1 then do;`,
+    `    dcl hash h();                    /* 外層：每組計數 */`,
+    `    h.definekey(${gk});`,
+    `    h.definedata(${gd});`,
+    `    h.definedone();`,
+    ``,
+    `    dcl hash seen();                 /* 內層：組合是否見過 */`,
+    `    seen.definekey(${sk});`,
+    `    seen.definedone();`,
+    `  end;`,
+    `  set ${qv(D.main)} end=lr;`,
+    `  if not missing(${cf}) then do;    /* 排除 missing，對齊 SQL COUNT(DISTINCT) 語意 */`,
+    `    if seen.check() ne 0 then do;   /* 這個組合第一次出現 */`,
+    `      seen.add();`,
+    `      if h.find() ne 0 then cnt = 0;`,
+    `      cnt + 1;`,
+    `      h.replace();`,
+    `    end;`,
+    `  end;`,
+    `  if lr then h.output(dataset:"${qv(D.output)}");`,
+    `run;`,
+  ].join('\n');
+}
+
+function genSort() {
+  const T=S.sort;
+  const out=qv(T.output), main=qv(T.main);
+  const keys=cleanStr(T.keys), data=cleanStr(T.data);
+  const order=T.order||'a';
+  // _seq_ 作為 tie-breaker 加入 key 尾端，確保重複排序欄位不會被 hash 覆蓋。
+  // 升冪（a）：_seq_ 正向遞增（1,2,3...），Hash 升冪排序，同值組維持原始順序。
+  // 降冪（d）：_seq_ 負向遞減（-1,-2,-3...），Hash 降冪排序，同值組 -1 > -2 > -3，
+  //           原始第 1 筆排最前，仍維持原始順序。
+  const seqInc = order==='a' ? '+1' : '+(-1)';
+  const allKeys=[...keys,'_seq_'];
+  const allData=[...keys,...data,'_seq_'];
+  const kstr=allKeys.map(k=>`"${k}"`).join(', ');
+  const dstr=allData.length?allData.map(d=>`"${d}"`).join(', '):'"???", "_seq_"';
+  return [
+    `data ${out}(drop=_seq_);`,
+    `  if _n_ = 1 then do;`,
+    `    dcl hash h(ordered:"${order}");   /* ${order==='a'?'升冪':'降冪'}；_seq_ 為 tie-breaker，確保 key 唯一 */`,
+    `    h.definekey(${kstr});`,
+    `    h.definedata(${dstr});`,
+    `    h.definedone();`,
+    `    dcl hiter it("h");`,
+    `  end;`,
+    `  _seq_ ${seqInc};  /* ${order==='a'?'正向遞增（1,2,3）同值保原始順序':'負向遞減（-1,-2,-3）降冪時同值仍保原始順序'} */`,
+    `  set ${main} end=lr;`,
+    `  h.add();`,
+    `  if lr then do;`,
+    `    if it.first() = 0 then do;`,
+    `      output;`,
+    `      do while(it.next() = 0);`,
+    `        output;`,
+    `      end;`,
+    `    end;`,
+    `  end;`,
+    `  stop;`,
+    `run;`,
+  ].join('\n');
+}
+
+function genHashH() {
+  const H=S.hashh;
+  const out=qv(H.output), main=qv(H.main), rf=H.routeField||'???';
+  const rs=H.routes;
+  const lines=[`data ${out};`];
+
+  // if 0 then set for each route
+  rs.forEach(r=>{
+    const tbl=qv(r.table);
+    const keep=[r.key||'???',...cleanStr(r.data)];
+    lines.push(`  if 0 then set ${tbl}(keep=${keep.join(' ')});`);
+  });
+
+  // Declare hashes
+  lines.push(`  if _n_ = 1 then do;`);
+  rs.forEach((r,i)=>{
+    const hn=`h${i+1}`;
+    const tbl=qv(r.table);
+    const kk=r.key||'???';
+    const dd=cleanStr(r.data);
+    lines.push(`    dcl hash ${hn}(dataset:"${tbl}");`);
+    lines.push(`    ${hn}.definekey("${kk}");`);
+    // Key 不放入 definedata：find() 時 key 值已由主表 set 帶入 PDV，無需重複帶回
+    lines.push(`    ${hn}.definedata(${dd.length?dd.map(d=>`"${d}"`).join(', '):'"???"'});`);
+    lines.push(`    ${hn}.definedone();`);
+    if(i<rs.length-1) lines.push('');
+  });
+  lines.push(`  end;`);
+  lines.push(`  set ${main};`);
+
+  // ⚠️ 跨路由同名欄位 attribute 衝突偵測（不同路由若同欄位型態/長度不同，SAS 以首個 if 0 then set 為準）
+  const _routeFieldSeen={}, _routeConflicts=[];
+  rs.forEach((r,i)=>{ cleanStr(r.data).forEach(f=>{ if(_routeFieldSeen[f]!==undefined){ if(!_routeConflicts.includes(f)) _routeConflicts.push(f); } else _routeFieldSeen[f]=i; }); });
+  if(_routeConflicts.length) lines.push(`  /* ⚠️ 欄位 ${_routeConflicts.join(', ')} 出現於多個路由 data，SAS 以第一個 if 0 then set 的型態/長度為準；若路由間屬性不同，後者值可能被截斷或型態錯誤，請確認各路由對照表該欄位定義一致。 */`);
+
+  // 路由值格式化：字元型自動加引號，數值型不加
+  const fmtVal = r => r.valType==='num' ? (r.val||'???') : `"${r.val||'???'}"`;
+
+  // Conditional routing
+  rs.forEach((r,i)=>{
+    const hn=`h${i+1}`;
+    const dd=cleanStr(r.data);
+    const cond=i===0?`if ${rf} = ${fmtVal(r)} then do;`:`else if ${rf} = ${fmtVal(r)} then do;`;
+    lines.push(`  ${cond}`);
+    // 找不到時清空 data 欄位；key 已在 PDV，不須 call missing
+    if(dd.length) lines.push(`    if ${hn}.find() ne 0 then call missing(${dd.join(', ')});`);
+    else          lines.push(`    ${hn}.find();  /* 無 data 欄位：僅執行查找，key 已在 PDV */`);
+    lines.push(`  end;`);
+  });
+
+  // else：無對應路由時清空所有 lookup 欄位，避免上一筆殘值汙染
+  const allDD = rs.flatMap(r=>cleanStr(r.data));
+  if(allDD.length){
+    lines.push(`  else call missing(${allDD.join(', ')});  /* 無對應路由：清空所有 lookup 欄位 */`);
+  }
+
+  lines.push(`run;`);
+  return lines.join('\n');
+}
+
+function getCode() {
+  switch(S.scenario){
+    case 'join':   return genJoin();
+    case 'dedup':  return genDedup();
+    case 'count':  return genCount();
+    case 'sum':    return genSum();
+    case 'countd': return genCountD();
+    case 'sort':   return genSort();
+    case 'hashh':  return genHashH();
+  }
+}
+
+/* ── Syntax highlighter (light) ── */
+function hl(code) {
+  code = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Stash comments & strings as placeholders → prevent subsequent regex from corrupting span tags
+  const tokens = [];
+  /* placeholder 格式：\x00t{n}t\x00  — t 讓數字兩側都是 word char，
+     \b(\d+)\b 因此不匹配 placeholder 內的索引數字，不會破壞還原。 */
+  const stash = w => { const id=`\x00t${tokens.length}t\x00`; tokens.push(w); return id; };
+  code = code.replace(/\/\*[\s\S]*?\*\//g, m => stash(`<span class="cmt">${m}</span>`));
+  code = code.replace(/"[^"]*"/g, m => stash(`<span class="str">${m}</span>`));
+  // Numbers (code has only \x00N\x00 placeholders now — no HTML tags to corrupt)
+  code = code.replace(/\b(\d+)\b/g, '<span class="num">$1</span>');
+  // Methods
+  ['definekey','definedata','definedone','find','check','add','replace','output','missing','do_over','first','next','last','prev'].forEach(fn=>{
+    code = code.replace(new RegExp(`\\b(${fn})(?=\\()`, 'g'), '<span class="fn">$1</span>');
+  });
+  // Keywords (output removed — already highlighted as method above)
+  ['data','run','set','if','then','do','end','call','dcl','hash','hiter','ne','while','length','stop','leave'].forEach(kw=>{
+    code = code.replace(new RegExp(`(?<![a-zA-Z_.])(${kw})(?![a-zA-Z_=])`, 'g'), m=>`<span class="kw">${m}</span>`);
+  });
+  // Restore stashed tokens
+  code = code.replace(/\x00t(\d+)t\x00/g, (_, i) => tokens[+i]);
+  return code;
+}
+
+function gen() {
+  const code = getCode();
+  $('codeScroll').innerHTML = `<pre>${hl(code)}</pre>`;
+}
+
+/* ── Tabs ── */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    S.scenario = t.dataset.s;
+    renderForm(); gen();
+  });
+});
+
+/* ── Copy ── */
+$('btnCopy').addEventListener('click', ()=>{
+  const iconHtml=`<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V2zm2 0v8h8V2H6zM2 6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-1H9v1H2V8h1V6H2z"/></svg>複製`;
+  navigator.clipboard.writeText(getCode()).then(()=>{
+    const b=$('btnCopy'); b.classList.add('ok'); b.textContent='✓ 已複製';
+    setTimeout(()=>{ b.classList.remove('ok'); b.innerHTML=iconHtml; }, 2000);
+  }).catch(()=>{
+    /* 離線 / 無 clipboard 權限時的退路：提示使用者手動選取 */
+    const b=$('btnCopy'); b.textContent='⚠️ 請手動複製';
+    setTimeout(()=>{ b.innerHTML=iconHtml; }, 2500);
+  });
+});
+
+/* ── 🥚 Easter egg：連點 SAS badge 7 下 ── */
+(()=>{
+  let clicks=0, timer=null;
+  document.querySelector('.logo-badge').addEventListener('click', ()=>{
+    clicks++;
+    clearTimeout(timer);
+    timer = setTimeout(()=>{ clicks=0; }, 2000);
+    if(clicks >= 7){
+      clicks=0; clearTimeout(timer);
+      const el = $('codeScroll');
+      const prev = el.innerHTML;
+      const egg = [
+        `/* ─────────────────────────────────────── */`,
+        `/*   🥚  彩蛋找到了！                      */`,
+        `/* ─────────────────────────────────────── */`,
+        ``,
+        `data _null_;`,
+        `  dcl hash egg(dataset:"heart.query");`,
+        `  egg.definekey('好奇心');`,
+        `  egg.definedata('耐心', '眼力');`,
+        `  egg.definedone();`,
+        ``,
+        `  if egg.find() = 0 then`,
+        `    put "這個工具純手工，無框架，無後端，離線可用。";`,
+        `run;`,
+        ``,
+        `/* hash object 查得到就有，查不到就 call missing() 🐣 */`,
+      ].join('\n');
+      el.innerHTML = `<pre>${hl(egg)}</pre>`;
+      setTimeout(()=>{ el.innerHTML = prev; }, 4500);
+    }
+  });
+})();
+
+/* ── Init ── */
+renderForm(); gen();
+</script>
