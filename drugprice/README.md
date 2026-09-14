@@ -24,17 +24,23 @@ raw/manifest.csv           所有原始檔的清單與 SHA-256
 output/<國別>_藥價.csv     統一欄位的結果（UTF-8 BOM，Excel 可直接開）
 ```
 
-## 目前接上的國家
+## 十國狀態
 
-| 代碼 | 國家 | 來源機關 | 幣別 | 欄位對照依據 |
+| 代碼 | 國家 | 執行方式 | 來源 | 幣別 |
 |---|---|---|---|---|
-| JP | 日本 | 厚生労働省 | JPY | 官方文件 |
-| FR | 法國（藥局零售） | ANSM／HAS 公開藥品資料庫 | EUR | 官方文件 |
-| BE | 比利時 | INAMI／RIZIV | EUR | 官方文件 |
-| SE | 瑞典 | TLV | SEK | 實際檔案驗證 |
-| AU | 澳洲 | PBS 公開 API | AUD | 官方文件 |
+| JP | 日本 | 自動 | 厚生労働省 | JPY |
+| FR | 法國（藥局零售） | 自動 | ANSM／HAS 公開藥品資料庫 | EUR |
+| BE | 比利時 | 自動 | INAMI／RIZIV | EUR |
+| SE | 瑞典 | 自動 | TLV | SEK |
+| AU | 澳洲 | 自動 | PBS 公開 API | AUD |
+| CA-SK | 加拿大薩克其萬省 | 自動 | Saskatchewan Drug Plan | CAD |
+| DE | 德國 | 人工 | BfArM（僅 PDF） | EUR |
+| CH | 瑞士 | 人工 | BAG（網址已失效） | CHF |
+| UK | 英國 | 人工 | NHS TRUD（需 API 金鑰） | GBP |
+| US | 美國 | 不涵蓋 | 無官方免費來源 | USD |
 
-尚未接上：法國 UCD、英國、瑞士、德國、加拿大薩省、美國（見 `python -m drugprice list`）。
+人工與不涵蓋的國家會在「人工待辦」分頁列出原因、操作步驟，
+以及每個藥品可直接點開的查詢網址。詳見 `docs/十國工作流總表.md`。
 
 ## 模組結構
 
@@ -58,7 +64,8 @@ drugprice/
     workspace.py  工作狀態
     static/       單一頁面的操作介面
   sources/        各國轉換器，每國一個檔案
-  registry.py     國家登記表（新增一國只要改這裡）
+  countries.py    十國工作流總表（執行方式、人工步驟、查詢網址）
+  registry.py     自動化來源登記表（新增一國只要改這裡）
   cli.py          命令列介面
 ```
 

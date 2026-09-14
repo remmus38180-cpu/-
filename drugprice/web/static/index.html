@@ -134,6 +134,7 @@ td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
     <button role="tab" data-tab="list" aria-selected="false">藥品清單</button>
     <button role="tab" data-tab="download" aria-selected="false">下載藥價</button>
     <button role="tab" data-tab="review" aria-selected="false">複核候選</button>
+    <button role="tab" data-tab="manual" aria-selected="false">人工待辦</button>
   </nav>
 </header>
 
@@ -211,6 +212,22 @@ Exforge,amlodipine+valsartan,C09DB01,5/80 mg,Novartis</pre>
   </div>
 </section>
 
+<!-- ============ 人工待辦 ============ -->
+<section id="tab-manual" hidden>
+  <h2>需要人工處理的國家</h2>
+  <p class="lede">以下國家無法自動下載。這裡列出原因、操作步驟，
+     以及每個藥品可以直接點開的查詢網址。查完之後請到佐證作業登錄截圖。</p>
+
+  <div class="banner">
+    <b>這不是程式漏抓。</b>
+    每個國家不能自動化的原因都寫在下面。有些是官方只出 PDF，
+    有些是需要個人帳號，有些是官網改版後管道還沒恢復。
+  </div>
+
+  <div id="country-table"></div>
+  <div id="worklist"></div>
+</section>
+
 <!-- ============ 複核 ============ -->
 <section id="tab-review" hidden>
   <h2>複核候選並勾選</h2>
@@ -272,6 +289,7 @@ function showTab(name) {
     loadRules();
     autoMatch();
   }
+  if (name === "manual") loadManual();
 }
 
 $("tabs").addEventListener("click", (event) => {
@@ -452,6 +470,57 @@ async function loadRules() {
     </ol>
     <p class="msg warn" style="margin-top:16px">${esc(rules["說明"])}</p>`;
   rulesLoaded = true;
+}
+
+/* ---------------- 人工待辦 ---------------- */
+let manualLoaded = false;
+async function loadManual() {
+  if (manualLoaded) return;
+  manualLoaded = true;
+
+  const countries = await api("/api/countries");
+  $("country-table").innerHTML = `
+    <div class="card"><h2 style="font-size:15px">十國執行方式總表</h2>
+    <table><thead><tr><th>國家</th><th>執行方式</th><th>整批檔來源</th>
+      <th>手冊指定網站</th></tr></thead><tbody>
+    ${countries.map((c) => {
+      const kind = c["方式代碼"] === "AUTO" ? "ok"
+        : c["方式代碼"] === "MANUAL" ? "warn" : "grey";
+      return `<tr>
+        <td>${esc(c["國家"])}</td>
+        <td><span class="pill ${kind}">${esc(c["執行方式"])}</span></td>
+        <td class="sub">${esc(c["整批檔來源"] || "—")}<br>
+            ${esc(c["整批檔說明"] || "")}</td>
+        <td class="sub">${esc(c["手冊指定網站"] || "—")}</td></tr>`;
+    }).join("")}
+    </tbody></table></div>`;
+
+  let work;
+  try {
+    work = await api("/api/worklist");
+  } catch (error) {
+    $("worklist").innerHTML =
+      `<div class="msg warn">${esc(error.message)}——請先到「藥品清單」分頁匯入。</div>`;
+    return;
+  }
+
+  $("worklist").innerHTML = work.map((w) => `
+    <div class="card">
+      <h2 style="font-size:16px">${esc(w["國家"])}
+        <span class="pill warn" style="margin-left:8px">${esc(w["執行方式"])}</span></h2>
+      <p class="lede" style="margin:8px 0 12px">${esc(w["原因"])}</p>
+      ${w["操作步驟"].length ? `<b style="font-size:14px">操作步驟</b>
+        <ol style="font-size:14px;margin:6px 0 14px;padding-left:22px">
+        ${w["操作步驟"].map((s) => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}
+      ${w["後續處理"] ? `<div class="msg info">${esc(w["後續處理"])}</div>` : ""}
+      <b style="font-size:14px">待查藥品（${w["待查藥品"].length} 筆）</b>
+      <table><thead><tr><th>商品名</th><th>成分名</th><th>查詢網址</th></tr></thead>
+      <tbody>${w["待查藥品"].map((item) => `<tr>
+        <td>${esc(item["商品名"])}</td><td>${esc(item["成分名"])}</td>
+        <td><a href="${esc(item["查詢網址"])}" target="_blank" rel="noopener">
+          ${esc(w["查詢網站"] || "開啟查詢頁")}</a></td></tr>`).join("")}
+      </tbody></table>
+    </div>`).join("");
 }
 
 /* ---------------- 複核 ---------------- */

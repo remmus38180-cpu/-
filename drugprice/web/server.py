@@ -22,6 +22,7 @@ import urllib.parse
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+from ..countries import COUNTRIES, METHOD_LABELS, build_worklist
 from ..matching.matcher import TIERS, match_country
 from ..matching.scoring import rules_table
 from ..registry import SOURCES, codes, get
@@ -97,6 +98,10 @@ class Handler(BaseHTTPRequestHandler):
                     "訊息": self.workspace.list_messages,
                     "清單": [to_jsonable(q) for q in self.workspace.queries],
                 })
+            if route == "/api/worklist":
+                return self._worklist()
+            if route == "/api/countries":
+                return self._countries()
             if route == "/api/export":
                 return self._export(params)
         except Exception as exc:                          # noqa: BLE001
@@ -140,6 +145,21 @@ class Handler(BaseHTTPRequestHandler):
             "清單訊息": workspace.list_messages,
             "工作": workspace.job.snapshot(since=10 ** 9) if workspace.job else None,
         })
+
+    def _countries(self):
+        """十國總表：每個國家的執行方式與來源，含自動不了的原因。"""
+        self._json([{
+            "代碼": c.code, "國家": c.name,
+            "執行方式": METHOD_LABELS[c.method], "方式代碼": c.method,
+            "整批檔來源": c.batch_agency, "整批檔說明": c.batch_note,
+            "手冊指定網站": c.manual_site, "查詢頁": c.manual_url,
+            "原因": c.reason, "後續處理": c.next_step,
+        } for c in COUNTRIES])
+
+    def _worklist(self):
+        if not self.workspace.queries:
+            return self._error("還沒有匯入藥品清單")
+        self._json(build_worklist(self.workspace.queries))
 
     def _job(self, params):
         job = self.workspace.job

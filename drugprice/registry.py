@@ -4,7 +4,7 @@
 新增一國時，在這裡加一行即可，其餘程式不用改。
 """
 
-from .sources import (australia_pbs, belgium_inami, france_cip,
+from .sources import (australia_pbs, belgium_inami, canada_sk, france_cip,
                       japan_mhlw, sweden_tlv)
 
 __all__ = ["SOURCES", "get", "codes"]
@@ -15,17 +15,17 @@ SOURCES = {
     "BE": belgium_inami.SOURCE,
     "SE": sweden_tlv.SOURCE,
     "AU": australia_pbs.SOURCE,
+    "CA-SK": canada_sk.SOURCE,
 }
 
-# 尚未接上的國家，列出來讓使用者知道不是漏抓
-NOT_YET = {
-    "FR-UCD": "法國（醫院用 UCD）— DBF 解析尚在調整",
-    "UK": "英國（NHS dm+d）— 需申請 TRUD 帳號與 API 金鑰",
-    "CH": "瑞士（BAG）— 欄位對照待真實檔案驗證",
-    "DE": "德國（BfArM／G-BA）— 尚未撰寫",
-    "CA-SK": "加拿大薩克其萬省 — 查無官方整批下載，須人工",
-    "US": "美國（Micromedex Red Book）— 需帳號密碼，本工具不涵蓋",
-}
+# 無法自動下載的國家。說明取自 countries.py，兩邊不會各說各話。
+def _not_yet():
+    from .countries import COUNTRIES, AUTO
+    return {c.code: f"{c.name} — {c.reason.splitlines()[0] if c.reason else ''}"
+            for c in COUNTRIES if c.method != AUTO}
+
+
+NOT_YET = _not_yet()
 
 
 def codes():
