@@ -1,0 +1,780 @@
+<title>十國藥價自動化流程提案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --paper:#FAF8F4;
+  --surface:#FFFFFF;
+  --surface-2:#F3EFE8;
+  --ink:#22242A;
+  --ink-soft:#4A4C53;
+  --muted:#6C6760;
+  --rule:#E2DBD1;
+  --rule-strong:#C9BFB1;
+  --accent:#8E2C34;
+  --accent-ink:#8E2C34;
+  --accent-soft:#F5E9E8;
+  --ok:#3F6B52;
+  --ok-soft:#E7F0EA;
+  --warn:#8A6114;
+  --warn-soft:#F6EEDC;
+  --manual:#565B64;
+  --manual-soft:#EBEAE7;
+  --shadow:0 1px 2px rgba(34,36,42,.05), 0 8px 24px -16px rgba(34,36,42,.28);
+
+  --serif:"Noto Serif TC", "Songti TC", "PMingLiU", Georgia, serif;
+  --sans:"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#15161A;
+    --surface:#1C1E23;
+    --surface-2:#22252B;
+    --ink:#E9E5DD;
+    --ink-soft:#C3BEB4;
+    --muted:#968F84;
+    --rule:#32353C;
+    --rule-strong:#474B54;
+    --accent:#DB868B;
+    --accent-ink:#E9A2A6;
+    --accent-soft:#2E2226;
+    --ok:#83B99B;
+    --ok-soft:#1E2A24;
+    --warn:#D4A85C;
+    --warn-soft:#2B2519;
+    --manual:#9AA1AC;
+    --manual-soft:#25282E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15161A;
+  --surface:#1C1E23;
+  --surface-2:#22252B;
+  --ink:#E9E5DD;
+  --ink-soft:#C3BEB4;
+  --muted:#968F84;
+  --rule:#32353C;
+  --rule-strong:#474B54;
+  --accent:#DB868B;
+  --accent-ink:#E9A2A6;
+  --accent-soft:#2E2226;
+  --ok:#83B99B;
+  --ok-soft:#1E2A24;
+  --warn:#D4A85C;
+  --warn-soft:#2B2519;
+  --manual:#9AA1AC;
+  --manual-soft:#25282E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 96px}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--rule);margin-bottom:40px}
+.masthead-inner{max-width:1180px;margin:0 auto;padding:56px 24px 32px}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent-ink);margin:0 0 20px;display:flex;align-items:center;gap:12px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule-strong)}
+h1{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(30px,5.2vw,50px);line-height:1.25;letter-spacing:.01em;
+  margin:0 0 18px;text-wrap:balance;
+}
+.standfirst{
+  font-size:17px;color:var(--ink-soft);max-width:60ch;margin:0 0 28px;line-height:1.9;
+}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px 28px;
+  font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  padding-top:20px;border-top:1px solid var(--rule);
+}
+.meta b{color:var(--ink-soft);font-weight:500}
+
+/* ---------- country strip ---------- */
+.strip{margin:32px 0 0}
+.strip-label{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 12px;
+}
+.chips{display:flex;flex-wrap:wrap;gap:7px;list-style:none;padding:0;margin:0}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 11px 5px 9px;border-radius:2px;
+  font-size:13px;line-height:1.5;
+  border:1px solid var(--rule-strong);background:var(--surface);
+}
+.chip .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.chip.s-ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.chip.s-ok .dot{background:var(--ok)}
+.chip.s-warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.chip.s-warn .dot{background:var(--warn)}
+.chip.s-manual{background:var(--manual-soft);border-color:transparent;color:var(--manual)}
+.chip.s-manual .dot{background:var(--manual)}
+.legend{
+  display:flex;flex-wrap:wrap;gap:6px 20px;margin:14px 0 0;
+  font-family:var(--mono);font-size:11.5px;color:var(--muted);
+}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+/* ---------- layout ---------- */
+.cols{display:block}
+@media (min-width:1080px){
+  .cols{display:grid;grid-template-columns:190px minmax(0,1fr);gap:56px;align-items:start}
+  .toc{position:sticky;top:32px;display:block}
+}
+.toc{display:none}
+.toc-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--rule);
+}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+.toc a{
+  display:flex;gap:10px;text-decoration:none;color:var(--ink-soft);
+  font-size:13.5px;line-height:1.5;padding:5px 0;border-radius:2px;
+}
+.toc a:hover{color:var(--accent-ink)}
+.toc a .n{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:2px}
+.toc a:hover .n{color:var(--accent-ink)}
+
+main{min-width:0;display:flex;flex-direction:column;gap:64px}
+section{scroll-margin-top:24px}
+.sec-head{display:flex;gap:16px;align-items:baseline;margin:0 0 24px}
+.sec-num{
+  font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent-ink);
+  letter-spacing:.08em;padding-top:6px;flex:none;
+}
+h2{
+  font-family:var(--serif);font-weight:700;font-size:clamp(22px,3vw,29px);
+  line-height:1.4;margin:0;text-wrap:balance;
+}
+h3{
+  font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.55;
+  margin:40px 0 12px;text-wrap:balance;
+}
+h4{
+  font-family:var(--sans);font-weight:700;font-size:15px;margin:28px 0 10px;color:var(--ink);
+}
+p{margin:0 0 16px;max-width:66ch}
+ul,ol{margin:0 0 16px;padding-left:22px;max-width:66ch}
+li{margin-bottom:7px}
+li::marker{color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--accent-ink)}
+code,.mono{font-family:var(--mono);font-size:.88em;background:var(--surface-2);
+  padding:2px 6px;border-radius:2px;border:1px solid var(--rule)}
+
+/* ---------- callout ---------- */
+.note{
+  background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent);
+  padding:20px 24px;margin:0 0 24px;border-radius:2px;box-shadow:var(--shadow);
+}
+.note p:last-child{margin-bottom:0}
+.note-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-ink);margin:0 0 10px;
+}
+
+/* ---------- change cards ---------- */
+.changes{display:flex;flex-direction:column;gap:0}
+.change{
+  border-top:1px solid var(--rule);padding:28px 0 4px;
+}
+.change:first-child{border-top:1px solid var(--rule-strong)}
+.change-head{display:flex;gap:14px;align-items:baseline;margin:0 0 14px}
+.change-tag{
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;
+  color:var(--paper);background:var(--accent);
+  padding:3px 8px;border-radius:2px;flex:none;
+}
+.change-head h3{margin:0;font-size:19px}
+
+/* ---------- tables ---------- */
+.tablewrap{
+  overflow-x:auto;margin:0 0 24px;border:1px solid var(--rule);border-radius:2px;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+thead th{
+  text-align:left;font-family:var(--sans);font-weight:700;font-size:12.5px;
+  letter-spacing:.03em;color:var(--ink-soft);
+  background:var(--surface-2);padding:11px 14px;
+  border-bottom:1px solid var(--rule-strong);white-space:nowrap;
+}
+tbody td{
+  padding:11px 14px;border-bottom:1px solid var(--rule);
+  vertical-align:top;line-height:1.65;color:var(--ink-soft);
+}
+tbody tr:last-child td{border-bottom:none}
+tbody td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
+table.wide{min-width:760px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:11px;
+  padding:2px 7px;border-radius:2px;white-space:nowrap;
+}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.manual{background:var(--manual-soft);color:var(--manual)}
+.who{
+  display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:2px;white-space:nowrap;
+}
+.who.machine{background:var(--surface-2);color:var(--muted);border:1px solid var(--rule)}
+.who.human{background:var(--accent-soft);color:var(--accent-ink)}
+
+/* ---------- architecture diagram ---------- */
+.arch{margin:0 0 24px}
+.arch svg{display:block;width:100%;height:auto}
+
+/* ---------- phases ---------- */
+.phases{display:flex;flex-direction:column;gap:0;margin:0 0 24px}
+.phase{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 20px;
+  padding:0 0 26px;position:relative;
+}
+.phase-rail{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:3px;
+}
+.phase-num{
+  width:30px;height:30px;border-radius:50%;flex:none;
+  display:grid;place-items:center;
+  font-family:var(--mono);font-size:13px;font-weight:600;
+  background:var(--surface);color:var(--muted);border:1px solid var(--rule-strong);
+}
+.phase.done .phase-num{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+.phase-line{flex:1;width:1px;background:var(--rule-strong);min-height:12px}
+.phase:last-child .phase-line{display:none}
+.phase-body{padding-bottom:6px}
+.phase-body h4{margin:2px 0 6px;font-size:16px}
+.phase-body p{margin:0 0 8px;font-size:14.5px;color:var(--ink-soft)}
+.phase-out{
+  font-family:var(--mono);font-size:12px;color:var(--accent-ink);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.phase-out::before{content:"→";opacity:.7}
+
+/* ---------- decisions ---------- */
+.decisions{list-style:none;padding:0;margin:0 0 24px;counter-reset:d;max-width:none}
+.decisions li{
+  counter-increment:d;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;
+  padding:16px 0;border-bottom:1px solid var(--rule);margin:0;
+}
+.decisions li::before{
+  content:counter(d,decimal-leading-zero);
+  font-family:var(--mono);font-size:12px;color:var(--accent-ink);padding-top:5px;
+}
+.decisions b{display:block;font-size:15px;margin-bottom:3px}
+.decisions span{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ---------- next steps ---------- */
+.next{
+  background:var(--surface);border:1px solid var(--rule-strong);border-radius:2px;
+  padding:28px 30px;box-shadow:var(--shadow);
+}
+.next ol{margin:0;padding-left:20px;max-width:62ch}
+.next li{margin-bottom:12px}
+.next li:last-child{margin-bottom:0}
+
+footer{
+  margin-top:72px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:6px 24px;
+}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="eyebrow">流程規劃提案</p>
+    <h1>十國藥價自動化機制</h1>
+    <p class="standfirst">
+      批次下載、比對收斂、佐證存證、單一操作介面。本提案保留原構想的三項自動化目標，
+      並針對五個會影響「資料能不能拿去核價」的關鍵點提出調整。
+    </p>
+    <div class="meta">
+      <span><b>提案日期</b>　2026-08-27</span>
+      <span><b>範圍</b>　十國藥價查詢全流程</span>
+      <span><b>狀態</b>　待討論與主管核定</span>
+      <span><b>已交付</b>　階段 0 環境檢測探針</span>
+    </div>
+
+    <div class="strip">
+      <p class="strip-label">十國批次下載現況</p>
+      <ul class="chips">
+        <li class="chip s-ok"><span class="dot"></span>日本</li>
+        <li class="chip s-ok"><span class="dot"></span>法國 CIP</li>
+        <li class="chip s-ok"><span class="dot"></span>比利時</li>
+        <li class="chip s-ok"><span class="dot"></span>瑞典</li>
+        <li class="chip s-ok"><span class="dot"></span>澳洲</li>
+        <li class="chip s-warn"><span class="dot"></span>瑞士</li>
+        <li class="chip s-warn"><span class="dot"></span>英國</li>
+        <li class="chip s-warn"><span class="dot"></span>法國 UCD</li>
+        <li class="chip s-warn"><span class="dot"></span>德國</li>
+        <li class="chip s-manual"><span class="dot"></span>加拿大薩省</li>
+        <li class="chip s-manual"><span class="dot"></span>美國</li>
+      </ul>
+      <p class="legend">
+        <span><i style="background:var(--ok)"></i>批次檔可用</span>
+        <span><i style="background:var(--warn)"></i>待驗證或待撰寫</span>
+        <span><i style="background:var(--manual)"></i>無批次檔，須人工</span>
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="cols">
+
+  <nav class="toc" aria-label="章節目錄">
+    <p class="toc-title">目錄</p>
+    <ol>
+      <li><a href="#s1"><span class="n">01</span><span>要解決什麼</span></a></li>
+      <li><a href="#s2"><span class="n">02</span><span>五項調整</span></a></li>
+      <li><a href="#s3"><span class="n">03</span><span>系統架構</span></a></li>
+      <li><a href="#s4"><span class="n">04</span><span>十國現況</span></a></li>
+      <li><a href="#s5"><span class="n">05</span><span>分階段時程</span></a></li>
+      <li><a href="#s6"><span class="n">06</span><span>需要決定的事</span></a></li>
+      <li><a href="#s7"><span class="n">07</span><span>風險與限制</span></a></li>
+      <li><a href="#s8"><span class="n">08</span><span>下一步</span></a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+  <!-- 1 -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2>這份提案要解決什麼</h2></div>
+    <p>
+      原構想的三項自動化需求方向正確，本提案予以保留：依匯入的藥品清單擷取各國健保支付價格、
+      留存網站頁面截圖作為佐證、以及把所有操作統一在一個 HTML 介面上。
+    </p>
+    <div class="note">
+      <p class="note-label">調整的唯一理由</p>
+      <p>
+        查得的十國藥價將作為藥價調整時的市場交易價資料之一。
+        <strong>錯誤的代價遠高於慢一點。</strong>
+        因此凡是牽涉「判斷」的步驟，設計上一律讓程式收斂選項、由人拍板，
+        並留下誰在什麼時候做了什麼決定的紀錄。
+      </p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2>對原流程的五項調整</h2></div>
+
+    <div class="changes">
+
+      <article class="change">
+        <div class="change-head">
+          <span class="change-tag">調整一</span>
+          <h3>程式不「選出價格」，只「收斂候選」，由人拍板</h3>
+        </div>
+        <p>
+          實際的人工流程包含兩個判斷步驟：用商品名加成分名查出同成分清單後，
+          <strong>搭配商品名與藥商名判斷哪一個是原廠藥</strong>；
+          接著在原廠藥的各種規格中，<strong>選擇要用哪個劑型、含量、包裝</strong>。
+        </p>
+        <p>
+          這兩步都是判斷，不是查表。錯判原廠藥或選錯可比規格，結果會是一個
+          「看起來很正常、但其實錯了」的價格——而且一旦寫進藥價調整就很難被發現。
+        </p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>步驟</th><th>由誰做</th><th>說明</th></tr></thead>
+            <tbody>
+              <tr><td>依成分名撈出同成分全部品項</td><td><span class="who machine">程式</span></td><td>機械性比對，程式做得比人準</td></tr>
+              <tr><td>計算單位藥品價格並排序</td><td><span class="who machine">程式</span></td><td>純算術，且保留分子分母供覆核</td></tr>
+              <tr><td>判定哪一筆是原廠藥</td><td><span class="who human">人</span></td><td>程式只提供線索：商品名相符度、藥商名相符度、原始檔的學名藥註記、收載日期</td></tr>
+              <tr><td>確認選用的規格可比</td><td><span class="who human">人</span></td><td>程式標示建議值（單位藥價最低者），由人勾選確認</td></tr>
+              <tr><td>記錄決定者與決定時間</td><td><span class="who machine">程式</span></td><td>供未來爭議時回溯</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          實務上每個藥品多一個確認畫面，成本很低；換到的是每一筆價格都有人負責、有紀錄可查。
+        </p>
+      </article>
+
+      <article class="change">
+        <div class="change-head">
+          <span class="change-tag">調整二</span>
+          <h3>價格必須連同「包裝數量」與「價格類別」一起存</h3>
+        </div>
+        <p>
+          包裝數量已納入。另外要補一個容易出事的欄位：<strong>價格類別</strong>。
+          各國公布的並不是同一種價格——
+        </p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>國家</th><th>常見的兩種價格</th><th>差別</th></tr></thead>
+            <tbody>
+              <tr><td>瑞典</td><td>AIP 藥局採購價／AUP 藥局零售價</td><td>AUP 含藥局加成</td></tr>
+              <tr><td>瑞士</td><td>FAP 廠商出廠價／PP 藥局零售價</td><td>PP 含配銷加成與稅</td></tr>
+              <tr><td>法國</td><td>Prix Fabricant HT／Prix Public TTC</td><td>含稅與否、通路加成</td></tr>
+              <tr><td>德國</td><td>Festbetrag 固定給付額／Apothekenverkaufspreis 藥局零售價</td><td>給付上限 vs 實際售價</td></tr>
+              <tr><td>澳洲</td><td>多個價格欄位（含 cp2p）</td><td>是否含調劑費等</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>把甲國的出廠價和乙國的零售價放進同一欄比較，數字會系統性偏差。因此：</p>
+        <ul>
+          <li>每一筆價格都帶「價格類別」標籤，且在介面上一直顯示，不能只藏在檔案裡</li>
+          <li>單位藥價排序<strong>只在同一價格類別內</strong>進行</li>
+          <li>匯出檔一律分欄呈現，不做跨類別的「代表價」</li>
+        </ul>
+      </article>
+
+      <article class="change">
+        <div class="change-head">
+          <span class="change-tag">調整三</span>
+          <h3>截圖升級為「佐證包」</h3>
+        </div>
+        <p>
+          單獨一張 PNG 的證據力其實不強——它沒辦法自己證明是什麼時候、從哪個網址拍的。
+          既然目的是爭議發生時作為佐證，建議每次擷取產出一組：
+        </p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>內容</th><th>用途</th></tr></thead>
+            <tbody>
+              <tr><td>整頁截圖 PNG</td><td>主要佐證。全頁而非可視區——價格常在捲軸外，只截可視區會漏</td></tr>
+              <tr><td>該頁原始 HTML 存檔</td><td>網站改版後仍可還原當時內容</td></tr>
+              <tr><td>中繼資料檔</td><td>完整網址、擷取時間（含時區）、HTTP 狀態碼、頁面標題、視窗尺寸、執行人員、PNG 的 SHA-256</td></tr>
+              <tr><td>批次清單檔</td><td>一次作業所有檔案的清單與雜湊值，可驗證事後未被抽換</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>批次下載的原始檔比照辦理</strong>：原封不動保存並計算雜湊。
+          處理後的結果是二手資料，原始檔才是佐證的根。
+        </p>
+        <p>
+          <strong>人工截圖走同一個登錄介面</strong>：同仁貼上網址、選擇截圖檔，工具補上時間戳與雜湊。
+          人工與自動產出的佐證格式一致，也避免來路不明的截圖混進來。
+        </p>
+      </article>
+
+      <article class="change">
+        <div class="change-head">
+          <span class="change-tag">調整四</span>
+          <h3>先做環境檢測，再決定截圖技術路線</h3>
+        </div>
+        <p>
+          既有程式碼顯示，先前有相當比例的時間耗在 Python、Chrome、ChromeDriver 的安裝與版本對應上。
+          建議先用一支<strong>只做檢查、不安裝任何東西</strong>的探針程式把環境條件問清楚。
+          已隨本提案交付，雙擊 <code>執行環境檢測.bat</code> 即可，約 1 至 3 分鐘。
+        </p>
+        <p>
+          檢查項目包含 Python 版本與模組完整性、檔案讀寫權限、本機介面連接埠、瀏覽器位置與版本、
+          十四個官方網站的連線與 SSL 憑證情形，以及最關鍵的一項——<strong>無頭截圖是否可用</strong>。
+        </p>
+        <div class="note">
+          <p class="note-label">為什麼這一項最關鍵</p>
+          <p>
+            若無頭截圖可用，截圖就能直接呼叫 Windows 內建的 Edge，
+            <strong>不需要安裝 Selenium，也不需要處理 ChromeDriver 版本對應</strong>，
+            同仁端的環境問題會少掉一大半。若不可用，再評估 Selenium 或全面改人工。
+          </p>
+        </div>
+      </article>
+
+      <article class="change">
+        <div class="change-head">
+          <span class="change-tag">調整五</span>
+          <h3>兩軌來源並列，而不是二選一</h3>
+        </div>
+        <p>
+          依指示，健保署官方指定網站優先，查無整批下載時才採用另尋得之來源。
+          建議在設計上讓兩軌<strong>同時存在並各自留痕</strong>：
+        </p>
+        <ul>
+          <li><strong>A 軌（批次檔來源）</strong>　整批下載、機讀、可自動比對</li>
+          <li><strong>B 軌（手冊指定網站）</strong>　逐筆查詢頁截圖，符合現行作業規範</li>
+        </ul>
+        <p>兩軌價格並列顯示，不一致時介面主動標示。</p>
+        <div class="note">
+          <p class="note-label">附帶好處</p>
+          <p>
+            這樣做會自動累積「兩邊價格是否一致」的證據，
+            正是澳洲那種情況所需要的依據——當資料足以證明官方批次檔比查詢頁更完整或更適用時，
+            就有具體材料可以提報修正指定網站，而不必憑印象主張。
+          </p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2>系統架構</h2></div>
+    <p>四層，各層可獨立測試、獨立交付。同仁只會看到最上面那一層。</p>
+
+    <div class="arch">
+      <svg viewBox="0 0 760 300" role="img" aria-label="四層架構圖：最上層為 HTML 操作介面，下方為資料層、比對層、佐證層">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--rule-strong)"/>
+          </marker>
+        </defs>
+
+        <rect x="8" y="8" width="744" height="78" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="26" y="34" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--accent-ink)" letter-spacing="1.4">D 層</text>
+        <text x="72" y="34" font-family="Noto Serif TC, serif" font-size="16" font-weight="700" fill="var(--ink)">操作介面（本機網頁，同仁唯一會看到的一層）</text>
+        <text x="26" y="60" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">匯入清單　→　選國家　→　執行下載　→　複核候選　→　佐證作業　→　匯出</text>
+        <text x="26" y="78" font-family="Noto Sans TC, sans-serif" font-size="12" fill="var(--muted)">全中文、無技術術語、不需安裝任何東西</text>
+
+        <path d="M180 86 L180 118" stroke="var(--rule-strong)" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
+        <path d="M380 86 L380 118" stroke="var(--rule-strong)" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
+        <path d="M580 86 L580 118" stroke="var(--rule-strong)" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
+
+        <rect x="8" y="122" width="344" height="170" rx="3" fill="var(--surface)" stroke="var(--rule-strong)"/>
+        <text x="26" y="148" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--accent-ink)" letter-spacing="1.4">A 層</text>
+        <text x="70" y="148" font-family="Noto Serif TC, serif" font-size="15" font-weight="700" fill="var(--ink)">資料</text>
+        <text x="26" y="174" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">批次下載 · 格式解析</text>
+        <text x="26" y="196" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">原始檔留存與雜湊</text>
+        <text x="26" y="218" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">統一欄位轉換</text>
+        <text x="26" y="240" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">價格類別標籤</text>
+        <text x="26" y="272" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">僅用 Python 標準函式庫</text>
+
+        <rect x="366" y="122" width="180" height="170" rx="3" fill="var(--surface)" stroke="var(--rule-strong)"/>
+        <text x="384" y="148" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--accent-ink)" letter-spacing="1.4">B 層</text>
+        <text x="428" y="148" font-family="Noto Serif TC, serif" font-size="15" font-weight="700" fill="var(--ink)">比對</text>
+        <text x="384" y="174" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">成分名正規化</text>
+        <text x="384" y="196" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">候選收斂</text>
+        <text x="384" y="218" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">單位藥價計算</text>
+        <text x="384" y="240" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">人工複核紀錄</text>
+
+        <rect x="560" y="122" width="192" height="170" rx="3" fill="var(--surface)" stroke="var(--rule-strong)"/>
+        <text x="578" y="148" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--accent-ink)" letter-spacing="1.4">C 層</text>
+        <text x="622" y="148" font-family="Noto Serif TC, serif" font-size="15" font-weight="700" fill="var(--ink)">佐證</text>
+        <text x="578" y="174" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">自動整頁截圖</text>
+        <text x="578" y="196" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">人工截圖登錄</text>
+        <text x="578" y="218" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">中繼資料</text>
+        <text x="578" y="240" font-family="Noto Sans TC, sans-serif" font-size="13" fill="var(--ink-soft)">雜湊與清單檔</text>
+      </svg>
+    </div>
+
+    <h3>A 層：統一欄位</h3>
+    <p>
+      沿用既有八支腳本的技術原則——只用 Python 標準函式庫、內建 SSL 憑證修法——
+      新增一層統一欄位轉換，讓十國資料進到同一張表。
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>欄位群</th><th>內容</th></tr></thead>
+        <tbody>
+          <tr><td>來源</td><td>國家代碼、來源機關、來源軌別（A／B）</td></tr>
+          <tr><td>佐證</td><td>資料版本日期、下載時間、來源網址、原始檔雜湊</td></tr>
+          <tr><td>識別</td><td>各國原生藥品碼（PZN、CIP、DIN、Varunummer、PBS code、YJ code 等）</td></tr>
+          <tr><td>比對</td><td>商品名、成分名（原文）、ATC</td></tr>
+          <tr><td>規格</td><td>劑型、含量（數值與單位分開存）、<strong>包裝數量（數值與單位）</strong></td></tr>
+          <tr><td>價格</td><td><strong>當地價格、幣別、價格類別</strong></td></tr>
+          <tr><td>判定線索</td><td>藥商、藥證持有商、學名藥註記</td></tr>
+          <tr><td>計算</td><td>單位藥價（價格÷包裝數量，保留分子分母）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <p class="note-label">不做的事</p>
+      <p>
+        本工具只存當地幣別的原始價格，<strong>不做匯率換算</strong>。
+        換算基準日與匯率來源屬政策決定，需另行規定。
+      </p>
+    </div>
+
+    <h3>B 層：比對與候選收斂</h3>
+    <p>三段式比對，每筆結果都標示比對依據與信心層級：</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>層級</th><th>條件</th><th>處理</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag ok">第一級</span></td><td>成分名＋ATC＋含量＋劑型 皆命中</td><td>列為建議候選</td></tr>
+          <tr><td><span class="tag warn">第二級</span></td><td>成分名命中，含量或劑型待確認</td><td>列出，標示待確認欄位</td></tr>
+          <tr><td><span class="tag manual">第三級</span></td><td>僅商品名模糊命中</td><td>一律標示需人工判讀</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      比對前先做正規化：大小寫、全半形、鹽類字尾（hydrochloride／HCl／mesylate 等），
+      以及各國語言的成分名對照（如 apixaban／Apixaban／アピキサバン）。
+      對照表隨使用逐步累積，查過的自動記住。
+    </p>
+
+    <h3>D 層：操作介面</h3>
+    <p>
+      以 Python 標準函式庫的 <code>http.server</code> 在本機開一個網頁介面，
+      同仁雙擊一個 .bat 就會自動開啟瀏覽器，<strong>不需要安裝任何東西，也不需要看到命令列</strong>。
+      介面只在本機執行，不對外開放。共六個頁面：總覽、匯入清單、執行下載、複核、佐證作業、匯出。
+    </p>
+    <p>
+      介面文字全中文、不出現技術術語；每一則錯誤訊息都要寫清楚「這代表什麼」與「您該怎麼做」。
+    </p>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2>十國範圍與現況</h2></div>
+    <div class="tablewrap">
+      <table class="wide">
+        <thead>
+          <tr><th>國家</th><th>B 軌　手冊指定來源</th><th>A 軌　批次檔來源</th><th>批次檔現況</th><th>截圖</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>日本</td><td>厚生労働省</td><td>厚生労働省（同機關）</td><td><span class="tag ok">已完成</span> 合成資料測試通過</td><td>自動</td></tr>
+          <tr><td>法國 CIP</td><td>BdM_IT／CNAM</td><td>ANSM／HAS 公開資料庫</td><td><span class="tag ok">已完成</span> 實際執行 20,863 筆</td><td>自動</td></tr>
+          <tr><td>法國 UCD</td><td>BdM_IT</td><td>BdM_IT（同機關）</td><td><span class="tag warn">調整中</span> DBF 解析尚未跑通</td><td>自動</td></tr>
+          <tr><td>比利時</td><td>CBIP（民間）</td><td>INAMI（政府）</td><td><span class="tag ok">已完成</span> CBIP 下載待補</td><td>自動</td></tr>
+          <tr><td>英國</td><td>NHS Prescription Service</td><td>NHS TRUD</td><td><span class="tag warn">待驗證</span> 需申請免費帳號與 API 金鑰</td><td>自動</td></tr>
+          <tr><td>澳洲</td><td>PBS</td><td>PBS 新制 API CSV</td><td><span class="tag ok">已完成</span> 舊制已於 2026/5 停用</td><td>自動</td></tr>
+          <tr><td>瑞士</td><td>compendium.ch（民間）</td><td>BAG（政府）</td><td><span class="tag warn">待驗證</span> 欄位對照未經真實檔案驗證</td><td>自動</td></tr>
+          <tr><td>瑞典</td><td>FASS（公會）</td><td>TLV（政府）</td><td><span class="tag ok">已完成</span> 經實際下載驗證</td><td>自動</td></tr>
+          <tr><td>德國</td><td>ROTE LISTE（民間，需帳密）</td><td>BfArM Festbeträge／G-BA AMNOG</td><td><span class="tag warn">未撰寫</span></td><td><span class="tag manual">人工</span></td></tr>
+          <tr><td>加拿大薩省</td><td>未納入手冊</td><td>查無官方整批下載</td><td><span class="tag manual">無</span></td><td><span class="tag manual">人工</span></td></tr>
+          <tr><td>美國</td><td>Micromedex Red Book（需帳密）</td><td>無官方免費替代</td><td><span class="tag manual">無</span></td><td><span class="tag manual">人工</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      德國、加拿大、美國三國無法自動化的部分，介面上會明確標示「本工具不涵蓋，須人工辦理」，
+      避免同仁誤以為是程式漏抓。加拿大薩省的查詢頁 robots.txt 明確禁止自動化存取，一律不寫爬蟲。
+    </p>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2>分階段時程</h2></div>
+    <p>
+      刻意把「操作介面」排在「比對層」之前，讓同仁能先用起來、邊用邊回饋。
+      各階段結束都交付可執行的成果，不會出現「全部做完才看得到東西」的情況。
+    </p>
+
+    <div class="phases">
+      <div class="phase done">
+        <div class="phase-rail"><div class="phase-num">0</div><div class="phase-line"></div></div>
+        <div class="phase-body">
+          <h4>環境檢測探針　<span class="tag ok">本次已交付</span></h4>
+          <p>只做檢查、不安裝任何東西。雙擊 .bat 執行，約 1 至 3 分鐘。</p>
+          <span class="phase-out">檢測報告，據以定案截圖技術路線</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="phase-num">1</div><div class="phase-line"></div></div>
+        <div class="phase-body">
+          <h4>統一欄位層</h4>
+          <p>接上五個已完成的國家（日本、法國 CIP、比利時、瑞典、澳洲），加上原始檔留存與雜湊。</p>
+          <span class="phase-out">五國資料可進同一張表</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="phase-num">2</div><div class="phase-line"></div></div>
+        <div class="phase-body">
+          <h4>HTML 操作介面骨架</h4>
+          <p>匯入清單、勾選國家、執行下載、看進度、匯出。</p>
+          <span class="phase-out">同仁可實際上手使用</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="phase-num">3</div><div class="phase-line"></div></div>
+        <div class="phase-body">
+          <h4>比對層與複核畫面</h4>
+          <p>成分名對照、候選清單、單位藥價排序、人工勾選與紀錄。</p>
+          <span class="phase-out">完整比對流程</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="phase-num">4</div><div class="phase-line"></div></div>
+        <div class="phase-body">
+          <h4>佐證包</h4>
+          <p>自動截圖與人工登錄兩種來源，A／B 兩軌並行，產出格式一致。</p>
+          <span class="phase-out">可供爭議舉證之佐證包</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-rail"><div class="phase-num">5</div><div class="phase-line"></div></div>
+        <div class="phase-body">
+          <h4>補齊剩餘國家</h4>
+          <p>瑞士欄位驗證、英國 TRUD、法國 UCD、德國 Festbeträge 與 G-BA、加拿大 PDF 解析。</p>
+          <span class="phase-out">十國到位</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2>需要決定的事項</h2></div>
+    <p>以下六項屬政策或管理決定，非技術問題，建議一併提請主管核示。</p>
+    <ol class="decisions">
+      <li><div><b>兩軌來源並列是否符合作業規範</b><span>既有報告已列為待確認事項，本次一併處理。</span></div></li>
+      <li><div><b>人工複核的責任歸屬</b><span>誰有權確認原廠藥判定與規格選用，紀錄保存多久。</span></div></li>
+      <li><div><b>英國 TRUD 帳號</b><span>需個人帳號與 API 金鑰，由誰申請、金鑰如何保管。</span></div></li>
+      <li><div><b>加拿大薩省是否去函 DPEB</b><span>詢問 ALLDIN 或 PDCMS 主檔可否申請匯出，既有報告待辦事項。</span></div></li>
+      <li><div><b>佐證包保存位置與保存年限</b><span>涉及爭議時效，需與檔案管理規定對齊。</span></div></li>
+      <li><div><b>匯率換算基準日與匯率來源</b><span>本工具不做換算，需另行規定。</span></div></li>
+    </ol>
+  </section>
+
+  <!-- 7 -->
+  <section id="s7">
+    <div class="sec-head"><span class="sec-num">07</span><h2>風險與限制</h2></div>
+    <div class="tablewrap">
+      <table class="wide">
+        <thead><tr><th>風險</th><th>說明</th><th>因應</th></tr></thead>
+        <tbody>
+          <tr><td>網站改版</td><td>各國官方網址定期失效，屬常態</td><td>介面提供「連線體檢」按鈕，可隨時全國檢查一輪</td></tr>
+          <tr><td>德國保密給付價</td><td>2025 年起部分新藥淨價不再公開，侵蝕德國作為參考國之透明度</td><td>個別品項標示是否適用，並於報告中揭露</td></tr>
+          <tr><td>政策性停用</td><td>官方可能停用既有下載管道，如澳洲舊制</td><td>每次執行記錄來源網址與格式，變動時可立即察覺</td></tr>
+          <tr><td>robots.txt 與服務條款</td><td>加拿大薩省已明確禁止自動化存取</td><td>該國一律人工，不寫爬蟲</td></tr>
+          <tr><td>截圖之法律效力</td><td>佐證包提高證據力，但非公證文書</td><td>個案如需更強證明力，需另循公證或存證程序</td></tr>
+          <tr><td>欄位對照可信度</td><td>瑞士、加拿大等國無官方逐欄位定義文件</td><td>於資料與匯出檔標示可信度等級，不與有官方文件佐證者等同看待</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section id="s8">
+    <div class="sec-head"><span class="sec-num">08</span><h2>下一步</h2></div>
+    <div class="next">
+      <ol>
+        <li>在公司電腦執行 <code>執行環境檢測.bat</code>，將產生的報告檔回傳。</li>
+        <li>依報告結果定案截圖技術路線（Edge 命令列／Selenium／人工）。</li>
+        <li>本提案如經同意或修正後同意，即進入階段 1。</li>
+      </ol>
+      <p style="margin:18px 0 0;font-size:14px;color:var(--muted)">
+        環境檢測報告回來之前，階段 1 的統一欄位層可以先行開發，不受影響。
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <span>十國藥價自動化機制　流程規劃提案</span>
+    <span>2026-08-27</span>
+    <span>待討論與主管核定</span>
+  </footer>
+
+  </main>
+</div>
+</div>
