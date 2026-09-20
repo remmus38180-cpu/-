@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>十大先進國藥價查詢導航器</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  width:400px;
+  font-family:'Segoe UI','Microsoft JhengHei',sans-serif;
+  background:#f8f9fb;
+  color:#1a1a2e;
+}
+.header{
+  background:linear-gradient(135deg,#0f4c75,#1b6ca8);
+  color:#fff;
+  padding:16px 20px 14px;
+  text-align:center;
+}
+.header h1{font-size:15px;font-weight:700;letter-spacing:.5px}
+.header p{font-size:11px;opacity:.8;margin-top:3px}
+
+.search-box{padding:14px 16px 10px}
+.search-box input{
+  width:100%;
+  padding:10px 14px;
+  border:2px solid #d0d7e2;
+  border-radius:8px;
+  font-size:14px;
+  outline:none;
+  transition:border-color .2s;
+}
+.search-box input:focus{border-color:#1b6ca8}
+.search-box input::placeholder{color:#a0aab4}
+
+.section{padding:4px 16px 8px}
+.section-title{
+  font-size:11px;
+  font-weight:600;
+  color:#6b7280;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.dot{
+  display:inline-block;
+  width:8px;height:8px;
+  border-radius:50%;
+}
+.dot-green{background:#22c55e}
+.dot-blue{background:#3b82f6}
+.dot-amber{background:#f59e0b}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-bottom:4px;
+}
+
+.btn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 12px;
+  border:1px solid #e2e6ec;
+  border-radius:8px;
+  background:#fff;
+  cursor:pointer;
+  transition:all .15s;
+  text-align:left;
+}
+.btn:hover{
+  border-color:#1b6ca8;
+  background:#f0f7ff;
+  transform:translateY(-1px);
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.btn:active{transform:translateY(0)}
+.btn .flag{font-size:20px;line-height:1}
+.btn .info{flex:1;min-width:0}
+.btn .country{font-size:12px;font-weight:600;color:#1a1a2e}
+.btn .site{font-size:10px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.btn.login{opacity:.75}
+.btn.login .country::after{
+  content:'🔒';
+  font-size:10px;
+  margin-left:4px;
+}
+
+.divider{
+  height:1px;
+  background:#e5e7eb;
+  margin:6px 16px;
+}
+
+.open-all{
+  margin:8px 16px 14px;
+  padding:10px;
+  width:calc(100% - 32px);
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(135deg,#0f4c75,#1b6ca8);
+  color:#fff;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:opacity .15s;
+}
+.open-all:hover{opacity:.9}
+.open-all:active{opacity:.8}
+
+.toast{
+  position:fixed;
+  bottom:12px;left:50%;
+  transform:translateX(-50%) translateY(40px);
+  background:#1a1a2e;
+  color:#fff;
+  padding:8px 16px;
+  border-radius:6px;
+  font-size:12px;
+  opacity:0;
+  transition:all .3s;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💊 十大先進國藥價查詢導航器</h1>
+  <p>輸入藥名 → 點擊國家按鈕 → 自動前往查詢</p>
+</div>
+
+<div class="search-box">
+  <input type="text" id="drugInput" placeholder="輸入英文藥名，例如 Eliquis" autofocus spellcheck="false">
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="dot dot-green"></span> 自動查詢（URL 直達結果頁）</div>
+  <div class="grid">
+    <button class="btn" data-country="UK"><span class="flag">🇬🇧</span><div class="info"><div class="country">英國</div><div class="site">NHS dm+d Browser</div></div></button>
+    <button class="btn" data-country="AU"><span class="flag">🇦🇺</span><div class="info"><div class="country">澳洲</div><div class="site">PBS</div></div></button>
+    <button class="btn" data-country="BE"><span class="flag">🇧🇪</span><div class="info"><div class="country">比利時</div><div class="site">CBIP</div></div></button>
+    <button class="btn" data-country="SE"><span class="flag">🇸🇪</span><div class="info"><div class="country">瑞典</div><div class="site">FASS</div></div></button>
+    <button class="btn" data-country="CH"><span class="flag">🇨🇭</span><div class="info"><div class="country">瑞士</div><div class="site">Compendium</div></div></button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-title"><span class="dot dot-blue"></span> 自動填入（開啟後自動輸入藥名並送出）</div>
+  <div class="grid">
+    <button class="btn" data-country="JP"><span class="flag">🇯🇵</span><div class="info"><div class="country">日本</div><div class="site">KEGG MEDICUS</div></div></button>
+    <button class="btn" data-country="FR"><span class="flag">🇫🇷</span><div class="info"><div class="country">法國</div><div class="site">BdM_IT (CNAM)</div></div></button>
+    <button class="btn" data-country="CA"><span class="flag">🇨🇦</span><div class="info"><div class="country">加拿大(薩省)</div><div class="site">Saskatchewan Formulary</div></div></button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-title"><span class="dot dot-amber"></span> 需登入（開啟首頁，手動查詢）</div>
+  <div class="grid">
+    <button class="btn login" data-country="DE"><span class="flag">🇩🇪</span><div class="info"><div class="country">德國</div><div class="site">ROTE LISTE</div></div></button>
+    <button class="btn login" data-country="US"><span class="flag">🇺🇸</span><div class="info"><div class="country">美國</div><div class="site">Micromedex Red Book</div></div></button>
+  </div>
+</div>
+
+<button class="open-all" id="openAll">⚡ 一鍵全開 10 國查詢</button>
+
+<div class="toast" id="toast"></div>
+
+<script src="popup.js"></script>
+</body>
+</html>
